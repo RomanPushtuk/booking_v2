@@ -1,2 +1,6 @@
+Error.stackTraceLimit = Infinity;
 import "reflect-metadata";
-console.log(123)
+
+import { start } from "./gateway/exports";
+
+start();
