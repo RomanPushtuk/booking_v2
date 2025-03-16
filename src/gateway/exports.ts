@@ -1,5 +1,7 @@
 import express from "express";
 import { useExpressServer, useContainer } from "routing-controllers";
+
+import { shared } from "./imports";
 import { diContainer } from "./di";
 
 useContainer(diContainer);
@@ -9,16 +11,21 @@ import {
   ClientController,
   HostController,
 } from "./controllers";
+import { ErrorHandlerMiddleware, TrackApiMiddleware } from "./middlewares";
 
-export const start = async () => {
-  const app = express();
+const app = express();
 
+const start = () => {
   useExpressServer(app, {
     classTransformer: false,
+    defaultErrorHandler: false,
     controllers: [AuthController, ClientController, HostController],
+    middlewares: [TrackApiMiddleware, ErrorHandlerMiddleware],
   });
 
-  app.listen(3000, () => {
-    console.log("BackEnd started on 3000 port");
+  return app.listen(3000, () => {
+    shared.logger.info("BackEnd started on 3000 port");
   });
 };
+
+export { start };

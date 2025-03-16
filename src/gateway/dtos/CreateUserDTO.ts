@@ -1,5 +1,5 @@
 import { IsIn, IsStrongPassword, MaxLength } from "class-validator";
-import { sharedModule } from "../imports";
+import { shared } from "../imports";
 
 export class CreateUserDTO {
   @MaxLength(36)
@@ -8,6 +8,6 @@ export class CreateUserDTO {
   @IsStrongPassword()
   password: string;
 
-  @IsIn(Object.values(sharedModule.enums.Roles))
+  @IsIn(Object.values(shared.enums.Roles))
   role: string;
 }

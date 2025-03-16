@@ -1,18 +1,22 @@
 import { Service } from "typedi";
-import { JsonController, Post } from "routing-controllers";
+import {
+  HttpError,
+  JsonController,
+  Post,
+} from "routing-controllers";
 
-@JsonController("/auth")
 @Service()
+@JsonController("/auth")
 export class AuthController {
   constructor() {}
 
   @Post("/register")
   async register(): Promise<void> {
-    throw new Error("AuthController POST /register not implemented.");
+    throw new HttpError(500, "AuthController POST /register not implemented.");
   }
 
   @Post("/login")
   async login(): Promise<void> {
-    throw new Error("AuthController POST /login not implemented.");
+    throw new HttpError(500, "AuthController POST /login not implemented.");
   }
 }

@@ -1,1 +1,1 @@
-export * as sharedModule from "../shared/exports";
+export * as shared from "../shared/exports";
