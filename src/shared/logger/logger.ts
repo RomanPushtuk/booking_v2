@@ -12,8 +12,9 @@ const logger = pino({
       const userIp = store.get("userIp");
 
       if (typeof args[0] === "object") {
-        (args[0] as { traceId: string, userIp: string }).traceId = traceId || "";
-        (args[0] as { traceId: string, userIp: string }).userIp = userIp || "";
+        (args[0] as { traceId: string; userIp: string }).traceId =
+          traceId || "";
+        (args[0] as { traceId: string; userIp: string }).userIp = userIp || "";
       } else {
         args.unshift({ traceId });
       }

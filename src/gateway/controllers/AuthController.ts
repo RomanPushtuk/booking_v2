@@ -1,18 +1,16 @@
-import { Service } from "typedi";
-import {
-  HttpError,
-  JsonController,
-  Post,
-} from "routing-controllers";
+import { Inject, Service } from "typedi";
+import { Body, HttpError, JsonController, Post } from "routing-controllers";
+import { CreateUserSaga } from "../sagas";
+import { CreateUserDTO } from "../dtos";
 
 @Service()
 @JsonController("/auth")
 export class AuthController {
-  constructor() {}
+  constructor(@Inject() public _createUserSaga: CreateUserSaga) {}
 
   @Post("/register")
-  async register(): Promise<void> {
-    throw new HttpError(500, "AuthController POST /register not implemented.");
+  async register(@Body() createUserDTO: CreateUserDTO): Promise<void> {
+    this._createUserSaga.execute(createUserDTO);
   }
 
   @Post("/login")
