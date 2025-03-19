@@ -6,11 +6,11 @@ import { CreateUserDTO } from "../dtos";
 @Service()
 @JsonController("/auth")
 export class AuthController {
-  constructor(@Inject() public _createUserSaga: CreateUserSaga) {}
+  constructor(@Inject() private _createUserSaga: CreateUserSaga) {}
 
   @Post("/register")
   async register(@Body() createUserDTO: CreateUserDTO): Promise<void> {
-    this._createUserSaga.execute(createUserDTO);
+    await this._createUserSaga.execute(createUserDTO);
   }
 
   @Post("/login")

@@ -9,7 +9,7 @@ export class Saga<T, R> {
   constructor() {}
 
   async execute(payload: T) {
-    shared.logger.info(`Start execute saga - ${this.constructor.name}`)
+    shared.logger.info(`Start execute saga - ${this.constructor.name}`);
     for (const step of this.steps) {
       try {
         await step.invoke(payload);
@@ -21,6 +21,6 @@ export class Saga<T, R> {
         throw new SagaFailedError(this.constructor.name, err as Error);
       }
     }
-    shared.logger.info(`Saga execution finished - ${this.constructor.name}`)
+    shared.logger.info(`Saga execution finished - ${this.constructor.name}`);
   }
 }
