@@ -11,7 +11,11 @@ import {
   ClientController,
   HostController,
 } from "./controllers";
-import { ErrorHandlerMiddleware, TrackApiMiddleware } from "./middlewares";
+import {
+  ErrorHandlerMiddleware,
+  TrackBeforeMiddleware,
+  TrackAfterMiddleware,
+} from "./middlewares";
 
 const app = express();
 
@@ -20,7 +24,11 @@ const start = () => {
     classTransformer: false,
     defaultErrorHandler: false,
     controllers: [AuthController, ClientController, HostController],
-    middlewares: [TrackApiMiddleware, ErrorHandlerMiddleware],
+    middlewares: [
+      TrackBeforeMiddleware,
+      TrackAfterMiddleware,
+      ErrorHandlerMiddleware,
+    ],
   });
 
   return app.listen(3000, () => {

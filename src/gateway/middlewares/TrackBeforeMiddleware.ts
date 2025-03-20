@@ -6,7 +6,7 @@ import { asyncLocalStorage } from "../../context";
 
 @Middleware({ type: "before" })
 @Service()
-export class TrackApiMiddleware implements ExpressMiddlewareInterface {
+export class TrackBeforeMiddleware implements ExpressMiddlewareInterface {
   use(request: Request, response: Response, next: NextFunction): void {
     const traceId = shared.utils.generateId();
 
@@ -22,7 +22,7 @@ export class TrackApiMiddleware implements ExpressMiddlewareInterface {
       traceId,
     };
 
-    shared.logger.info(payload);
+    shared.logger.info(payload, "Received a new request");
 
     asyncLocalStorage.run(new Map(), () => {
       const store = asyncLocalStorage.getStore() as Map<string, string>;

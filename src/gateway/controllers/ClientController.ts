@@ -1,10 +1,9 @@
-import { Inject, Service } from "typedi";
+import { Service } from "typedi";
 import {
   Get,
   Post,
   Delete,
   JsonController,
-  HttpError,
   Body,
   Param,
   Patch,
@@ -17,63 +16,83 @@ import {
   UpdateClientSaga,
 } from "../sagas";
 import {
+  ClientDTO,
   CreateBookingDTO,
   DeleteBookingDTO,
   DeleteUserDTO,
   UpdateBookingDTO,
   UpdateClientDTO,
+  ClientDeletedDTO,
+  ClientUpdatedDTO,
+  BookingCreatedDTO,
+  BookingDTO,
+  BookingUpdatedDTO,
+  BookingDeletedDTO,
 } from "../dtos";
 
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor(
-    @Inject() private _deleteUserSaga: DeleteUserSaga,
-    @Inject() private _updateClientSaga: UpdateClientSaga,
-  ) {}
+  constructor() {}
 
   @Get("/me")
-  async getMe(): Promise<void> {
-    throw new HttpError(500, "ClientController GET /me not implemented");
+  async getMe(): Promise<ClientDTO> {
+    return new ClientDTO({
+      id: "test_id",
+      info: { firstName: "first_name", lastName: "last_name" },
+    });
   }
 
   @Delete("/me")
-  async deleteClient(@Body() deleteUserDTO: DeleteUserDTO): Promise<void> {
-    await this._deleteUserSaga.execute(deleteUserDTO);
+  async deleteClient(
+    @Body() deleteUserDTO: DeleteUserDTO,
+  ): Promise<ClientDeletedDTO> {
+    const deleteUserSaga = new DeleteUserSaga();
+    await deleteUserSaga.execute(deleteUserDTO);
+    return new ClientDeletedDTO({ id: "test_id" });
   }
 
   @Patch("/me")
-  async updateClient(@Body() updateClientDTO: UpdateClientDTO): Promise<void> {
-    await this._updateClientSaga.execute(updateClientDTO);
+  async updateClient(
+    @Body() updateClientDTO: UpdateClientDTO,
+  ): Promise<ClientUpdatedDTO> {
+    const updateClientSaga = new UpdateClientSaga();
+    await updateClientSaga.execute(updateClientDTO);
+    return new ClientUpdatedDTO({ id: "test_id" });
   }
 
   @Get("/me/bookings")
-  async getBookings(): Promise<void> {
-    throw new HttpError(
-      500,
-      "ClientController GET /me/bookings not implemented",
-    );
+  async getBookings(): Promise<BookingDTO[]> {
+    return [];
+  }
+
+  @Get("/me/bookings/:bookingId")
+  async getBookingById(): Promise<BookingDTO> {
+    return new BookingDTO({ id: "test_id" });
   }
 
   @Post("/me/bookings")
   public async createBooking(
     @Body() createBookingDTO: CreateBookingDTO,
-  ): Promise<void> {
+  ): Promise<BookingCreatedDTO> {
     const createBookingSaga = new CreateBookingSaga();
     await createBookingSaga.execute(createBookingDTO);
+    return new BookingCreatedDTO({ id: "test_id" });
   }
 
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
     @Body() updateBookingDTO: UpdateBookingDTO,
-  ): Promise<void> {
+  ): Promise<BookingUpdatedDTO> {
     const updateBookingSaga = new UpdateBookingSaga();
     await updateBookingSaga.execute(updateBookingDTO);
+    return new BookingUpdatedDTO({ id: "test_id" })
   }
 
-  @Delete("/me/bookins/:bookingId")
-  async cancelBooking(@Param("bookingId") bookingId: string): Promise<void> {
+  @Delete("/me/bookings/:bookingId")
+  async cancelBooking(@Param("bookingId") bookingId: string): Promise<BookingDeletedDTO> {
     const deleteBookingSaga = new DeleteBookingSaga();
     await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));
+    return new BookingDeletedDTO({ id: "test_id" })
   }
 }
