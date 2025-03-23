@@ -33,7 +33,7 @@ const logger = pino({
         },
       },
       {
-        level: "info",
+        level: "trace",
         target: "pino-pretty",
         options: { destination: process.stdout.fd, colorize: true },
       },

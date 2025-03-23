@@ -1,8 +1,8 @@
 import { Step } from "../application";
-import { UserDTO } from "../dtos";
+import { UpdateClientDTO } from "../dtos";
 import { shared } from "../imports";
 
-export class CreateUserInBookingServiceStep extends Step<UserDTO, void> {
+export class UpdateClientInInfoServiceStep extends Step<UpdateClientDTO, void> {
   override async invoke(): Promise<void> {
     shared.logger.info(this.constructor.name + " invoke");
     return;

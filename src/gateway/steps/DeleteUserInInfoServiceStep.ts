@@ -1,12 +1,15 @@
 import { Step } from "../application";
 import { DeleteUserDTO } from "../dtos";
+import { shared } from "../imports";
 
 export class DeleteUserInInfoServiceStep extends Step<DeleteUserDTO, void> {
-  override invoke(params: DeleteUserDTO): Promise<void> {
-    throw new Error("Method not implemented.");
+  override async invoke(): Promise<void> {
+    shared.logger.info(this.constructor.name + " invoke");
+    return;
   }
 
-  override withCompenstation(params: DeleteUserDTO): Promise<void> {
-    throw new Error("Method not implemented.");
+  override async withCompenstation(): Promise<void> {
+    shared.logger.info(this.constructor.name + " withCompenstation");
+    return;
   }
 }

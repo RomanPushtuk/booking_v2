@@ -30,10 +30,19 @@ import {
 } from "../dtos";
 import { UpdateHostSaga } from "../sagas/UpdateHostSaga";
 import {
+  CreateBookingInBookingServiceStep,
+  CreateBookingInInfoServiceStep,
+  DeleteBookingInBookingServiceStep,
+  DeleteBookingInInfoServiceStep,
   DeleteUserInAuthServiceStep,
   DeleteUserInBookingServiceStep,
   DeleteUserInInfoServiceStep,
+  UpdateBookingInBookingServiceStep,
+  UpdateBookingInInfoServiceStep,
+  UpdateHostInBookingServiceStep,
+  UpdateHostInInfoServiceStep,
 } from "../steps";
+import { shared } from "../imports";
 
 @Service()
 @JsonController("/hosts")
@@ -63,8 +72,12 @@ export class HostController {
   async updateHost(
     @Body() updateHostDTO: UpdateHostDTO,
   ): Promise<HostUpdatedDTO> {
-    const updateHostSaga = new UpdateHostSaga();
-    await updateHostSaga.execute(updateHostDTO);
+    const userId = "test_id";
+    const updateHostSaga = new UpdateHostSaga(
+      new UpdateHostInBookingServiceStep(),
+      new UpdateHostInInfoServiceStep(),
+    );
+    await updateHostSaga.execute(updateHostDTO, userId);
     return new HostUpdatedDTO({ id: "test_id" });
   }
 
@@ -90,8 +103,23 @@ export class HostController {
   public async createBooking(
     @Body() createBookingDTO: CreateBookingDTO,
   ): Promise<BookingCreatedDTO> {
-    const createBookingSaga = new CreateBookingSaga();
-    await createBookingSaga.execute(createBookingDTO);
+    const bookingDTO = new BookingDTO({
+      id: shared.utils.generateId(),
+      ...createBookingDTO,
+      clientId: "test_client_id",
+      hostId: "test_host_id",
+      fromDateTime: "2025-03-23T19:42:22.327Z",
+      toDateTime: "2025-03-23T19:42:22.327Z",
+      info: {
+        title: "title",
+        description: "description"
+      }
+    });
+    const createBookingSaga = new CreateBookingSaga(
+      new CreateBookingInBookingServiceStep(),
+      new CreateBookingInInfoServiceStep(),
+    );
+    await createBookingSaga.execute(bookingDTO);
     return new BookingCreatedDTO({ id: "test_id" });
   }
 
@@ -112,10 +140,14 @@ export class HostController {
 
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
+    @Param("bookingId") bookingId: string,
     @Body() updateBookingDTO: UpdateBookingDTO,
   ): Promise<BookingUpdatedDTO> {
-    const updateBookingSaga = new UpdateBookingSaga();
-    await updateBookingSaga.execute(updateBookingDTO);
+    const updateBookingSaga = new UpdateBookingSaga(
+      new UpdateBookingInBookingServiceStep(),
+      new UpdateBookingInInfoServiceStep(),
+    );
+    await updateBookingSaga.execute(updateBookingDTO, bookingId);
     return new BookingUpdatedDTO({ id: "test_id" });
   }
 
@@ -123,7 +155,10 @@ export class HostController {
   async cancelBooking(
     @Param("bookingId") bookingId: string,
   ): Promise<BookingDeletedDTO> {
-    const deleteBookingSaga = new DeleteBookingSaga();
+    const deleteBookingSaga = new DeleteBookingSaga(
+      new DeleteBookingInBookingServiceStep(),
+      new DeleteBookingInInfoServiceStep(),
+    );
     await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));
     return new BookingDeletedDTO({ id: "test_id" });
   }

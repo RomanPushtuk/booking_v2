@@ -26,6 +26,9 @@ export class AuthController {
     const userDTO = new UserDTO({
       id: shared.utils.generateId(),
       ...createUserDTO,
+      login: "test_login",
+      password: "test_password_123456!@",
+      role: "HOST",
     });
 
     const createUserSaga = new CreateUserSaga(

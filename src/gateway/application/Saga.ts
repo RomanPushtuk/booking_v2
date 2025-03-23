@@ -8,15 +8,15 @@ export class Saga<T, R> {
 
   constructor() {}
 
-  async execute(payload: T) {
+  async execute(payload: T, ...args: unknown[]) {
     shared.logger.info(`Start execute saga - ${this.constructor.name}`);
     for (const step of this.steps) {
       try {
-        await step.invoke(payload);
+        await step.invoke(payload, ...args);
         this.successfulSteps.unshift(step);
       } catch (err) {
         this.successfulSteps.forEach(async (step) => {
-          await step.withCompenstation(payload);
+          await step.withCompenstation(payload, ...args);
         });
         throw new SagaFailedError(this.constructor.name, err as Error);
       }
