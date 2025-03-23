@@ -8,6 +8,7 @@ import {
   Param,
 } from "routing-controllers";
 import { Service } from "typedi";
+import { shared } from "../imports";
 import {
   CreateBookingSaga,
   DeleteBookingSaga,
@@ -42,7 +43,6 @@ import {
   UpdateHostInBookingServiceStep,
   UpdateHostInInfoServiceStep,
 } from "../steps";
-import { shared } from "../imports";
 
 @Service()
 @JsonController("/hosts")
@@ -112,8 +112,8 @@ export class HostController {
       toDateTime: "2025-03-23T19:42:22.327Z",
       info: {
         title: "title",
-        description: "description"
-      }
+        description: "description",
+      },
     });
     const createBookingSaga = new CreateBookingSaga(
       new CreateBookingInBookingServiceStep(),

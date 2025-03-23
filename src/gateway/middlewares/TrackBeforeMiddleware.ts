@@ -2,6 +2,7 @@ import { ExpressMiddlewareInterface, Middleware } from "routing-controllers";
 import { Request, Response, NextFunction } from "express";
 import { Service } from "typedi";
 import { shared } from "../imports";
+import { logger } from "../logger";
 import { asyncLocalStorage } from "../../context";
 
 @Middleware({ type: "before" })
@@ -22,7 +23,7 @@ export class TrackBeforeMiddleware implements ExpressMiddlewareInterface {
       traceId,
     };
 
-    shared.logger.info(payload, "Received a new request");
+    logger.info(payload, "Received a new request");
 
     asyncLocalStorage.run(new Map(), () => {
       const store = asyncLocalStorage.getStore() as Map<string, string>;

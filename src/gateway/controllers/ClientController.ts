@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
 } from "routing-controllers";
+import { shared } from "../imports";
 import {
   DeleteUserSaga,
   CreateBookingSaga,
@@ -42,7 +43,6 @@ import {
   UpdateClientInBookingServiceStep,
   UpdateClientInInfoServiceStep,
 } from "../steps";
-import { shared } from "../imports";
 
 @Service()
 @JsonController("/clients")
@@ -116,8 +116,8 @@ export class ClientController {
       toDateTime: "2025-03-23T19:42:22.327Z",
       info: {
         title: "title",
-        description: "description"
-      }
+        description: "description",
+      },
     });
     const createBookingSaga = new CreateBookingSaga(
       new CreateBookingInBookingServiceStep(),

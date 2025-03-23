@@ -1,15 +1,15 @@
 import { Step } from "../application";
 import { DeleteUserDTO } from "../dtos";
-import { shared } from "../imports";
+import { logger } from "../logger";
 
 export class DeleteUserInInfoServiceStep extends Step<DeleteUserDTO, void> {
   override async invoke(): Promise<void> {
-    shared.logger.info(this.constructor.name + " invoke");
+    logger.info(this.constructor.name + " invoke");
     return;
   }
 
   override async withCompenstation(): Promise<void> {
-    shared.logger.info(this.constructor.name + " withCompenstation");
+    logger.info(this.constructor.name + " withCompenstation");
     return;
   }
 }

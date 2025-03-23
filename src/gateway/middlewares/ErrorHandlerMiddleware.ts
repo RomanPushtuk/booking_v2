@@ -3,7 +3,7 @@ import {
   ExpressErrorMiddlewareInterface,
 } from "routing-controllers";
 import { Request, Response, NextFunction } from "express";
-import { shared } from "../imports";
+import { logger } from "../logger";
 import { Service } from "typedi";
 
 @Middleware({ type: "after" })
@@ -15,7 +15,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     _response: Response,
     next: NextFunction,
   ) {
-    shared.logger.error(error);
+    logger.error(error);
     next(error);
   }
 }

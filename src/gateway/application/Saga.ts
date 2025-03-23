@@ -1,6 +1,6 @@
 import { Step } from "./Step";
 import { SagaFailedError } from "../errors";
-import { shared } from "../imports";
+import { logger } from "../logger";
 
 export class Saga<T, R> {
   protected steps: Step<T, R>[] = [];
@@ -9,7 +9,7 @@ export class Saga<T, R> {
   constructor() {}
 
   async execute(payload: T, ...args: unknown[]) {
-    shared.logger.info(`Start execute saga - ${this.constructor.name}`);
+    logger.info(`Start execute saga - ${this.constructor.name}`);
     for (const step of this.steps) {
       try {
         await step.invoke(payload, ...args);
@@ -21,6 +21,6 @@ export class Saga<T, R> {
         throw new SagaFailedError(this.constructor.name, err as Error);
       }
     }
-    shared.logger.info(`Saga execution finished - ${this.constructor.name}`);
+    logger.info(`Saga execution finished - ${this.constructor.name}`);
   }
 }
