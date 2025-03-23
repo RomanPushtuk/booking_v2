@@ -68,7 +68,17 @@ export class ClientController {
 
   @Get("/me/bookings/:bookingId")
   async getBookingById(): Promise<BookingDTO> {
-    return new BookingDTO({ id: "test_id" });
+    return new BookingDTO({ 
+      id: "test_id",
+      clientId: "client_id",
+      hostId: "host_id",
+      fromDateTime: "2025-03-23T14:58:00.289Z",
+      toDateTime: "2025-03-23T14:58:00.289Z",
+      info: {
+        title: "title",
+        description: "description"
+      }
+     });
   }
 
   @Post("/me/bookings")

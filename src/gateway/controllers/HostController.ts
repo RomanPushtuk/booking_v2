@@ -44,6 +44,9 @@ export class HostController {
   async getMe(): Promise<HostDTO> {
     return new HostDTO({
       id: "test_id",
+      forwardBooking: "2 weeks",
+      workHours: [{ from: "09:00", to: "13:00" }, { from: "14:00", to: "18:00" }],
+      workDays: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"],
       info: { firstName: "first_name", lastName: "last_name " },
     });
   }
@@ -82,7 +85,17 @@ export class HostController {
 
   @Get("/me/bookings/:bookingId")
   async getBookingById(): Promise<BookingDTO> {
-    return new BookingDTO({ id: "test_id" });
+    return new BookingDTO({ 
+      id: "test_id",
+      clientId: "client_id",
+      hostId: "host_id",
+      fromDateTime: "2025-03-23T14:58:00.289Z",
+      toDateTime: "2025-03-23T14:58:00.289Z",
+      info: {
+        title: "title",
+        description: "description"
+      }
+     });
   }
 
   @Patch("/me/bookings/:bookingId")
@@ -106,6 +119,9 @@ export class HostController {
   async getHost(): Promise<HostDTO> {
     return new HostDTO({
       id: "test_id",
+      forwardBooking: "2 weeks",
+      workHours: [{ from: "09:00", to: "13:00" }, { from: "14:00", to: "18:00" }],
+      workDays: ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"],
       info: { firstName: "first_name", lastName: "last_name " },
     });
   }
