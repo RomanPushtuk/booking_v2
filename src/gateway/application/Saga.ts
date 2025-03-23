@@ -3,8 +3,8 @@ import { SagaFailedError } from "../errors";
 import { shared } from "../imports";
 
 export class Saga<T, R> {
-  private steps: Step<T, R>[] = [];
-  private successfulSteps: Step<T, R>[] = [];
+  protected steps: Step<T, R>[] = [];
+  protected successfulSteps: Step<T, R>[] = [];
 
   constructor() {}
 

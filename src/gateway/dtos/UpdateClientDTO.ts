@@ -1,8 +1,4 @@
-import {
-  IsString,
-  ValidateNested,
-  validateSync,
-} from "class-validator";
+import { IsString, ValidateNested, validateSync } from "class-validator";
 import { shared } from "../imports";
 
 class _Info {

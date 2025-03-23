@@ -1,7 +1,18 @@
 import { Service } from "typedi";
 import { Body, JsonController, Post } from "routing-controllers";
+import { shared } from "../imports";
 import { CreateUserSaga } from "../sagas";
-import { CreateUserDTO, UserCreatedDTO, UserLoggedInDTO } from "../dtos";
+import {
+  CreateUserDTO,
+  UserCreatedDTO,
+  UserDTO,
+  UserLoggedInDTO,
+} from "../dtos";
+import {
+  CreateUserInAuthServiceStep,
+  CreateUserInBookingServiceStep,
+  CreateUserInInfoServiceStep,
+} from "../steps";
 
 @Service()
 @JsonController("/auth")
@@ -12,8 +23,17 @@ export class AuthController {
   async register(
     @Body() createUserDTO: CreateUserDTO,
   ): Promise<UserCreatedDTO> {
-    const createUserSaga = new CreateUserSaga();
-    await createUserSaga.execute(createUserDTO);
+    const userDTO = new UserDTO({
+      id: shared.utils.generateId(),
+      ...createUserDTO,
+    });
+
+    const createUserSaga = new CreateUserSaga(
+      new CreateUserInAuthServiceStep(),
+      new CreateUserInBookingServiceStep(),
+      new CreateUserInInfoServiceStep(),
+    );
+    await createUserSaga.execute(userDTO);
     return new UserCreatedDTO({ id: "test_id" });
   }
 

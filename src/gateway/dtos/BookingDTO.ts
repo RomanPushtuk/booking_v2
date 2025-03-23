@@ -1,12 +1,18 @@
-import { MaxLength, validateSync, IsDateString, IsString, ValidateNested } from "class-validator";
+import {
+  MaxLength,
+  validateSync,
+  IsDateString,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 import { shared } from "../imports";
 
 class _Info {
   @IsString()
-  title: string
+  title: string;
 
   @IsString()
-  description: string 
+  description: string;
 }
 
 export class BookingDTO {
@@ -26,7 +32,7 @@ export class BookingDTO {
   toDateTime: string;
 
   @ValidateNested()
-  info: _Info
+  info: _Info;
 
   constructor(data: shared.types.GetInterface<BookingDTO>) {
     this.id = data.id;

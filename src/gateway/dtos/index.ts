@@ -1,4 +1,5 @@
 export { CreateUserDTO } from "./CreateUserDTO";
+export { UserDTO } from "./UserDTO";
 export { AuthUserDTO } from "./AuthUserDTO";
 export { DeleteUserDTO } from "./DeleteUserDTO";
 export { CreateBookingDTO } from "./CreateBookingDTO";

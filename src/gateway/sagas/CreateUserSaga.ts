@@ -1,4 +1,17 @@
 import { Saga } from "../application";
-import { CreateUserDTO } from "../dtos";
+import { UserDTO } from "../dtos";
+import {
+  CreateUserInAuthServiceStep,
+  CreateUserInBookingServiceStep,
+} from "../steps";
 
-export class CreateUserSaga extends Saga<CreateUserDTO, void> {}
+export class CreateUserSaga extends Saga<UserDTO, void> {
+  constructor(
+    step1: CreateUserInAuthServiceStep,
+    step2: CreateUserInBookingServiceStep,
+    step3: CreateUserInBookingServiceStep,
+  ) {
+    super();
+    this.steps = [step1, step2, step3];
+  }
+}

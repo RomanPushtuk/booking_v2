@@ -29,6 +29,11 @@ import {
   BookingUpdatedDTO,
   BookingDeletedDTO,
 } from "../dtos";
+import {
+  DeleteUserInAuthServiceStep,
+  DeleteUserInBookingServiceStep,
+  DeleteUserInInfoServiceStep,
+} from "../steps";
 
 @Service()
 @JsonController("/clients")
@@ -47,7 +52,11 @@ export class ClientController {
   async deleteClient(
     @Body() deleteUserDTO: DeleteUserDTO,
   ): Promise<ClientDeletedDTO> {
-    const deleteUserSaga = new DeleteUserSaga();
+    const deleteUserSaga = new DeleteUserSaga(
+      new DeleteUserInAuthServiceStep(),
+      new DeleteUserInBookingServiceStep(),
+      new DeleteUserInInfoServiceStep(),
+    );
     await deleteUserSaga.execute(deleteUserDTO);
     return new ClientDeletedDTO({ id: "test_id" });
   }
@@ -68,7 +77,7 @@ export class ClientController {
 
   @Get("/me/bookings/:bookingId")
   async getBookingById(): Promise<BookingDTO> {
-    return new BookingDTO({ 
+    return new BookingDTO({
       id: "test_id",
       clientId: "client_id",
       hostId: "host_id",
@@ -76,9 +85,9 @@ export class ClientController {
       toDateTime: "2025-03-23T14:58:00.289Z",
       info: {
         title: "title",
-        description: "description"
-      }
-     });
+        description: "description",
+      },
+    });
   }
 
   @Post("/me/bookings")
@@ -96,13 +105,15 @@ export class ClientController {
   ): Promise<BookingUpdatedDTO> {
     const updateBookingSaga = new UpdateBookingSaga();
     await updateBookingSaga.execute(updateBookingDTO);
-    return new BookingUpdatedDTO({ id: "test_id" })
+    return new BookingUpdatedDTO({ id: "test_id" });
   }
 
   @Delete("/me/bookings/:bookingId")
-  async cancelBooking(@Param("bookingId") bookingId: string): Promise<BookingDeletedDTO> {
+  async cancelBooking(
+    @Param("bookingId") bookingId: string,
+  ): Promise<BookingDeletedDTO> {
     const deleteBookingSaga = new DeleteBookingSaga();
     await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));
-    return new BookingDeletedDTO({ id: "test_id" })
+    return new BookingDeletedDTO({ id: "test_id" });
   }
 }

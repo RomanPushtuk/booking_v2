@@ -30,10 +30,10 @@ export class HostDTO {
   forwardBooking: string;
 
   @ValidateNested({ each: true })
-  workHours: _WorkHour[]
+  workHours: _WorkHour[];
 
   @IsString({ each: true })
-  workDays: string[]
+  workDays: string[];
 
   @ValidateNested()
   info: _Info;
