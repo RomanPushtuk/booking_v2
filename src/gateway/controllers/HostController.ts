@@ -21,8 +21,8 @@ import {
   BookingDTO,
   BookingUpdatedDTO,
   CreateBookingDTO,
-  DeleteBookingDTO,
-  DeleteUserDTO,
+  // DeleteBookingDTO,
+  // DeleteUserDTO,
   HostDeletedDTO,
   HostDTO,
   HostUpdatedDTO,
@@ -86,14 +86,14 @@ export class HostController {
 
   @Delete("/me")
   async deleteHost(
-    @Body() deleteUserDTO: DeleteUserDTO,
+    // @Body() deleteUserDTO: DeleteUserDTO,
   ): Promise<HostDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
       new DeleteUserInInfoServiceStep(),
     );
-    await deleteUserSaga.execute(deleteUserDTO);
+    await deleteUserSaga.execute("test_id");
     return new HostDeletedDTO({ id: "test_id" });
   }
 
@@ -171,7 +171,7 @@ export class HostController {
       ),
       new DeleteBookingInInfoServiceStep(),
     );
-    await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));
+    await deleteBookingSaga.execute(bookingId);
     return new BookingDeletedDTO({ id: "test_id" });
   }
 

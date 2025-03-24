@@ -19,8 +19,7 @@ import {
 import {
   ClientDTO,
   CreateBookingDTO,
-  DeleteBookingDTO,
-  DeleteUserDTO,
+  // DeleteUserDTO,
   UpdateBookingDTO,
   UpdateClientDTO,
   ClientDeletedDTO,
@@ -59,14 +58,14 @@ export class ClientController {
 
   @Delete("/me")
   async deleteClient(
-    @Body() deleteUserDTO: DeleteUserDTO,
+    // @Body() deleteUserDTO: DeleteUserDTO,
   ): Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
       new DeleteUserInInfoServiceStep(),
     );
-    await deleteUserSaga.execute(deleteUserDTO);
+    await deleteUserSaga.execute("test_id");
     return new ClientDeletedDTO({ id: "test_id" });
   }
 
@@ -160,7 +159,7 @@ export class ClientController {
       ),
       new DeleteBookingInInfoServiceStep(),
     );
-    await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));
+    await deleteBookingSaga.execute(bookingId);
     return new BookingDeletedDTO({ id: "test_id" });
   }
 }
