@@ -11,4 +11,8 @@ export class UserService {
   async deleteUser(deleteUserDTO: gateway.dtos.DeleteUserDTO) {
     logger.info({ deleteUserDTO }, this.constructor.name + " deleteUser");
   }
+
+  async restoreUser(deleteUserDTO: gateway.dtos.DeleteUserDTO) {
+    logger.info({ deleteUserDTO }, this.constructor.name + " restoreUser");
+  }
 }

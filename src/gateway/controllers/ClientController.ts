@@ -8,7 +8,7 @@ import {
   Param,
   Patch,
 } from "routing-controllers";
-import { shared } from "../imports";
+import { shared, booking } from "../imports";
 import {
   DeleteUserSaga,
   CreateBookingSaga,
@@ -120,7 +120,10 @@ export class ClientController {
       },
     });
     const createBookingSaga = new CreateBookingSaga(
-      new CreateBookingInBookingServiceStep(),
+      new CreateBookingInBookingServiceStep(
+        booking.services.clientService.createBooking,
+        booking.services.clientService.deleteBooking,
+      ),
       new CreateBookingInInfoServiceStep(),
     );
     await createBookingSaga.execute(bookingDTO);
@@ -145,7 +148,10 @@ export class ClientController {
     @Param("bookingId") bookingId: string,
   ): Promise<BookingDeletedDTO> {
     const deleteBookingSaga = new DeleteBookingSaga(
-      new DeleteBookingInBookingServiceStep(),
+      new DeleteBookingInBookingServiceStep(
+        booking.services.clientService.deleteBooking,
+        booking.services.clientService.restoreBooking,
+      ),
       new DeleteBookingInInfoServiceStep(),
     );
     await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));

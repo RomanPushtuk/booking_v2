@@ -8,7 +8,7 @@ import {
   Param,
 } from "routing-controllers";
 import { Service } from "typedi";
-import { shared } from "../imports";
+import { booking, shared } from "../imports";
 import {
   CreateBookingSaga,
   DeleteBookingSaga,
@@ -116,7 +116,10 @@ export class HostController {
       },
     });
     const createBookingSaga = new CreateBookingSaga(
-      new CreateBookingInBookingServiceStep(),
+      new CreateBookingInBookingServiceStep(
+        booking.services.hostService.createBooking,
+        booking.services.hostService.deleteBooking,
+      ),
       new CreateBookingInInfoServiceStep(),
     );
     await createBookingSaga.execute(bookingDTO);
@@ -156,7 +159,10 @@ export class HostController {
     @Param("bookingId") bookingId: string,
   ): Promise<BookingDeletedDTO> {
     const deleteBookingSaga = new DeleteBookingSaga(
-      new DeleteBookingInBookingServiceStep(),
+      new DeleteBookingInBookingServiceStep(
+        booking.services.hostService.deleteBooking,
+        booking.services.hostService.restoreBooking,
+      ),
       new DeleteBookingInInfoServiceStep(),
     );
     await deleteBookingSaga.execute(new DeleteBookingDTO({ id: bookingId }));
