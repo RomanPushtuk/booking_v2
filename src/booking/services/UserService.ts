@@ -8,11 +8,11 @@ export class UserService {
     logger.info({ userDTO }, this.constructor.name + " createUser");
   }
 
-  async deleteUser(deleteUserDTO: gateway.dtos.DeleteUserDTO) {
-    logger.info({ deleteUserDTO }, this.constructor.name + " deleteUser");
+  async deleteUser(userId: string) {
+    logger.info({ userId }, this.constructor.name + " deleteUser");
   }
 
-  async restoreUser(deleteUserDTO: gateway.dtos.DeleteUserDTO) {
-    logger.info({ deleteUserDTO }, this.constructor.name + " restoreUser");
+  async restoreUser(userId: string) {
+    logger.info({ userId }, this.constructor.name + " restoreUser");
   }
 }

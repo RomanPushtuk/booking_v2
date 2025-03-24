@@ -76,7 +76,10 @@ export class ClientController {
   ): Promise<ClientUpdatedDTO> {
     const userId = "test_id";
     const updateClientSaga = new UpdateClientSaga(
-      new UpdateClientInBookingServiceStep(),
+      new UpdateClientInBookingServiceStep(
+        booking.services.clientService.updateClient,
+        booking.services.clientService.revertClient,
+      ),
       new UpdateClientInInfoServiceStep(),
     );
     await updateClientSaga.execute(updateClientDTO, userId);
@@ -136,7 +139,10 @@ export class ClientController {
     @Body() updateBookingDTO: UpdateBookingDTO,
   ): Promise<BookingUpdatedDTO> {
     const updateBookingSaga = new UpdateBookingSaga(
-      new UpdateBookingInBookingServiceStep(),
+      new UpdateBookingInBookingServiceStep(
+        booking.services.clientService.updateBooking,
+        booking.services.clientService.revertBooking,
+      ),
       new UpdateBookingInInfoServiceStep(),
     );
     await updateBookingSaga.execute(updateBookingDTO, bookingId);

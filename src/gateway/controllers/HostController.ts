@@ -74,7 +74,10 @@ export class HostController {
   ): Promise<HostUpdatedDTO> {
     const userId = "test_id";
     const updateHostSaga = new UpdateHostSaga(
-      new UpdateHostInBookingServiceStep(),
+      new UpdateHostInBookingServiceStep(
+        booking.services.hostService.updateHost,
+        booking.services.hostService.revertHost,
+      ),
       new UpdateHostInInfoServiceStep(),
     );
     await updateHostSaga.execute(updateHostDTO, userId);
@@ -147,7 +150,10 @@ export class HostController {
     @Body() updateBookingDTO: UpdateBookingDTO,
   ): Promise<BookingUpdatedDTO> {
     const updateBookingSaga = new UpdateBookingSaga(
-      new UpdateBookingInBookingServiceStep(),
+      new UpdateBookingInBookingServiceStep(
+        booking.services.hostService.updateBooking,
+        booking.services.hostService.revertBooking,
+      ),
       new UpdateBookingInInfoServiceStep(),
     );
     await updateBookingSaga.execute(updateBookingDTO, bookingId);

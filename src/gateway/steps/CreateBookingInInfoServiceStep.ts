@@ -1,5 +1,5 @@
 import { Step } from "../application";
-import { BookingDTO, DeleteBookingDTO } from "../dtos";
+import { BookingDTO } from "../dtos";
 import { logger } from "../logger";
 import { info } from "../imports";
 
@@ -12,8 +12,7 @@ export class CreateBookingInInfoServiceStep extends Step<BookingDTO, void> {
 
   override async withCompenstation(bookingDTO: BookingDTO): Promise<void> {
     logger.info(this.constructor.name + " withCompenstation");
-    const deleteBookingDTO = new DeleteBookingDTO({ id: bookingDTO.id });
-    info.services.bookingService.deleteBooking(deleteBookingDTO);
+    info.services.bookingService.deleteBooking(bookingDTO.id);
     return;
   }
 }

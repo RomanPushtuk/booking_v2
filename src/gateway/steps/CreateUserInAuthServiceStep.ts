@@ -1,5 +1,5 @@
 import { Step } from "../application";
-import { DeleteUserDTO, UserDTO } from "../dtos";
+import { UserDTO } from "../dtos";
 import { auth } from "../imports";
 import { logger } from "../logger";
 
@@ -12,8 +12,7 @@ export class CreateUserInAuthServiceStep extends Step<UserDTO, void> {
 
   override async withCompenstation(userDTO: UserDTO): Promise<void> {
     logger.info(this.constructor.name + " withCompenstation");
-    const deleteUserDTO = new DeleteUserDTO({ id: userDTO.id });
-    await auth.services.authService.deleteUser(deleteUserDTO);
+    await auth.services.authService.deleteUser(userDTO.id);
     return;
   }
 }

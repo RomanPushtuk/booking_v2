@@ -1,35 +1,27 @@
 import { Step } from "../application";
-import { DeleteBookingDTO } from "../dtos";
 import { logger } from "../logger";
 
-export class DeleteBookingInBookingServiceStep extends Step<
-  DeleteBookingDTO,
-  void
-> {
-  private _invokeCb: (deleteBookingDTO: DeleteBookingDTO) => Promise<void>;
-  private _withCompenstationCb: (
-    deleteBookingDTO: DeleteBookingDTO,
-  ) => Promise<void>;
+export class DeleteBookingInBookingServiceStep extends Step<string, void> {
+  private _invokeCb: (bookingId: string) => Promise<void>;
+  private _withCompenstationCb: (bookingId: string) => Promise<void>;
 
   constructor(
-    invokeCb: (deleteBookingDTO: DeleteBookingDTO) => Promise<void>,
-    withCompenstationCb: (deleteBookingDTO: DeleteBookingDTO) => Promise<void>,
+    invokeCb: (bookingId: string) => Promise<void>,
+    withCompenstationCb: (bookingId: string) => Promise<void>,
   ) {
     super();
     this._invokeCb = invokeCb;
     this._withCompenstationCb = withCompenstationCb;
   }
-  override async invoke(deleteBookingDTO: DeleteBookingDTO): Promise<void> {
+  override async invoke(bookingId: string): Promise<void> {
     logger.info(this.constructor.name + " invoke");
-    await this._invokeCb(deleteBookingDTO);
+    await this._invokeCb(bookingId);
     return;
   }
 
-  override async withCompenstation(
-    deleteBookingDTO: DeleteBookingDTO,
-  ): Promise<void> {
+  override async withCompenstation(bookingId: string): Promise<void> {
     logger.info(this.constructor.name + " withCompenstation");
-    await this._withCompenstationCb(deleteBookingDTO);
+    await this._withCompenstationCb(bookingId);
     return;
   }
 }

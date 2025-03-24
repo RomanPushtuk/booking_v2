@@ -8,14 +8,25 @@ export class BookingService {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
   }
 
-  async deleteBooking(deleteBookingDTO: gateway.dtos.DeleteBookingDTO) {
-    logger.info({ deleteBookingDTO }, this.constructor.name + " deleteBooking");
+  async deleteBooking(bookingId: string) {
+    logger.info({ bookingId }, this.constructor.name + " deleteBooking");
   }
 
-  async restoreBooking(deleteBookingDTO: gateway.dtos.DeleteBookingDTO) {
+  async restoreBooking(bookingId: string) {
+    logger.info({ bookingId }, this.constructor.name + " restoreBooking");
+  }
+
+  async updateBooking(
+    updateBookingDTO: gateway.dtos.UpdateBookingDTO,
+    bookingId: string,
+  ) {
     logger.info(
-      { deleteBookingDTO },
-      this.constructor.name + " restoreBooking",
+      { updateBookingDTO, bookingId },
+      this.constructor.name + " updateBooking",
     );
+  }
+
+  async revertBooking(bookingId: string) {
+    logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
   }
 }
