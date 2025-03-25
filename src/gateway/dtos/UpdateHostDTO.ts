@@ -1,43 +1,49 @@
-import { IsString, ValidateNested, validateSync } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsOptional,
+  IsDefined,
+  IsString,
+  IsIn,
+  ValidateNested,
+} from "class-validator";
 import { shared } from "../imports";
 
 class _WorkHour {
+  @IsDefined()
   @IsString()
   from: string;
 
+  @IsDefined()
   @IsString()
   to: string;
 }
 
 class _Info {
+  @IsOptional()
   @IsString()
   firstName?: string;
 
+  @IsOptional()
   @IsString()
   lastName?: string;
 }
 
 export class UpdateHostDTO {
+  @IsOptional()
   @IsString()
   forwardBooking?: string;
 
+  @IsOptional()
   @ValidateNested({ each: true })
+  @Type(() => _WorkHour)
   workHours?: _WorkHour[];
 
-  @IsString({ each: true })
+  @IsOptional()
+  @IsIn(Object.values(shared.enums.Days), { each: true })
   workDays?: string[];
 
+  @IsOptional()
   @ValidateNested()
+  @Type(() => _Info)
   info?: _Info;
-
-  constructor(data: shared.types.GetInterface<UpdateHostDTO>) {
-    this.forwardBooking = data.forwardBooking;
-    this.workHours = data.workHours;
-    this.workDays = data.workDays;
-    this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(UpdateHostDTO.name, errors);
-  }
 }

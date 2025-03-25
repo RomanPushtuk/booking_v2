@@ -4,6 +4,16 @@ import { logger } from "../logger";
 
 @Service()
 export class UserService {
+  constructor() {
+    this.createUser = this.createUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.restoreUser = this.restoreUser.bind(this);
+    this.updateClient = this.updateClient.bind(this);
+    this.revertClient = this.revertClient.bind(this);
+    this.updateHost = this.updateHost.bind(this);
+    this.revertHost = this.revertHost.bind(this);
+  }
+
   async createUser(userDTO: gateway.dtos.UserDTO) {
     logger.info({ userDTO }, this.constructor.name + " createUser");
   }

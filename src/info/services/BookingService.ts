@@ -4,6 +4,14 @@ import { logger } from "../logger";
 
 @Service()
 export class BookingService {
+  constructor() {
+    this.createBooking = this.createBooking.bind(this);
+    this.deleteBooking = this.deleteBooking.bind(this);
+    this.restoreBooking = this.restoreBooking.bind(this);
+    this.updateBooking = this.updateBooking.bind(this);
+    this.revertBooking = this.revertBooking.bind(this);
+  }
+
   async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
   }

@@ -57,9 +57,8 @@ export class ClientController {
   }
 
   @Delete("/me")
-  async deleteClient(
-    // @Body() deleteUserDTO: DeleteUserDTO,
-  ): Promise<ClientDeletedDTO> {
+  async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
+  : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),

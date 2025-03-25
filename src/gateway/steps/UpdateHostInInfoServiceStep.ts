@@ -9,7 +9,7 @@ export class UpdateHostInInfoServiceStep extends Step<UpdateHostDTO, void> {
     hostId: string,
   ): Promise<void> {
     logger.info(this.constructor.name + " invoke");
-    info.services.userService.updateClient(updateHostDTO, hostId);
+    info.services.userService.updateHost(updateHostDTO, hostId);
     return;
   }
 
@@ -18,7 +18,7 @@ export class UpdateHostInInfoServiceStep extends Step<UpdateHostDTO, void> {
     hostId: string,
   ): Promise<void> {
     logger.info(this.constructor.name + " withCompenstation");
-    info.services.bookingService.revertBooking(hostId);
+    info.services.userService.revertHost(hostId);
     return;
   }
 }

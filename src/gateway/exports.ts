@@ -22,7 +22,8 @@ const app = express();
 
 const start = () => {
   useExpressServer(app, {
-    classTransformer: false,
+    classTransformer: true,
+    validation: true,
     defaultErrorHandler: false,
     controllers: [AuthController, ClientController, HostController],
     middlewares: [
