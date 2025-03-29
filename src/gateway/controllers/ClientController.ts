@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   Patch,
+  QueryParam,
 } from "routing-controllers";
 import { shared, booking } from "../imports";
 import {
@@ -85,7 +86,20 @@ export class ClientController {
   }
 
   @Get("/me/bookings")
-  async getBookings(): Promise<BookingDTO[]> {
+  async getBookings(
+    @QueryParam("sortDirection") sortDirection: string = "DECS",
+    @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
+    @QueryParam("dateTimeFrom") dateTimeFrom: string,
+    @QueryParam("dateTimeTo") dateTimeTo: string,
+    @QueryParam("hostId") hostId: string,
+  ): Promise<BookingDTO[]> {
+    new shared.application.BookingSorting(sortDirection, sortProperty);
+    new shared.application.BookingFilters({
+      hostId,
+      clientId: "test_id",
+      dateTimeFrom,
+      dateTimeTo,
+    });
     return [];
   }
 

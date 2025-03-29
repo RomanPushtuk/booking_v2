@@ -6,6 +6,7 @@ import {
   Body,
   Post,
   Param,
+  QueryParam,
 } from "routing-controllers";
 import { Service } from "typedi";
 import { booking, shared } from "../imports";
@@ -98,7 +99,20 @@ export class HostController {
   }
 
   @Get("/me/bookings")
-  public async getMyBookings(): Promise<BookingDTO[]> {
+  public async getMyBookings(
+    @QueryParam("sortDirection") sortDirection: string = "DECS",
+    @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
+    @QueryParam("dateTimeFrom") dateTimeFrom: string,
+    @QueryParam("dateTimeTo") dateTimeTo: string,
+    @QueryParam("clientId") clientId: string,
+  ): Promise<BookingDTO[]> {
+    new shared.application.BookingSorting(sortDirection, sortProperty);
+    new shared.application.BookingFilters({
+      clientId,
+      hostId: "test_id",
+      dateTimeFrom,
+      dateTimeTo,
+    });
     return [];
   }
 
@@ -191,7 +205,21 @@ export class HostController {
   }
 
   @Get("/:id/bookings")
-  public async getHostBookings(): Promise<BookingDTO[]> {
+  public async getHostBookings(
+    @QueryParam("sortDirection") sortDirection: string = "DECS",
+    @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
+    @QueryParam("dateTimeFrom") dateTimeFrom: string,
+    @QueryParam("dateTimeTo") dateTimeTo: string,
+    @QueryParam("clientId") clientId: string,
+    @QueryParam("hostId") hostId: string,
+  ): Promise<BookingDTO[]> {
+    new shared.application.BookingSorting(sortDirection, sortProperty);
+    new shared.application.BookingFilters({
+      clientId,
+      hostId,
+      dateTimeFrom,
+      dateTimeTo,
+    });
     return [];
   }
 }

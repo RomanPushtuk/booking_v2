@@ -6,7 +6,7 @@ import {
 } from "class-validator";
 import { shared } from "../imports";
 
-class _info {
+class _Info {
   @IsString()
   firstName: string;
 
@@ -19,7 +19,7 @@ export class ClientDTO {
   id: string;
 
   @ValidateNested()
-  info: _info;
+  info: _Info;
 
   constructor(data: shared.types.GetInterface<ClientDTO>) {
     this.id = data.id;

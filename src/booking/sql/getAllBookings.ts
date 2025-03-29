@@ -1,11 +1,10 @@
 import { StatementSync } from "node:sqlite";
 import { db } from "../db";
-import { BookingFilters } from "../application/BookingFilters";
-import { BookingSorting } from "../application/BookingSorting";
+import { shared } from "../imports";
 
 export const getAllBookings = (data: {
-  sorting?: BookingSorting;
-  filters?: BookingFilters;
+  sorting?: shared.application.BookingSorting;
+  filters?: shared.application.BookingFilters;
 }): StatementSync => {
   const { sorting, filters } = data;
 
