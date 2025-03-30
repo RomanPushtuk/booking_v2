@@ -87,7 +87,7 @@ export class ClientController {
 
   @Get("/me/bookings")
   async getBookings(
-    @QueryParam("sortDirection") sortDirection: string = "DECS",
+    @QueryParam("sortDirection") sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
     @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
     @QueryParam("dateTimeFrom") dateTimeFrom: string,
     @QueryParam("dateTimeTo") dateTimeTo: string,

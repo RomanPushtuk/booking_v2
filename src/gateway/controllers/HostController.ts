@@ -100,7 +100,7 @@ export class HostController {
 
   @Get("/me/bookings")
   public async getMyBookings(
-    @QueryParam("sortDirection") sortDirection: string = "DECS",
+    @QueryParam("sortDirection") sortDirection:  shared.enums.SortDirection = shared.enums.SortDirection.DESC,
     @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
     @QueryParam("dateTimeFrom") dateTimeFrom: string,
     @QueryParam("dateTimeTo") dateTimeTo: string,
@@ -206,7 +206,7 @@ export class HostController {
 
   @Get("/:id/bookings")
   public async getHostBookings(
-    @QueryParam("sortDirection") sortDirection: string = "DECS",
+    @QueryParam("sortDirection") sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
     @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
     @QueryParam("dateTimeFrom") dateTimeFrom: string,
     @QueryParam("dateTimeTo") dateTimeTo: string,

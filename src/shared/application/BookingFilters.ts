@@ -1,5 +1,5 @@
 import { IsDateString, validateSync } from "class-validator";
-import { shared } from "../imports";
+import { GetInterface } from "../types";
 
 export class BookingFilters {
   clientId?: string;
@@ -12,7 +12,7 @@ export class BookingFilters {
   @IsDateString()
   dateTimeTo?: string;
 
-  constructor(data: Partial<shared.types.GetInterface<BookingFilters>>) {
+  constructor(data: Partial<GetInterface<BookingFilters>>) {
     const { clientId, hostId, dateTimeFrom, dateTimeTo } = data;
 
     this.clientId = clientId;

@@ -1,10 +1,10 @@
-import { shared } from "../imports";
+import { SortDirection } from "../enums";
 
 export class BookingSorting {
-  direction: shared.enums.SortDirection;
+  direction: SortDirection;
   property: string;
 
-  constructor(direction: shared.enums.SortDirection, property: string) {
+  constructor(direction: SortDirection, property: string) {
     this.direction = direction;
     this.property = property;
   }
