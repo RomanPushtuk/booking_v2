@@ -1,40 +1,43 @@
-import { Service } from "typedi";
-import { gateway } from "../imports";
-import { logger } from "../logger";
+import { Service } from 'typedi';
+import { gateway } from '../imports';
+import { logger } from '../logger';
+import { BookingRepository } from '../repositories';
 
 @Service()
 export class BookingService {
-  constructor() {
-    this.createBooking = this.createBooking.bind(this);
-    this.deleteBooking = this.deleteBooking.bind(this);
-    this.restoreBooking = this.restoreBooking.bind(this);
-    this.updateBooking = this.updateBooking.bind(this);
-    this.revertBooking = this.revertBooking.bind(this);
-  }
+	private bookingRepo: BookingRepository;
 
-  async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
-    logger.info({ bookingDTO }, this.constructor.name + " createBooking");
-  }
+	constructor() {
+		this.bookingRepo = new BookingRepository();
+		this.createBooking = this.createBooking.bind(this);
+		this.deleteBooking = this.deleteBooking.bind(this);
+		this.restoreBooking = this.restoreBooking.bind(this);
+		this.updateBooking = this.updateBooking.bind(this);
+		this.revertBooking = this.revertBooking.bind(this);
+	}
 
-  async deleteBooking(bookingId: string) {
-    logger.info({ bookingId }, this.constructor.name + " deleteBooking");
-  }
+	async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
+		logger.info({ bookingDTO }, `${this.constructor.name} createBooking`);
+		return this.bookingRepo.saveBooking(bookingDTO);
+	}
 
-  async restoreBooking(bookingId: string) {
-    logger.info({ bookingId }, this.constructor.name + " restoreBooking");
-  }
+	async deleteBooking(bookingId: string) {
+		logger.info({ bookingId }, `${this.constructor.name} deleteBooking`);
+		return this.bookingRepo.deleteBooking(bookingId);
+	}
 
-  async updateBooking(
-    updateBookingDTO: gateway.dtos.UpdateBookingDTO,
-    bookingId: string,
-  ) {
-    logger.info(
-      { updateBookingDTO, bookingId },
-      this.constructor.name + " updateBooking",
-    );
-  }
+	async restoreBooking(bookingId: string) {
+		logger.info({ bookingId }, `${this.constructor.name} restoreBooking`);
+		return this.bookingRepo.update({ id: bookingId }, { $set: { deleted: false } }, {});
+	}
 
-  async revertBooking(bookingId: string) {
-    logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
-  }
+	async updateBooking(updateBookingDTO: gateway.dtos.UpdateBookingDTO, bookingId: string) {
+		logger.info({ updateBookingDTO, bookingId }, `${this.constructor.name} updateBooking`);
+		return this.bookingRepo.update({ id: bookingId }, { $set: updateBookingDTO }, {});
+	}
+
+	async revertBooking(bookingId: string) {
+		logger.info({ bookingId }, `${this.constructor.name} revertBooking`);
+		return this.bookingRepo.getBookingById(bookingId); // Get curr version
+	}
 }
