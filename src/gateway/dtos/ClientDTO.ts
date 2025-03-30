@@ -2,7 +2,6 @@ import {
   MaxLength,
   IsString,
   ValidateNested,
-  validateSync,
 } from "class-validator";
 import { shared } from "../imports";
 
@@ -24,9 +23,5 @@ export class ClientDTO {
   constructor(data: shared.types.GetInterface<ClientDTO>) {
     this.id = data.id;
     this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(ClientDTO.name, errors);
   }
 }

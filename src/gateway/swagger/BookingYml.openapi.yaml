@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: BookingYml
+  title: Booking_v2
   description: ''
   version: 1.0.0
 tags:
@@ -22,6 +22,7 @@ paths:
           in: path
           description: ''
           required: true
+          example: ''
           schema:
             type: string
       responses:
@@ -29,7 +30,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &ref_0
+              schema:
                 $ref: '#/components/schemas/HostDTO'
               example:
                 id: QfgtBGhO
@@ -51,9 +52,7 @@ paths:
     get:
       summary: GetHostBookings
       deprecated: false
-      description: >-
-        Each user of the system can see the host records without specifying the
-        clients.
+      description: Each user of the system can see the host records without specifying the clients.
       operationId: PUBLIC_GET_HOST_BOOKINGS
       tags:
         - public
@@ -62,6 +61,7 @@ paths:
           in: path
           description: ''
           required: true
+          example: ''
           schema:
             type: string
         - name: sortDirection
@@ -127,20 +127,28 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BookingDTO7'
-              example:
-                - id: W5yzHBnj
-                  clientId: RHufHq84
-                  hostId: DHhd82df
-                  date: '2025-09-24'
-                  time:
-                    from: '09:00'
-                    to: '11:30'
-                - id: peYQTB5F
-                  hostId: DHhd82df
-                  date: '2025-09-29'
-                  time:
-                    from: '14:00'
-                    to: '15:00'
+              examples:
+                '1':
+                  summary: Success
+                  description: ''
+                  value:
+                    id: W5yzHBnj
+                    clientId: RHufHq84
+                    hostId: DHhd82df
+                    date: '2025-09-24'
+                    time:
+                      from: '09:00'
+                      to: '11:30'
+                '2':
+                  summary: Success
+                  description: ''
+                  value:
+                    id: peYQTB5F
+                    hostId: DHhd82df
+                    date: '2025-09-29'
+                    time:
+                      from: '14:00'
+                      to: '15:00'
           headers: {}
       security: []
   /auth/register:
@@ -190,6 +198,23 @@ paths:
           headers: {}
       security: []
   /clients/me:
+    delete:
+      summary: DeleteMe
+      deprecated: false
+      description: Mark a client as deleted from the system
+      operationId: CLIENTS_DELETE_CLIENT
+      tags:
+        - clients
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDeletedDTO'
+          headers: {}
+      security: []
     get:
       summary: GetMe
       deprecated: false
@@ -206,21 +231,40 @@ paths:
                 $ref: '#/components/schemas/ClientDTO'
           headers: {}
       security: []
-    delete:
-      summary: DeleteMe
+    patch:
+      summary: PatchMe
       deprecated: false
-      description: Mark a client as deleted from the system
-      operationId: CLIENTS_DETELE_CLIENT
-      tags:
-        - clients
+      description: ''
+      operationId: CLIENTS_UPDATE
+      tags: []
       parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                info:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                  required:
+                    - firstName
+                    - lastName
+              required:
+                - info
+            examples: {}
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDeletedDTO'
+                type: object
+                properties: {}
           headers: {}
       security: []
   /clients/me/bookings:
@@ -229,7 +273,8 @@ paths:
       deprecated: false
       description: Get user bookings
       operationId: CLIENTS_GET_BOOKINGS
-      tags: []
+      tags:
+        - clients
       parameters:
         - name: sortDirection
           in: query
@@ -294,6 +339,31 @@ paths:
                   $ref: '#/components/schemas/BookingDTO'
           headers: {}
       security: []
+  /clients/me/bookings/{id}:
+    get:
+      summary: GetMyBooking
+      deprecated: false
+      description: Get user booking
+      operationId: CLIENTS_GET_BOOKING
+      tags:
+        - clients
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDTO'
+          headers: {}
+      security: []
   /clients/me/booking:
     post:
       summary: CreateBooking
@@ -307,17 +377,55 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBookingDTO'
+              type: object
+              properties:
+                hostId:
+                  type: string
+                date:
+                  type: string
+                fromDateTime:
+                  type: string
+                  format: date-time
+                  examples:
+                    - '2025-03-30T12:34:56Z'
+                toDateTime:
+                  type: string
+                  format: date-time
+                  examples:
+                    - '2025-03-30T12:34:56Z'
+                  description: It can be optional, then the standard recording duration will be 30 min.
+                clientId:
+                  type: string
+              required:
+                - clientId
+                - hostId
+                - date
+                - fromDateTime
+            examples: {}
       responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                  - id
+          headers: {}
         '201':
           description: ''
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingCreatedDTO'
+              example:
+                id: test_id
           headers: {}
       security: []
-  /client/me/bookings/{id}:
+  /client/me/bookings/1:
     delete:
       summary: DeleteBooking
       deprecated: false
@@ -325,13 +433,7 @@ paths:
       operationId: CLIENTS_DELETE_BOOKING
       tags:
         - clients
-      parameters:
-        - name: id
-          in: path
-          description: ''
-          required: true
-          schema:
-            type: string
+      parameters: []
       responses:
         '200':
           description: ''
@@ -354,13 +456,38 @@ paths:
           in: path
           description: ''
           required: true
+          example: ''
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBookingDTO'
+              type: object
+              properties:
+                hostId:
+                  type: string
+                date:
+                  type: string
+                fromDateTime:
+                  type: string
+                  format: date-time
+                  examples:
+                    - '2025-03-30T12:34:56Z'
+                toDateTime:
+                  type: string
+                  format: date-time
+                  examples:
+                    - '2025-03-30T12:34:56Z'
+                  description: It can be optional, then the standard recording duration will be 30 min.
+                clientId:
+                  type: string
+              required:
+                - clientId
+                - hostId
+                - date
+                - fromDateTime
+            examples: {}
       responses:
         '200':
           description: ''
@@ -384,7 +511,45 @@ paths:
           description: ''
           content:
             application/json:
-              schema: *ref_0
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  forwardBooking:
+                    type: string
+                  workHours:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        from:
+                          type: string
+                        to:
+                          type: string
+                      required:
+                        - from
+                        - to
+                  workDays:
+                    type: array
+                    items:
+                      type: string
+                  info:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                    required:
+                      - firstName
+                      - lastName
+                required:
+                  - id
+                  - forwardBooking
+                  - workHours
+                  - workDays
+                  - info
               example:
                 id: qMzpUi3C
                 forwardBooking: 3 weeks
@@ -413,7 +578,6 @@ paths:
                 $ref: '#/components/schemas/HostDeletedDTO'
           headers: {}
       security: []
-  /host/me:
     patch:
       summary: UpdateMe
       deprecated: false
@@ -426,7 +590,57 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateHostDTO'
+              type: object
+              properties:
+                forwardBooking:
+                  type: string
+                workHours:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      from:
+                        type: string
+                      to:
+                        type: string
+                    required:
+                      - from
+                      - to
+                workDays:
+                  type: array
+                  items:
+                    type: string
+                info:
+                  type: object
+                  properties:
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                  required:
+                    - firstName
+                    - lastName
+              required:
+                - forwardBooking
+                - workHours
+                - workDays
+                - info
+            example:
+              forwardBooking: '2025-04-15'
+              workHours:
+                - from: '09:00'
+                  to: '13:00'
+                - from: '14:00'
+                  to: '18:00'
+              workDays:
+                - MONDAY
+                - TUESDAY
+                - WEDNESDAY
+                - THURSDAY
+                - FRIDAY
+              info:
+                firstName: Иван
+                lastName: Кондрич
       responses:
         '200':
           description: ''
@@ -436,7 +650,7 @@ paths:
                 $ref: '#/components/schemas/HostUpdatedDTO'
           headers: {}
       security: []
-  /hosts/me/booking:
+  /hosts/me/bookings:
     post:
       summary: CreateBooking
       deprecated: false
@@ -450,6 +664,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateBookingDTO3'
+            examples: {}
       responses:
         '201':
           description: ''
@@ -459,7 +674,6 @@ paths:
                 $ref: '#/components/schemas/BookingCreatedDTO4'
           headers: {}
       security: []
-  /hosts/me/bookings:
     get:
       summary: GetMyBookings
       deprecated: false
@@ -552,6 +766,7 @@ paths:
           in: path
           description: ''
           required: true
+          example: ''
           schema:
             type: string
       responses:
@@ -575,6 +790,7 @@ paths:
           in: path
           description: ''
           required: true
+          example: ''
           schema:
             type: string
       requestBody:
@@ -635,23 +851,40 @@ paths:
                     description: status
           headers: {}
       security: []
+  /GetMyBooking:
+    get:
+      summary: GetMyBooking
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security: []
 components:
   schemas:
     AuthUserDTO:
       type: object
       properties:
-        email:
+        login:
           type: string
         password:
           type: string
       required:
-        - email
+        - login
         - password
       title: Auth_AuthUserDTO
     CreateUserDTO:
       type: object
       properties:
-        email:
+        login:
           type: string
         password:
           type: string
@@ -661,7 +894,7 @@ components:
             - CLIENT
             - HOST
       required:
-        - email
+        - login
         - password
         - role
       title: Auth_CreateUserDTO
@@ -729,9 +962,7 @@ components:
           type: string
         timeTo:
           type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          description: It can be optional, then the standard recording duration will be 30 min.
       required:
         - hostId
         - date
@@ -773,9 +1004,7 @@ components:
           type: string
         timeTo:
           type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          description: It can be optional, then the standard recording duration will be 30 min.
       title: Clients_UpdateBookingDTO
       required:
         - hostId
@@ -927,9 +1156,7 @@ components:
           type: string
         timeTo:
           type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          description: It can be optional, then the standard recording duration will be 30 min.
       required:
         - date
         - timeFrom
@@ -954,9 +1181,7 @@ components:
           type: string
         timeTo:
           type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          description: It can be optional, then the standard recording duration will be 30 min.
       title: Hosts_UpdateBookingDTO
       required:
         - clientId
@@ -977,9 +1202,7 @@ components:
           description: ID
         clientId:
           type: string
-          description: >-
-            The ID will be visible only to the client who created the booking,
-            the rest will receive an empty value.
+          description: The ID will be visible only to the client who created the booking, the rest will receive an empty value.
         hostId:
           type: string
         date:

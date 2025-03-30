@@ -20,7 +20,6 @@ import {
 import {
   ClientDTO,
   CreateBookingDTO,
-  // DeleteUserDTO,
   UpdateBookingDTO,
   UpdateClientDTO,
   ClientDeletedDTO,
@@ -76,6 +75,7 @@ export class ClientController {
   async updateClient(
     @Body() updateClientDTO: UpdateClientDTO,
   ): Promise<ClientUpdatedDTO> {
+  
     const userId = "test_id";
     const updateClientSaga = new UpdateClientSaga(
       new UpdateClientInBookingServiceStep(
@@ -84,15 +84,16 @@ export class ClientController {
       ),
       new UpdateClientInInfoServiceStep(),
     );
+    
     await updateClientSaga.execute(updateClientDTO, userId);
     return new ClientUpdatedDTO({ id: "test_id" });
   }
+  
 
   // private
   @Get("/me/bookings")
   async getBookings(
-    @QueryParam("sortDirection")
-    sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
+    @QueryParam("sortDirection") sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
     @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
     @QueryParam("dateTimeFrom") dateTimeFrom: string,
     @QueryParam("dateTimeTo") dateTimeTo: string,

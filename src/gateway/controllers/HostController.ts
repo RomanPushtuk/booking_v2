@@ -22,6 +22,7 @@ import {
   BookingDTO,
   BookingUpdatedDTO,
   CreateBookingDTO,
+  // DeleteUserDTO,
   // DeleteBookingDTO,
   // DeleteUserDTO,
   HostDeletedDTO,
@@ -76,7 +77,6 @@ export class HostController {
   async updateHost(
     @Body() updateHostDTO: UpdateHostDTO,
   ): Promise<HostUpdatedDTO> {
-    console.log(updateHostDTO);
     const userId = "test_id";
     const updateHostSaga = new UpdateHostSaga(
       new UpdateHostInBookingServiceStep(
@@ -91,8 +91,9 @@ export class HostController {
 
   // private
   @Delete("/me")
-  async deleteHost() // @Body() deleteUserDTO: DeleteUserDTO,
-  : Promise<HostDeletedDTO> {
+  async deleteHost(
+    // @Body() deleteUserDTO: DeleteUserDTO,
+  ): Promise<HostDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),

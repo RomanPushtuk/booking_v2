@@ -1,6 +1,5 @@
 import {
   MaxLength,
-  validateSync,
   IsDateString,
   IsString,
   ValidateNested,
@@ -41,9 +40,5 @@ export class BookingDTO {
     this.fromDateTime = data.fromDateTime;
     this.toDateTime = data.toDateTime;
     this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(BookingDTO.name, errors);
   }
 }

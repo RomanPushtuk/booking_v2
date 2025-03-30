@@ -2,11 +2,10 @@ import {
   MaxLength,
   IsString,
   ValidateNested,
-  validateSync,
 } from "class-validator";
 import { shared } from "../imports";
 
-class _WorkHour {
+export class _WorkHour {
   @IsString()
   from: string;
 
@@ -23,6 +22,15 @@ class _Info {
 }
 
 export class HostDTO {
+
+  constructor(data: shared.types.GetInterface<HostDTO>) {
+    this.id = data.id;
+    this.forwardBooking = data.forwardBooking;
+    this.workHours = data.workHours;
+    this.workDays = data.workDays;
+    this.info = data.info;
+  }
+  
   @MaxLength(36)
   id: string;
 
@@ -38,15 +46,11 @@ export class HostDTO {
   @ValidateNested()
   info: _Info;
 
-  constructor(data: shared.types.GetInterface<HostDTO>) {
-    this.id = data.id;
-    this.forwardBooking = data.forwardBooking;
-    this.workHours = data.workHours;
-    this.workDays = data.workDays;
-    this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(HostDTO.name, errors);
-  }
+  // constructor(data: shared.types.GetInterface<HostDTO>) {
+  //   this.id = data.id;
+  //   this.forwardBooking = data.forwardBooking;
+  //   this.workHours = data.workHours;
+  //   this.workDays = data.workDays;
+  //   this.info = data.info;
+  // }
 }

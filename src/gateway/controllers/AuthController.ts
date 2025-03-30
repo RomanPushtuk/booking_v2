@@ -37,7 +37,9 @@ export class AuthController {
       new CreateUserInBookingServiceStep(),
       new CreateUserInInfoServiceStep(),
     );
+
     await createUserSaga.execute(userDTO);
+
     return new UserCreatedDTO({ id: "test_id" });
   }
 
