@@ -11,7 +11,8 @@
     "prettier": "prettier ./src --write",
     "fix": "eslint --fix",
     "test": "jest",
-    "debug": "nodemon --inspect ./src/index.ts"
+    "debug": "nodemon --inspect ./src/index.ts",
+    "swagger": "npm run dev -- run swagger"
   },
   "author": "Roman Pushtuk",
   "license": "ISC",
