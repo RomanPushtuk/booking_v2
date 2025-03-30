@@ -1,7 +1,4 @@
-import { StatementSync } from "node:sqlite";
-import { db } from "../db";
-
-export const getBookingById = (data: { id: string }): StatementSync => {
+export const getBookingById = (data: { id: string }) => {
   const { id } = data;
-  return db.prepare(`SELECT * FROM \`bookings\` WHERE \`id\` = '${id}';`);
+  return `SELECT * FROM \`bookings\` WHERE \`id\` = '${id}';`;
 };

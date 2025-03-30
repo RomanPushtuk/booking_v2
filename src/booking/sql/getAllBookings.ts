@@ -1,11 +1,9 @@
-import { StatementSync } from "node:sqlite";
-import { db } from "../db";
 import { shared } from "../imports";
 
 export const getAllBookings = (data: {
   sorting?: shared.application.BookingSorting;
   filters?: shared.application.BookingFilters;
-}): StatementSync => {
+}): string => {
   const { sorting, filters } = data;
 
   let orderBySql = "";
@@ -35,7 +33,5 @@ export const getAllBookings = (data: {
     });
   }
 
-  return db.prepare(
-    `select * from \`bookings\` ${filtersSql.join(" ")} ${orderBySql};`,
-  );
+  return `select * from \`bookings\` ${filtersSql.join(" ")} ${orderBySql};`;
 };

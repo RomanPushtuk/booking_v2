@@ -25,7 +25,6 @@ const app = express();
 const args = process.argv.slice(2);
 const enableSwagger = args.includes("swagger");
 
-
 if (enableSwagger) setupSwagger(app);
 
 const start = () => {

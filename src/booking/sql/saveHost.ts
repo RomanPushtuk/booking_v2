@@ -1,6 +1,3 @@
-import { StatementSync } from "node:sqlite";
-import { db } from "../db";
-
 interface HostDbModel {
   id: string;
   forwardBooking: string;
@@ -9,9 +6,9 @@ interface HostDbModel {
   deleted: boolean;
 }
 
-export const saveHost = (clientModel: HostDbModel): StatementSync => {
+export const saveHost = (clientModel: HostDbModel): string => {
   const { id, forwardBooking, workDays, workHours, deleted } = clientModel;
-  return db.prepare(`MERGE into \`hosts\` (
+  return `INSERT OR REPLACE INTO \`hosts\` (
     \`id\`,
     \`forwardBooking\`,   
     \`workDays\`, 
@@ -23,5 +20,5 @@ export const saveHost = (clientModel: HostDbModel): StatementSync => {
    '${workDays}', 
    '${workHours}',
    ${deleted}, 
-  );`);
+  );`;
 };

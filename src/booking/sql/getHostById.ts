@@ -1,7 +1,4 @@
-import { StatementSync } from "node:sqlite";
-import { db } from "../db";
-
-export const getHostById = (data: { id: string }): StatementSync => {
+export const getHostById = (data: { id: string }): string => {
   const { id } = data;
-  return db.prepare(`SELECT * FROM \`hosts\` WHERE \`id\` = '${id}';`);
+  return `SELECT * FROM \`hosts\` WHERE \`id\` = '${id}';`;
 };

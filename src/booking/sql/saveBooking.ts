@@ -1,38 +1,29 @@
-import { StatementSync } from "node:sqlite";
-import { db } from "../db";
-
-interface IBookingDatabaseModel {
+export const saveBooking = (bookingModel: {
   id: string;
   clientId: string;
   hostId: string;
-  date: string;
-  dateTimeFrom: string;
-  dateTimeTo: string;
+  fromDateTime: string;
+  toDateTime: string;
   deleted: boolean;
-}
-
-export const saveBooking = (
-  bookingModel: IBookingDatabaseModel,
-): StatementSync => {
-  const { id, clientId, hostId, date, dateTimeFrom, dateTimeTo, deleted } =
+}): string => {
+  const { id, clientId, hostId, fromDateTime, toDateTime, deleted } =
     bookingModel;
-  return db.prepare(`
-    MERGE into
+  return `
+    INSERT OR REPLACE INTO
       \`bookings\` (
       \`id\`,
       \`clientId\`,
       \`hostId\`,
-      \`dateTimeFrom\`,
-      \`dateTimeTo\`,
+      \`fromDateTime\`,
+      \`toDateTime\`,
       \`deleted\`,
     ) values (
      '${id}', 
      '${clientId}', 
      '${hostId}', 
-     '${date}', 
-     '${dateTimeFrom}', 
-     '${dateTimeTo}', 
-     ${deleted},
+     '${fromDateTime}', 
+     '${toDateTime}', 
+     ${Number(deleted)},
     );
-  `);
+  `;
 };

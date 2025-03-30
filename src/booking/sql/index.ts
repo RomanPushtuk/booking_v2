@@ -6,4 +6,3 @@ export { getHostById } from "./getHostById";
 export { saveBooking } from "./saveBooking";
 export { saveClient } from "./saveClient";
 export { saveHost } from "./saveHost";
-export { saveUser } from "./saveUser";
