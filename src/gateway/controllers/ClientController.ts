@@ -43,13 +43,14 @@ import {
   UpdateClientInBookingServiceStep,
   UpdateClientInInfoServiceStep,
 } from "../steps";
+import { ClientOnly } from "../auth";
 
 @Service()
 @JsonController("/clients")
 export class ClientController {
   constructor() {}
 
-  // private
+	@ClientOnly()
   @Get("/me")
   async getMe(): Promise<ClientDTO> {
     return new ClientDTO({
@@ -58,8 +59,8 @@ export class ClientController {
     });
   }
 
-  // private
-  @Delete("/me")
+	@ClientOnly()
+	@Delete("/me")
   async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
   : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
@@ -70,8 +71,8 @@ export class ClientController {
     await deleteUserSaga.execute("test_id");
     return new ClientDeletedDTO({ id: "test_id" });
   }
-
-  // private
+		
+	@ClientOnly()
   @Patch("/me")
   async updateClient(
     @Body() updateClientDTO: UpdateClientDTO,
@@ -88,7 +89,7 @@ export class ClientController {
     return new ClientUpdatedDTO({ id: "test_id" });
   }
 
-  // private
+	@ClientOnly()
   @Get("/me/bookings")
   async getBookings(
     @QueryParam("sortDirection") sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
@@ -107,7 +108,7 @@ export class ClientController {
     return [];
   }
 
-  // private
+	@ClientOnly()
   @Get("/me/bookings/:bookingId")
   async getBookingById(): Promise<BookingDTO> {
     return new BookingDTO({
@@ -123,7 +124,7 @@ export class ClientController {
     });
   }
 
-  // private
+	@ClientOnly()
   @Post("/me/bookings")
   public async createBooking(
     @Body() createBookingDTO: CreateBookingDTO,
@@ -151,7 +152,7 @@ export class ClientController {
     return new BookingCreatedDTO({ id: "test_id" });
   }
 
-  // private
+	@ClientOnly()
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
     @Param("bookingId") bookingId: string,
@@ -168,7 +169,7 @@ export class ClientController {
     return new BookingUpdatedDTO({ id: "test_id" });
   }
 
-  // private
+	@ClientOnly()
   @Delete("/me/bookings/:bookingId")
   async cancelBooking(
     @Param("bookingId") bookingId: string,

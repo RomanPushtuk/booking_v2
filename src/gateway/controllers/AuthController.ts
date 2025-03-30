@@ -13,13 +13,14 @@ import {
   CreateUserInBookingServiceStep,
   CreateUserInInfoServiceStep,
 } from "../steps";
+import { Public } from "../auth";
 
 @Service()
 @JsonController("/auth")
 export class AuthController {
   constructor() {}
 
-  // public
+	@Public()
   @Post("/register")
   async register(
     @Body() createUserDTO: CreateUserDTO,
@@ -41,7 +42,7 @@ export class AuthController {
     return new UserCreatedDTO({ id: "test_id" });
   }
 
-  // public
+  @Public()
   @Post("/login")
   async login(): Promise<UserLoggedInDTO> {
     return new UserLoggedInDTO({

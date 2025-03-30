@@ -17,6 +17,10 @@ import {
   TrackBeforeMiddleware,
   TrackAfterMiddleware,
 } from "./middlewares";
+import {
+	authorizationChecker,
+	currentUserChecker,
+} from "./auth";
 
 const app = express();
 
@@ -31,6 +35,8 @@ const start = () => {
       TrackAfterMiddleware,
       ErrorHandlerMiddleware,
     ],
+		authorizationChecker,
+		currentUserChecker,
   });
 
   return app.listen(3000, () => {
