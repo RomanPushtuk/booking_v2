@@ -1,0 +1,1058 @@
+openapi: 3.0.1
+info:
+  title: BookingYml
+  description: ''
+  version: 1.0.0
+tags:
+  - name: public
+  - name: auth
+  - name: clients
+  - name: hosts
+paths:
+  /hosts/{id}:
+    get:
+      summary: GetHostById
+      deprecated: false
+      description: Each user of the system can get information about the host
+      operationId: PUBLIC_GET_HOST_BY_ID
+      tags:
+        - public
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: &ref_0
+                $ref: '#/components/schemas/HostDTO'
+              example:
+                id: QfgtBGhO
+                forwardBooking: 3 weeks
+                workHours:
+                  - from: '09:00'
+                    to: '13:00'
+                  - from: '14:00'
+                    to: '18:00'
+                workDays:
+                  - MONDAY
+                  - TUESDAY
+                  - WEDNESDAY
+                  - THURSDAY
+                  - FRIDAY
+          headers: {}
+      security: []
+  /hosts/{id}/bookings:
+    get:
+      summary: GetHostBookings
+      deprecated: false
+      description: >-
+        Each user of the system can see the host records without specifying the
+        clients.
+      operationId: PUBLIC_GET_HOST_BOOKINGS
+      tags:
+        - public
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: sortDirection
+          in: query
+          description: ''
+          required: false
+          example: DESC
+          schema:
+            type: string
+            enum:
+              - DESC
+              - ASC
+            default: DESC
+        - name: sortProperty
+          in: query
+          description: ''
+          required: false
+          example: dateFrom
+          schema:
+            type: string
+            default: dateFrom
+            enum:
+              - dateFrom
+              - dateTo
+              - timeFrom
+              - timeTo
+        - name: dateFrom
+          in: query
+          description: YYYY-MM-DD
+          required: false
+          example: 22-01-2025
+          schema:
+            type: string
+        - name: dateTo
+          in: query
+          description: YYYY-MM-DD
+          required: false
+          example: 28-01-2025
+          schema:
+            type: string
+        - name: timeFrom
+          in: query
+          description: HH:mm
+          required: false
+          example: '08:00'
+          schema:
+            type: string
+            default: '00:00'
+        - name: timeto
+          in: query
+          description: HH:mm
+          required: false
+          example: '23:59'
+          schema:
+            type: string
+            default: '23:59'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingDTO7'
+              example:
+                - id: W5yzHBnj
+                  clientId: RHufHq84
+                  hostId: DHhd82df
+                  date: '2025-09-24'
+                  time:
+                    from: '09:00'
+                    to: '11:30'
+                - id: peYQTB5F
+                  hostId: DHhd82df
+                  date: '2025-09-29'
+                  time:
+                    from: '14:00'
+                    to: '15:00'
+          headers: {}
+      security: []
+  /auth/register:
+    post:
+      summary: Register
+      deprecated: false
+      description: Registering a new user in the system
+      operationId: AUTH_REGISTER
+      tags:
+        - auth
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreatedDTO'
+          headers: {}
+      security: []
+  /auth/login:
+    post:
+      summary: Login
+      deprecated: false
+      description: ''
+      operationId: AUTH_LOGIN
+      tags:
+        - auth
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthUserDTO'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuthorizedDTO'
+          headers: {}
+      security: []
+  /clients/me:
+    get:
+      summary: GetMe
+      deprecated: false
+      description: Get a client
+      operationId: CLIENTS_GET_CLIENT
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDTO'
+          headers: {}
+      security: []
+    delete:
+      summary: DeleteMe
+      deprecated: false
+      description: Mark a client as deleted from the system
+      operationId: CLIENTS_DETELE_CLIENT
+      tags:
+        - clients
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDeletedDTO'
+          headers: {}
+      security: []
+  /clients/me/bookings:
+    get:
+      summary: GetMyBookings
+      deprecated: false
+      description: Get user bookings
+      operationId: CLIENTS_GET_BOOKINGS
+      tags: []
+      parameters:
+        - name: sortDirection
+          in: query
+          description: ''
+          required: false
+          example: DESC
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+            default: DESC
+        - name: sortProperty
+          in: query
+          description: ''
+          required: false
+          example: dateFrom
+          schema:
+            type: string
+            enum:
+              - dateFrom
+              - dateTo
+              - timeFrom
+              - timeTo
+            default: dateFrom
+        - name: dateFrom
+          in: query
+          description: ''
+          required: false
+          example: YYYY-MM-DD
+          schema:
+            type: string
+        - name: dateTo
+          in: query
+          description: ''
+          required: false
+          example: YYYY-MM-DD
+          schema:
+            type: string
+        - name: timeFrom
+          in: query
+          description: ''
+          required: false
+          example: HH:mm
+          schema:
+            type: string
+        - name: timeTo
+          in: query
+          description: ''
+          required: false
+          example: HH:mm
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingDTO'
+          headers: {}
+      security: []
+  /clients/me/booking:
+    post:
+      summary: CreateBooking
+      deprecated: false
+      description: Send a request to create a new booking
+      operationId: CLIENTS_CREATE_BOOKING
+      tags:
+        - clients
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingDTO'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingCreatedDTO'
+          headers: {}
+      security: []
+  /client/me/bookings/{id}:
+    delete:
+      summary: DeleteBooking
+      deprecated: false
+      description: Delete (cancel) booking
+      operationId: CLIENTS_DELETE_BOOKING
+      tags:
+        - clients
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDeletedDTO'
+          headers: {}
+      security: []
+  /clients/my/bookings/{id}:
+    patch:
+      summary: UpdateBooking
+      deprecated: false
+      description: Update booking
+      operationId: CLIENTS_UPDATE_BOOKING
+      tags:
+        - clients
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookingDTO'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingUpdatedDTO'
+          headers: {}
+      security: []
+  /hosts/me:
+    get:
+      summary: GetMe
+      deprecated: false
+      description: Get information about the host
+      operationId: HOSTS_GET_ME
+      tags:
+        - hosts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: *ref_0
+              example:
+                id: qMzpUi3C
+                forwardBooking: 3 weeks
+                workHours:
+                  - from: '08:00'
+                    to: '20:00'
+                workDays:
+                  - SUNDAY
+                  - THURSDAY
+          headers: {}
+      security: []
+    delete:
+      summary: DeleteMe
+      deprecated: false
+      description: Mark host as deleted
+      operationId: HOSTS_DELETE_ME
+      tags:
+        - hosts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostDeletedDTO'
+          headers: {}
+      security: []
+  /host/me:
+    patch:
+      summary: UpdateMe
+      deprecated: false
+      description: Update host params
+      operationId: HOSTS_UPDATE_ME
+      tags:
+        - hosts
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHostDTO'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostUpdatedDTO'
+          headers: {}
+      security: []
+  /hosts/me/booking:
+    post:
+      summary: CreateBooking
+      deprecated: false
+      description: Send a request to create a new booking
+      operationId: HOSTS_CREATE_BOOKING
+      tags:
+        - hosts
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingDTO3'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingCreatedDTO4'
+          headers: {}
+      security: []
+  /hosts/me/bookings:
+    get:
+      summary: GetMyBookings
+      deprecated: false
+      description: ''
+      operationId: HOSTS_GET_MY_BOOKINGS
+      tags:
+        - hosts
+      parameters:
+        - name: clientId
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: sortDirection
+          in: query
+          description: ''
+          required: false
+          example: DESC
+          schema:
+            type: string
+            enum:
+              - DESC
+              - ASC
+            default: DESC
+        - name: sortProperty
+          in: query
+          description: ''
+          required: false
+          example: dateFrom
+          schema:
+            type: string
+            default: dateFrom
+            enum:
+              - dateFrom
+              - dateTo
+              - timeFrom
+              - timeTo
+        - name: dateFrom
+          in: query
+          description: YYYY-MM-DD
+          required: false
+          example: 22-01-2025
+          schema:
+            type: string
+        - name: dateTo
+          in: query
+          description: YYYY-MM-DD
+          required: false
+          example: 28-01-2025
+          schema:
+            type: string
+        - name: timeFrom
+          in: query
+          description: HH:mm
+          required: false
+          example: '08:00'
+          schema:
+            type: string
+            default: '00:00'
+        - name: timeto
+          in: query
+          description: HH:mm
+          required: false
+          example: '23:59'
+          schema:
+            type: string
+            default: '23:59'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingDTO1'
+          headers: {}
+      security: []
+  /hosts/me/bookings/{id}:
+    delete:
+      summary: DeleteBooking
+      deprecated: false
+      description: Delete(cancel) booking
+      operationId: HOSTS_DELETE_BOOKIN
+      tags:
+        - hosts
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDeletedDTO2'
+          headers: {}
+      security: []
+  /hosts/my/bookings/{id}:
+    patch:
+      summary: UpdateBooking
+      deprecated: false
+      description: Update booking
+      tags:
+        - hosts
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookingDTO5'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingUpdatedDTO6'
+          headers: {}
+      security: []
+  /hosts/me/settings:
+    get:
+      summary: GetMySettings
+      deprecated: false
+      description: ''
+      operationId: HOSTS_GET_HOST_SETTINGS
+      tags:
+        - hosts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostSettingsDTO'
+          headers: {}
+      security: []
+    patch:
+      summary: UpdateSettings
+      deprecated: false
+      description: ''
+      operationId: HOSTS_UPDATE_SETTIGNS
+      tags:
+        - hosts
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHostSettingsDTO'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status
+          headers: {}
+      security: []
+components:
+  schemas:
+    AuthUserDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+      title: Auth_AuthUserDTO
+    CreateUserDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - CLIENT
+            - HOST
+      required:
+        - email
+        - password
+        - role
+      title: Auth_CreateUserDTO
+    UserCreatedDTO:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+      title: Auth_UserCreatedDTO
+    UserAuthorizedDTO:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+      title: Auth_UserAuthorizedDTO
+    ClientDTO:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+      title: Clients_ClientDTO
+    BookingDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        clientId:
+          type: string
+        hostId:
+          type: string
+        date:
+          type: string
+        time:
+          type: object
+          properties:
+            from:
+              type: string
+            to:
+              type: string
+          required:
+            - from
+            - to
+      required:
+        - id
+        - clientId
+        - hostId
+        - date
+        - time
+      title: Clients_BookingDTO
+    CreateBookingDTO:
+      type: object
+      properties:
+        hostId:
+          type: string
+        date:
+          type: string
+        timeFrom:
+          type: string
+        timeTo:
+          type: string
+          description: >-
+            It can be optional, then the standard recording duration will be 30
+            min.
+      required:
+        - hostId
+        - date
+        - timeFrom
+      title: Clients_CreateBookingDTO
+    BookingCreatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+      title: Clients_BookingCreatedDTO
+    ClientDeletedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+      title: Clients_ClientDeletedDTO
+    BookingDeletedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      required:
+        - id
+      title: Clients_BookingDeletedDTO
+    UpdateBookingDTO:
+      type: object
+      properties:
+        hostId:
+          type: string
+        date:
+          type: string
+        timeFrom:
+          type: string
+        timeTo:
+          type: string
+          description: >-
+            It can be optional, then the standard recording duration will be 30
+            min.
+      title: Clients_UpdateBookingDTO
+      required:
+        - hostId
+    BookingUpdatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Clients_BookingUpdatedDTO
+      required:
+        - id
+    HostDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        forwardBooking:
+          type: string
+          description: 'How far forward recording is allowed. Example: 1 week, 3 days.'
+        workHours:
+          type: array
+          items:
+            type: object
+            properties:
+              from:
+                type: string
+                description: 'Example: 09:00'
+              to:
+                type: string
+                description: 'Example: 18:00'
+            required:
+              - from
+              - to
+        workDays:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+      required:
+        - id
+        - forwardBooking
+        - workHours
+        - workDays
+      title: Hosts_HostDTO
+    BookingDTO1:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        clientId:
+          type: string
+        hostId:
+          type: string
+        date:
+          type: string
+          description: YYYY-MM-DD
+        time:
+          type: object
+          properties:
+            from:
+              type: string
+              description: HH:mm
+            to:
+              type: string
+              description: HH:mm
+          required:
+            - from
+            - to
+      required:
+        - id
+        - clientId
+        - hostId
+        - date
+        - time
+      title: Hosts_BookingDTO
+    HostDeletedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      required:
+        - id
+      title: Hosts_HostDeletedDTO
+    UpdateHostDTO:
+      type: object
+      properties:
+        workHours:
+          type: array
+          items:
+            type: object
+            properties:
+              from:
+                type: string
+              to:
+                type: string
+            required:
+              - from
+              - to
+        workDays:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+      title: Hosts_UpdateHostDTO
+    HostUpdatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      required:
+        - id
+      title: Hosts_HostUpdatedDTO
+    BookingDeletedDTO2:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      required:
+        - id
+      title: Hosts_BookingDeletedDTO
+    CreateBookingDTO3:
+      type: object
+      properties:
+        clientId:
+          type: string
+        date:
+          type: string
+        timeFrom:
+          type: string
+        timeTo:
+          type: string
+          description: >-
+            It can be optional, then the standard recording duration will be 30
+            min.
+      required:
+        - date
+        - timeFrom
+      title: Hosts_CreateBookingDTO
+    BookingCreatedDTO4:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      required:
+        - id
+      title: Hosts_BookingCreatedDTO
+    UpdateBookingDTO5:
+      type: object
+      properties:
+        clientId:
+          type: string
+        date:
+          type: string
+        timeFrom:
+          type: string
+        timeTo:
+          type: string
+          description: >-
+            It can be optional, then the standard recording duration will be 30
+            min.
+      title: Hosts_UpdateBookingDTO
+      required:
+        - clientId
+    BookingUpdatedDTO6:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Hosts_BookingUpdatedDTO
+      required:
+        - id
+    BookingDTO7:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        clientId:
+          type: string
+          description: >-
+            The ID will be visible only to the client who created the booking,
+            the rest will receive an empty value.
+        hostId:
+          type: string
+        date:
+          type: string
+          description: YYYY-MM-DD
+        time:
+          type: object
+          properties:
+            from:
+              type: string
+              description: HH:mm
+            to:
+              type: string
+              description: HH:mm
+          required:
+            - from
+            - to
+      required:
+        - id
+        - hostId
+        - date
+        - time
+      title: Public_BookingDTO
+    HostSettingsDTO:
+      type: object
+      properties:
+        allowOverlapingBookings:
+          type: boolean
+          default: false
+        allowPastTimeBookings:
+          type: boolean
+          default: false
+        allowBookingСancelByClient:
+          type: boolean
+          default: true
+        allowBookingСancelByHost:
+          type: boolean
+          default: true
+        allowBookingUpdateByClient:
+          type: boolean
+          default: false
+        allowBookingUpdateByHost:
+          type: boolean
+          default: false
+        allowBookingApprove:
+          type: boolean
+          default: false
+      required:
+        - allowOverlapingBookings
+        - allowPastTimeBookings
+        - allowBookingСancelByClient
+        - allowBookingСancelByHost
+        - allowBookingUpdateByClient
+        - allowBookingUpdateByHost
+        - allowBookingApprove
+      title: Hosts_HostSettingsDTO
+    UpdateHostSettingsDTO:
+      type: object
+      properties:
+        allowOverlapingBookings:
+          type: boolean
+        allowPastTimeBookings:
+          type: boolean
+        allowBookingСancelByClient:
+          type: boolean
+        allowBookingСancelByHost:
+          type: boolean
+        allowBookingUpdateByClient:
+          type: boolean
+        allowBookingUpdateByHost:
+          type: boolean
+        allowBookingApprove:
+          type: boolean
+      title: Hosts_UpdateHostSettingsDTO
+  securitySchemes: {}
+servers: []
