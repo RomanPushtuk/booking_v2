@@ -50,11 +50,13 @@ import {
 export class HostController {
   constructor() {}
 
+  // pubclic
   @Get()
   async getHosts(): Promise<HostDTO[]> {
     return [];
   }
 
+  // private
   @Get("/me")
   async getMe(): Promise<HostDTO> {
     return new HostDTO({
@@ -69,6 +71,7 @@ export class HostController {
     });
   }
 
+  // private
   @Patch("/me")
   async updateHost(
     @Body() updateHostDTO: UpdateHostDTO,
@@ -86,6 +89,7 @@ export class HostController {
     return new HostUpdatedDTO({ id: "test_id" });
   }
 
+  // private
   @Delete("/me")
   async deleteHost() // @Body() deleteUserDTO: DeleteUserDTO,
   : Promise<HostDeletedDTO> {
@@ -98,6 +102,7 @@ export class HostController {
     return new HostDeletedDTO({ id: "test_id" });
   }
 
+  // private
   @Get("/me/bookings")
   public async getMyBookings(
     @QueryParam("sortDirection") sortDirection:  shared.enums.SortDirection = shared.enums.SortDirection.DESC,
@@ -116,6 +121,7 @@ export class HostController {
     return [];
   }
 
+  // private
   @Post("/me/bookings")
   public async createBooking(
     @Body() createBookingDTO: CreateBookingDTO,
@@ -143,6 +149,7 @@ export class HostController {
     return new BookingCreatedDTO({ id: "test_id" });
   }
 
+  // private
   @Get("/me/bookings/:bookingId")
   async getBookingById(): Promise<BookingDTO> {
     return new BookingDTO({
@@ -158,6 +165,7 @@ export class HostController {
     });
   }
 
+  // private
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
     @Param("bookingId") bookingId: string,
@@ -174,6 +182,7 @@ export class HostController {
     return new BookingUpdatedDTO({ id: "test_id" });
   }
 
+  // private
   @Delete("/me/bookings/:bookingId")
   async cancelBooking(
     @Param("bookingId") bookingId: string,
@@ -204,6 +213,7 @@ export class HostController {
     });
   }
 
+  // public
   @Get("/:id/bookings")
   public async getHostBookings(
     @QueryParam("sortDirection") sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,

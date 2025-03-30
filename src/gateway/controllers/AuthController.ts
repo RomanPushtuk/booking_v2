@@ -19,6 +19,7 @@ import {
 export class AuthController {
   constructor() {}
 
+  // public
   @Post("/register")
   async register(
     @Body() createUserDTO: CreateUserDTO,
@@ -40,6 +41,7 @@ export class AuthController {
     return new UserCreatedDTO({ id: "test_id" });
   }
 
+  // public
   @Post("/login")
   async login(): Promise<UserLoggedInDTO> {
     return new UserLoggedInDTO({
