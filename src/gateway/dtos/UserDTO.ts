@@ -24,4 +24,5 @@ export class UserDTO {
     if (errors.length)
       throw new shared.errors.DTOValidationError(UserDTO.name, errors);
   }
+
 }

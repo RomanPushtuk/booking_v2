@@ -1,5 +1,12 @@
-import { IsString, ValidateNested, validateSync } from "class-validator";
+import {
+  IsOptional,
+  IsString,
+  ValidateNested,
+  validateSync,
+} from "class-validator";
 import { shared } from "../imports";
+import { Type } from "class-transformer";
+import { _WorkHour } from "./HostDTO";
 
 class _Info {
   @IsString()
@@ -11,10 +18,13 @@ class _Info {
 
 export class UpdateClientDTO {
   @ValidateNested()
+  @IsOptional()
+  @Type(() => _WorkHour)
   info?: _Info;
 
   constructor(data: shared.types.GetInterface<UpdateClientDTO>) {
-    this.info = data.info;
+    console.log("data:", data);
+    this.info = data?.info;
 
     const errors = validateSync(this);
     if (errors.length)

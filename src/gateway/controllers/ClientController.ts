@@ -76,6 +76,16 @@ export class ClientController {
   async updateClient(
     @Body() updateClientDTO: UpdateClientDTO,
   ): Promise<ClientUpdatedDTO> {
+    // Sanitize the incoming request body before passing it to the DTO
+    const sanitizedData = {
+      info: {
+        firstName: updateClientDTO.info?.firstName,
+        lastName: updateClientDTO.info?.lastName,
+      }
+    };
+  
+    const cleanDTO = new UpdateClientDTO(sanitizedData);
+  
     const userId = "test_id";
     const updateClientSaga = new UpdateClientSaga(
       new UpdateClientInBookingServiceStep(
@@ -84,9 +94,11 @@ export class ClientController {
       ),
       new UpdateClientInInfoServiceStep(),
     );
-    await updateClientSaga.execute(updateClientDTO, userId);
+    
+    await updateClientSaga.execute(cleanDTO, userId);
     return new ClientUpdatedDTO({ id: "test_id" });
   }
+  
 
   // private
   @Get("/me/bookings")

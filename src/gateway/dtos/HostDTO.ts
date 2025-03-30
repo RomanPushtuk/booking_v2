@@ -6,7 +6,7 @@ import {
 } from "class-validator";
 import { shared } from "../imports";
 
-class _WorkHour {
+export class _WorkHour {
   @IsString()
   from: string;
 

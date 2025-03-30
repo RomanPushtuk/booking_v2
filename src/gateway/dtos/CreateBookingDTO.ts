@@ -32,7 +32,13 @@ export class CreateBookingDTO {
   info: _Info;
 
   constructor(data: shared.types.GetInterface<CreateBookingDTO>) {
-    this.clientId = data.clientId;
+    console.log("Received data:", data);
+
+    if (!data || !data.clientId || !data.hostId || !data.fromDateTime || !data.toDateTime || !data.info) {
+      throw new Error("Missing required properties in data object");
+    }
+
+    this.clientId = data.clientId || "some-client-id";
     this.hostId = data.hostId;
     this.fromDateTime = data.fromDateTime;
     this.toDateTime = data.toDateTime;
