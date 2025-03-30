@@ -12,7 +12,8 @@
     "fix": "eslint --fix",
     "test": "jest",
     "debug": "nodemon --inspect ./src/index.ts",
-    "swagger": "npm run dev -- run swagger"
+    "swagger": "npm run dev -- run swagger",
+    "migration": "node ./src/migrations/run_migrations.js"
   },
   "author": "Roman Pushtuk",
   "license": "ISC",
