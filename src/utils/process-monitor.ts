@@ -12,6 +12,60 @@ interface PidUsageStats {
 	timestamp: number; // Measurement timestamp in ms
 }
 
+export function checkLogFileSize(logFile: string): {
+	exceededLimit: boolean,
+	fileSize: number,
+	maxSize: number
+} {
+	try {
+		const maxLogSizeMB = process.env["MAX_LOG_SIZE_MB"]
+			? parseInt(process.env["MAX_LOG_SIZE_MB"], 10)
+			: 10;
+
+		// Convert MB into bytes
+		const maxLogSizeBytes = maxLogSizeMB * 1024 * 1024;
+
+		// Checking, if file exists
+		if (!fs.existsSync(logFile)) {
+			return {
+				exceededLimit: false,
+				fileSize: 0,
+				maxSize: maxLogSizeBytes
+			};
+		}
+
+		// Check size of file
+		const stats = fs.statSync(logFile);
+		const fileSizeBytes = stats.size;
+
+		const exceededLimit = fileSizeBytes > maxLogSizeBytes;
+
+		if (exceededLimit) {
+			// Clean the whole file
+			// fs.writeFileSync(logFile, '');
+			// console.log(`Log file ${logFile} exceeded size limit (${maxLogSizeMB} MB) and was cleared.`);
+
+			// Create new one and previons one rename with timestamp
+			const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+			fs.renameSync(logFile, `${logFile}.${timestamp}.backup`);
+			fs.writeFileSync(logFile, '');
+		}
+
+		return {
+			exceededLimit,
+			fileSize: fileSizeBytes,
+			maxSize: maxLogSizeBytes
+		};
+	} catch (error) {
+		console.error(`Error checking log file size for ${logFile}:`, error);
+		return {
+			exceededLimit: false,
+			fileSize: 0,
+			maxSize: 0
+		};
+	}
+}
+
 export function startProcessMonitoring(processId: number, logFile: string = 'process_metrics.log') {
 	// Get network traffic (Only for linux)
 	const getNetworkTraffic = (pid: number) => {
@@ -37,6 +91,8 @@ export function startProcessMonitoring(processId: number, logFile: string = 'pro
 
 	// Monitoring itself
 	const intervalId = setInterval(() => {
+		checkLogFileSize(logFile);
+
 		pidusage(processId, (err: Error | null, stats: PidUsageStats) => {
 			if (err) {
 				console.error('Monitoring error:', err);
