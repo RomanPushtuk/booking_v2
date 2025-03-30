@@ -9,6 +9,6 @@ export default [
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  { ignores: ['node_modules', 'dist', '.prettierrc.js', 'jest.config.js'] },
+  { ignores: ['node_modules', 'dist', '.prettierrc.js', 'jest.config.js', 'src/migrations'] },
   ESLintConfigPrettier,
 ];

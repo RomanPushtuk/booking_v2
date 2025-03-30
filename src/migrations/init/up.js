@@ -1,4 +1,4 @@
-export const createUserTable = `
+const createAuthModuleUserTable = `
     CREATE TABLE users (
         id TEXT PRIMARY KEY,
         login TEXT NOT NULL UNIQUE,
@@ -7,3 +7,5 @@ export const createUserTable = `
         deleted INTEGER NOT NULL DEFAULT 0
     );
 `;
+
+module.exports = { createAuthModuleUserTable };

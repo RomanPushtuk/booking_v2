@@ -13,7 +13,7 @@ export class User {
     this.login = data.login;
     this.password = data.password;
     this.role = data.role;
-    this.deleted = data.deleted;
+    this.deleted = Boolean(data.deleted);
 
     const errors = validateSync(this);
     if (errors.length)
