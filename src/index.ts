@@ -5,8 +5,13 @@ import { Socket } from "net";
 import * as gateway from "./gateway/exports";
 import * as shared from "./shared/exports";
 
+import { startProcessMonitoring } from './utils/process-monitor';
+
 let connections: Socket[] = [];
 const server = gateway.start();
+
+const processId = process.pid; // PID of app
+startProcessMonitoring(processId, 'process_metrics.log');
 
 server.on("connection", (connection) => {
   connections.push(connection);
