@@ -25,9 +25,9 @@ export class AuthRepository {
     return new User(data);
   }
 
-  async save(userDto: User): Promise<{ id: string }> {
-    const sql = saveUser(userDto);
+  async save(user: User): Promise<{ id: string }> {
+    const sql = saveUser(user);
     db.exec(sql);
-    return { id: userDto.id };
+    return { id: user.id };
   }
 }

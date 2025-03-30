@@ -1,4 +1,3 @@
-export const getHostById = (data: { id: string }): string => {
-  const { id } = data;
+export const getHostById = (id: string): string => {
   return `SELECT * FROM \`hosts\` WHERE \`id\` = '${id}';`;
 };

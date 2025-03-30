@@ -2,7 +2,7 @@ import { shared } from "../imports";
 
 export class Client {
   id: string;
-  deleted: boolean
+  deleted: boolean;
 
   constructor(data: shared.types.GetInterface<Client>) {
     this.id = data.id;

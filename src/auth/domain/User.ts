@@ -1,4 +1,3 @@
-import { validateSync } from "class-validator";
 import { shared } from "../imports";
 
 export class User {
@@ -14,9 +13,5 @@ export class User {
     this.password = data.password;
     this.role = data.role;
     this.deleted = Boolean(data.deleted);
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(User.name, errors);
   }
 }

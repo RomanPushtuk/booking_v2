@@ -14,6 +14,6 @@ export class Booking {
     this.hostId = data.hostId;
     this.fromDateTime = data.fromDateTime;
     this.toDateTime = data.toDateTime;
-    this.deleted = data.deleted;
+    this.deleted = Boolean(data.deleted);
   }
 }

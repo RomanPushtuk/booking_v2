@@ -1,4 +1,3 @@
-export const getBookingById = (data: { id: string }) => {
-  const { id } = data;
-  return `SELECT * FROM \`bookings\` WHERE \`id\` = '${id}';`;
+export const getBookingById = (bookingId: string) => {
+  return `SELECT * FROM \`bookings\` WHERE \`id\` = '${bookingId}';`;
 };
