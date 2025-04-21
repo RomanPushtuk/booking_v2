@@ -18,14 +18,14 @@ export class HostService {
 
   async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
-    const booking = new Booking({ ...bookingDTO, deleted: false })
+    const booking = new Booking({ ...bookingDTO, deleted: false });
     this._uow.bookingRepository.save(booking);
   }
 
   async deleteBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " deleteBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error('bookign not find');
+    if (!booking) throw new Error("bookign not find");
     booking.deleted = true;
     this._uow.bookingRepository.save(booking);
   }
@@ -33,7 +33,7 @@ export class HostService {
   async restoreBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error('bookign not find');
+    if (!booking) throw new Error("bookign not find");
     booking.deleted = false;
     this._uow.bookingRepository.save(booking);
   }
@@ -67,7 +67,7 @@ export class HostService {
     );
     const host = this._uow.hostRepository.getById(hostId);
     if (!host) throw new Error("host not found");
-     // TODO Make update 
+    // TODO Make update
     this._uow.hostRepository.save(host);
   }
 
@@ -75,7 +75,7 @@ export class HostService {
     logger.info({ hostId }, this.constructor.name + " revertHost");
     const host = this._uow.hostRepository.getById(hostId);
     if (!host) throw new Error("host not found");
-     // TODO Make update revent
+    // TODO Make update revent
     this._uow.hostRepository.save(host);
   }
 }

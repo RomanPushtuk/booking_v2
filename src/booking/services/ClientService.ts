@@ -19,7 +19,7 @@ export class ClientService {
 
   async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
-    const booking = new Booking({ ...bookingDTO, deleted: false })
+    const booking = new Booking({ ...bookingDTO, deleted: false });
     this._uow.bookingRepository.save(booking);
   }
 
@@ -27,7 +27,7 @@ export class ClientService {
     logger.info({ bookingId }, this.constructor.name + " deleteBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("booking not found");
-    booking.deleted = true
+    booking.deleted = true;
     this._uow.bookingRepository.save(booking);
   }
 
@@ -35,7 +35,7 @@ export class ClientService {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("booking not found");
-    booking.deleted =  false;
+    booking.deleted = false;
     this._uow.bookingRepository.save(booking);
   }
 

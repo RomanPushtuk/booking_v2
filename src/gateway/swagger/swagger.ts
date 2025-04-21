@@ -29,6 +29,6 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
   return Promise.resolve();
 };
 
-export const setupSwagger = (app: Express) => {
+export const useSwagger = (app: Express) => {
   app.use("/api-docs", auth, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 };
