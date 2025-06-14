@@ -6,9 +6,8 @@ export class Saga<T, R> {
   protected steps: Step<T, R>[] = [];
   protected successfulSteps: Step<T, R>[] = [];
 
-  constructor() {}
-
   async execute(payload: T, ...args: unknown[]) {
+    const result = []
     logger.info(`Start execute saga - ${this.constructor.name}`);
     for (const step of this.steps) {
       try {
