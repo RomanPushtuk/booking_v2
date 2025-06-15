@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   QueryParam,
+  Authorized,
 } from "routing-controllers";
 import { shared, booking } from "../imports";
 import {
@@ -47,9 +48,10 @@ import {
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor() {}
+  constructor() { }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Get("/me")
   async getMe(): Promise<ClientDTO> {
     return new ClientDTO({
@@ -61,7 +63,7 @@ export class ClientController {
   // private
   @Delete("/me")
   async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
-  : Promise<ClientDeletedDTO> {
+    : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),

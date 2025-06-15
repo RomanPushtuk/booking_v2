@@ -5,6 +5,7 @@ import { useSwagger } from "./swagger";
 import { useLogPresenter } from "./logPresenter";
 import { diContainer } from "./di";
 import { logger } from "./logger";
+import { authorizationChecker, currentUserChecker } from "./utils";
 
 export * as dtos from "./dtos";
 
@@ -23,12 +24,13 @@ import {
 
 const app = express();
 
-
 useSwagger(app);
-useLogPresenter(app)
+useLogPresenter(app);
 
 const start = () => {
   useExpressServer(app, {
+    authorizationChecker,
+    currentUserChecker,
     classTransformer: true,
     validation: true,
     defaultErrorHandler: false,

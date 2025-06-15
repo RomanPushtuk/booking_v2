@@ -1,4 +1,5 @@
 import { Inject, Service } from "typedi";
+import jwt from "jsonwebtoken";
 import { gateway } from "../imports";
 import { logger } from "../logger";
 import { AuthRepository } from "../repositories";
@@ -10,7 +11,34 @@ export class AuthService {
     this.createUser = this.createUser.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
     this.restoreUser = this.restoreUser.bind(this);
+    this.login = this.login.bind(this);
   }
+
+  async getUserById(userId: string): Promise<User> {
+    logger.info({ userId }, this.constructor.name + " deleteUser");
+    const user = await this._authRepository.findById(userId);
+    if (!user) throw new Error("User not found");
+    return user;
+  }
+
+  async login(
+    loginUserDTO: gateway.dtos.LogInUserDTO,
+  ): Promise<gateway.dtos.UserLoggedInDTO> {
+    logger.info({ loginUserDTO }, this.constructor.name + " login");
+
+    const user = await this._authRepository.findByLoginAndPassword(
+      loginUserDTO.login,
+      loginUserDTO.password,
+    );
+    if (!user) throw new Error("User not found");
+    const payload = { id: user.id, login: user.login, role: user.role };
+    const token = jwt.sign(payload, "secret", { expiresIn: "1h" });
+
+    return new gateway.dtos.UserLoggedInDTO({
+      accessToken: token,
+    });
+  }
+
   async createUser(userDTO: gateway.dtos.UserDTO): Promise<{ id: string }> {
     logger.info({ userDTO }, this.constructor.name + " createUser");
     const user = new User({ ...userDTO, deleted: false });

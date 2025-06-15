@@ -1,4 +1,4 @@
-import { IsJWT, MaxLength, validateSync } from "class-validator";
+import { IsJWT, validateSync } from "class-validator";
 import { shared } from "../imports";
 
 export class UserLoggedInDTO {

@@ -9,6 +9,7 @@ export { UpdateClientDTO } from "./UpdateClientDTO";
 export { UpdateHostDTO } from "./UpdateHostDTO";
 export { UserCreatedDTO } from "./UserCreatedDTO";
 export { UserLoggedInDTO } from "./UserLoggedInDTO";
+export { LogInUserDTO } from "./LogInUserDTO";
 export { ClientDTO } from "./ClientDTO";
 export { ClientDeletedDTO } from "./ClientDeletedDTO";
 export { ClientUpdatedDTO } from "./ClientUpdatedDTO";

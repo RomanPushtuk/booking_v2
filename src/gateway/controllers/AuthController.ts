@@ -1,12 +1,8 @@
 import { Service } from "typedi";
 import { Body, JsonController, Post } from "routing-controllers";
-import { shared } from "../imports";
+import { shared, auth } from "../imports";
 import { CreateUserSaga } from "../sagas";
-import {
-  CreateUserDTO,
-  UserDTO,
-  UserLoggedInDTO,
-} from "../dtos";
+import { CreateUserDTO, LogInUserDTO, UserDTO, UserLoggedInDTO } from "../dtos";
 import {
   CreateUserInAuthServiceStep,
   CreateUserInBookingServiceStep,
@@ -16,7 +12,7 @@ import {
 @Service()
 @JsonController("/auth")
 export class AuthController {
-  constructor() { }
+  constructor() {}
 
   // public
   @Post("/register")
@@ -26,9 +22,6 @@ export class AuthController {
     const userDTO = new UserDTO({
       id: shared.utils.generateId(),
       ...createUserDTO,
-      login: "test_login",
-      password: "test_password_123456!@",
-      role: "HOST",
     });
 
     const createUserSaga = new CreateUserSaga(
@@ -36,20 +29,20 @@ export class AuthController {
       new CreateUserInBookingServiceStep(),
       new CreateUserInInfoServiceStep(),
     );
+
     await createUserSaga.execute(userDTO);
 
-    return new UserLoggedInDTO({
-      accessToken:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
-    });
+    const loginUserDTO: LogInUserDTO = {
+      login: createUserDTO.login,
+      password: createUserDTO.password,
+    };
+
+    return this.login(loginUserDTO);
   }
 
   // public
   @Post("/login")
-  async login(): Promise<UserLoggedInDTO> {
-    return new UserLoggedInDTO({
-      accessToken:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
-    });
+  async login(@Body() loginUserDTO: LogInUserDTO): Promise<UserLoggedInDTO> {
+    return auth.services.authService.login(loginUserDTO);
   }
 }
