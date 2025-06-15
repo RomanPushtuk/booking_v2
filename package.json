@@ -39,10 +39,10 @@
     "ts-jest": "29.2.6",
     "ts-node": "10.9.2",
     "typescript": "5.6.3",
-    "typescript-eslint": "8.26.1"
+    "typescript-eslint": "8.26.1",
+    "axios": "1.10.0"
   },
   "dependencies": {
-    "axios": "1.10.0",
     "basic-auth": "2.0.1",
     "body-parser": "1.20.3",
     "class-transformer": "0.5.1",
