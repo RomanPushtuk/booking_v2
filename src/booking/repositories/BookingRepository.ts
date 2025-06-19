@@ -1,12 +1,16 @@
+import { shared } from "../imports";
 import { Booking } from "../domain";
 import { logger } from "../logger";
 import { db } from "../db";
 import { saveBooking, getBookingById, getAllBookings } from "../sql";
+import { BookingMapper } from "../mappers";
 
 export class BookingRepository {
   save(booking: Booking) {
     logger.info(this.constructor.name + " save");
-    const sql = saveBooking(booking);
+
+    const bookingDbModel = BookingMapper.toDbModel(booking);
+    const sql = saveBooking(bookingDbModel);
     db.exec(sql);
     return { id: booking.id };
   }
@@ -14,19 +18,40 @@ export class BookingRepository {
   getById(bookingId: string): Booking | null {
     logger.info(this.constructor.name + " getById");
     const sql = getBookingById(bookingId);
-    const data = db.prepare(sql).get() as Booking | undefined;
+    const data = db.prepare(sql).get() as
+      | {
+          id: string;
+          clientId: string;
+          hostId: string;
+          fromDateTime: string;
+          toDateTime: string;
+          deleted: boolean;
+        }
+      | undefined;
     if (!data) return null;
-    return new Booking(data);
+    return BookingMapper.toDomain(data);
   }
 
   saveAll(bookings: Booking[]) {
     return bookings.map(this.save);
   }
 
-  getAll(): Booking[] | null {
-    const sql = getAllBookings({});
-    const data = db.prepare(sql).all() as Booking[] | undefined;
+  getAll(filters?: {
+    sorting?: shared.application.BookingSorting;
+    filters?: shared.application.BookingFilters;
+  }): Booking[] | null {
+    const sql = getAllBookings(filters);
+    const data = db.prepare(sql).all() as
+      | {
+          id: string;
+          clientId: string;
+          hostId: string;
+          fromDateTime: string;
+          toDateTime: string;
+          deleted: boolean;
+        }[]
+      | undefined;
     if (!data) return null;
-    return data.map((booking) => new Booking(booking));
+    return data.map(BookingMapper.toDomain);
   }
 }

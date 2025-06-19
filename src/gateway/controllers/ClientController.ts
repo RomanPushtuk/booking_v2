@@ -48,7 +48,7 @@ import {
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor() { }
+  constructor() {}
 
   // private
   @Authorized([shared.enums.Roles.CLIENT])
@@ -63,7 +63,7 @@ export class ClientController {
   // private
   @Delete("/me")
   async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
-    : Promise<ClientDeletedDTO> {
+  : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),

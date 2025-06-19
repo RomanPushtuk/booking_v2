@@ -1,23 +1,28 @@
+import { Inject } from "typedi";
 import { logger } from "../logger";
 import { db } from "../db";
 import { saveHost, getHostById, getAllHosts } from "../sql";
-import { Host } from "../domain";
+import { Booking, Host } from "../domain";
+import { UnitOfWork } from "../services";
+import { HostMapper } from "../mappers";
 
 export class HostRepository {
+  constructor(@Inject() private _uow: UnitOfWork) {}
+
   save(host: Host) {
     logger.info(this.constructor.name + " save");
-    const sql = saveHost({
-      ...host,
-      workDays: JSON.stringify(host.workDays),
-      workHours: JSON.stringify(host.workHours),
-    });
+    const bookings = host.getBookings();
+    this._uow.bookingRepository.saveAll(bookings);
+    const hostDbModel = HostMapper.toDbModel(host);
+    const sql = saveHost(hostDbModel);
     db.exec(sql);
     return { id: host.id };
   }
+
   getById(hostId: string) {
     logger.info(this.constructor.name + " getById");
     const sql = getHostById(hostId);
-    const data = db.prepare(sql).get() as
+    const hostData = db.prepare(sql).get() as
       | {
           id: string;
           forwardBooking: string;
@@ -26,22 +31,28 @@ export class HostRepository {
           deleted: boolean;
         }
       | undefined;
+    if (!hostData) return null;
 
-    if (!data) return null;
-    return new Host({
-      ...data,
-      workDays: JSON.parse(data.workDays),
-      workHours: JSON.parse(data.workHours),
+    const bookings = this._uow.bookingRepository.getAll({
+      filters: { hostId },
+    });
+    if (!bookings) return null;
+
+    return HostMapper.toDomain({
+      ...hostData,
+      bookings,
     });
   }
+
   saveAll(hosts: Host[]) {
     logger.info(this.constructor.name + " saveAll");
     return hosts.map(this.save);
   }
+
   getAll() {
     logger.info(this.constructor.name + " getAll");
     const sql = getAllHosts();
-    const data = db.prepare(sql).all() as
+    const hostsData = db.prepare(sql).all() as
       | {
           id: string;
           forwardBooking: string;
@@ -50,14 +61,28 @@ export class HostRepository {
           deleted: boolean;
         }[]
       | undefined;
-    if (!data) return null;
-    return data.map(
-      (host) =>
-        new Host({
-          ...host,
-          workDays: JSON.parse(host.workDays),
-          workHours: JSON.parse(host.workHours),
-        }),
-    );
+    if (!hostsData) return null;
+
+    let hostsDataWithBookings = [] as {
+      id: string;
+      forwardBooking: string;
+      workHours: string;
+      workDays: string;
+      deleted: boolean;
+      bookings: Booking[];
+    }[];
+
+    try {
+      hostsDataWithBookings = hostsData.map((hostData) => {
+        const filter = { filters: { hostId: hostData.id } };
+        const bookings = this._uow.bookingRepository.getAll(filter);
+        if (!bookings) throw new Error();
+        return { ...hostData, bookings };
+      });
+    } catch {
+      return null;
+    }
+
+    return hostsDataWithBookings.map(HostMapper.toDomain);
   }
 }

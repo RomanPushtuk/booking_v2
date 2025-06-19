@@ -1,11 +1,13 @@
-export const saveBooking = (bookingModel: {
+export interface BookingDbModel {
   id: string;
   clientId: string;
   hostId: string;
   fromDateTime: string;
   toDateTime: string;
   deleted: boolean;
-}): string => {
+}
+
+export const saveBooking = (bookingModel: BookingDbModel): string => {
   const { id, clientId, hostId, fromDateTime, toDateTime, deleted } =
     bookingModel;
   return `

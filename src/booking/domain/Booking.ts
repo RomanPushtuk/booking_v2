@@ -1,4 +1,4 @@
-import { shared } from "../imports";
+import { BookingProperties } from "../types";
 
 export class Booking {
   id: string;
@@ -8,12 +8,24 @@ export class Booking {
   toDateTime: string;
   deleted: boolean;
 
-  constructor(data: shared.types.GetInterface<Booking>) {
+  constructor(data: BookingProperties) {
     this.id = data.id;
     this.clientId = data.clientId;
     this.hostId = data.hostId;
     this.fromDateTime = data.fromDateTime;
     this.toDateTime = data.toDateTime;
     this.deleted = Boolean(data.deleted);
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getHostId() {
+    return this.hostId;
+  }
+
+  setDeleted(flag: boolean) {
+    this.deleted = flag;
   }
 }

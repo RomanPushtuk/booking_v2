@@ -1,0 +1,1 @@
+export { BookingRegistry } from "./BookingRegistry";
