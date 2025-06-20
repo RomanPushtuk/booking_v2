@@ -1,11 +1,11 @@
 import {
   MaxLength,
-  validateSync,
+  // validateSync,
   IsDateString,
   IsString,
   ValidateNested,
 } from "class-validator";
-import { shared } from "../imports";
+// import { shared } from "../imports";
 
 class _Info {
   @IsString()
@@ -31,15 +31,15 @@ export class CreateBookingDTO {
   @ValidateNested()
   info: _Info;
 
-  constructor(data: shared.types.GetInterface<CreateBookingDTO>) {
-    this.clientId = data.clientId;
-    this.hostId = data.hostId;
-    this.fromDateTime = data.fromDateTime;
-    this.toDateTime = data.toDateTime;
-    this.info = data.info;
+  // constructor(data: shared.types.GetInterface<CreateBookingDTO>) {
+  //   this.clientId = data.clientId;
+  //   this.hostId = data.hostId;
+  //   this.fromDateTime = data.fromDateTime;
+  //   this.toDateTime = data.toDateTime;
+  //   this.info = data.info;
 
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(CreateBookingDTO.name, errors);
-  }
+  //   const errors = validateSync(this);
+  //   if (errors.length)
+  //     throw new shared.errors.DTOValidationError(CreateBookingDTO.name, errors);
+  // }
 }

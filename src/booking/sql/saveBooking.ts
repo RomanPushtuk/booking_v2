@@ -18,14 +18,14 @@ export const saveBooking = (bookingModel: BookingDbModel): string => {
       \`hostId\`,
       \`fromDateTime\`,
       \`toDateTime\`,
-      \`deleted\`,
+      \`deleted\`
     ) values (
      '${id}', 
      '${clientId}', 
      '${hostId}', 
      '${fromDateTime}', 
      '${toDateTime}', 
-     ${Number(deleted)},
+     ${Number(deleted)}
     );
   `;
 };

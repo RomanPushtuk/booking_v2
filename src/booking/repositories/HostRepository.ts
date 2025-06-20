@@ -1,4 +1,4 @@
-import { Inject } from "typedi";
+// import { Inject } from "typedi";
 import { logger } from "../logger";
 import { db } from "../db";
 import { saveHost, getHostById, getAllHosts } from "../sql";
@@ -7,7 +7,12 @@ import { UnitOfWork } from "../services";
 import { HostMapper } from "../mappers";
 
 export class HostRepository {
-  constructor(@Inject() private _uow: UnitOfWork) {}
+  constructor(private _uow: UnitOfWork) { 
+    this.save = this.save.bind(this);
+    this.getById = this.getById.bind(this);
+    this.getAll = this.getAll.bind(this);
+    this.saveAll = this.saveAll.bind(this);
+  }
 
   save(host: Host) {
     logger.info(this.constructor.name + " save");
@@ -24,12 +29,12 @@ export class HostRepository {
     const sql = getHostById(hostId);
     const hostData = db.prepare(sql).get() as
       | {
-          id: string;
-          forwardBooking: string;
-          workHours: string;
-          workDays: string;
-          deleted: boolean;
-        }
+        id: string;
+        forwardBooking: string;
+        workHours: string;
+        workDays: string;
+        deleted: boolean;
+      }
       | undefined;
     if (!hostData) return null;
 
@@ -54,12 +59,12 @@ export class HostRepository {
     const sql = getAllHosts();
     const hostsData = db.prepare(sql).all() as
       | {
-          id: string;
-          forwardBooking: string;
-          workHours: string;
-          workDays: string;
-          deleted: boolean;
-        }[]
+        id: string;
+        forwardBooking: string;
+        workHours: string;
+        workDays: string;
+        deleted: boolean;
+      }[]
       | undefined;
     if (!hostsData) return null;
 

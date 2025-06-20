@@ -6,6 +6,12 @@ import { saveBooking, getBookingById, getAllBookings } from "../sql";
 import { BookingMapper } from "../mappers";
 
 export class BookingRepository {
+  constructor() {
+    this.save = this.save.bind(this);
+    this.getById = this.getById.bind(this);
+    this.getAll = this.getAll.bind(this);
+    this.saveAll = this.saveAll.bind(this);
+  }
   save(booking: Booking) {
     logger.info(this.constructor.name + " save");
 
@@ -20,13 +26,13 @@ export class BookingRepository {
     const sql = getBookingById(bookingId);
     const data = db.prepare(sql).get() as
       | {
-          id: string;
-          clientId: string;
-          hostId: string;
-          fromDateTime: string;
-          toDateTime: string;
-          deleted: boolean;
-        }
+        id: string;
+        clientId: string;
+        hostId: string;
+        fromDateTime: string;
+        toDateTime: string;
+        deleted: boolean;
+      }
       | undefined;
     if (!data) return null;
     return BookingMapper.toDomain(data);
@@ -43,13 +49,13 @@ export class BookingRepository {
     const sql = getAllBookings(filters);
     const data = db.prepare(sql).all() as
       | {
-          id: string;
-          clientId: string;
-          hostId: string;
-          fromDateTime: string;
-          toDateTime: string;
-          deleted: boolean;
-        }[]
+        id: string;
+        clientId: string;
+        hostId: string;
+        fromDateTime: string;
+        toDateTime: string;
+        deleted: boolean;
+      }[]
       | undefined;
     if (!data) return null;
     return data.map(BookingMapper.toDomain);

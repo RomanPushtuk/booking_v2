@@ -8,16 +8,16 @@ import {
 
 @Service()
 export class UnitOfWork {
-  constructor() {}
+  constructor() { }
 
-  async begin() {}
+  async begin() { }
 
   get clientRepository() {
     return new ClientRepository();
   }
 
   get hostRepository() {
-    return new HostRepository();
+    return new HostRepository(this);
   }
 
   get bookingRepository() {
@@ -28,5 +28,5 @@ export class UnitOfWork {
     return new UserRepository();
   }
 
-  async commit() {}
+  async commit() { }
 }

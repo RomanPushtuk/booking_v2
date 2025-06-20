@@ -44,11 +44,12 @@ import {
   UpdateClientInBookingServiceStep,
   UpdateClientInInfoServiceStep,
 } from "../steps";
+import { logger } from "../logger";
 
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor() {}
+  constructor() { }
 
   // private
   @Authorized([shared.enums.Roles.CLIENT])
@@ -63,7 +64,7 @@ export class ClientController {
   // private
   @Delete("/me")
   async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
-  : Promise<ClientDeletedDTO> {
+    : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
@@ -134,14 +135,14 @@ export class ClientController {
     const bookingDTO = new BookingDTO({
       id: shared.utils.generateId(),
       ...createBookingDTO,
-      clientId: "test_client_id",
-      hostId: "test_host_id",
-      fromDateTime: "2025-03-23T19:42:22.327Z",
-      toDateTime: "2025-03-23T19:42:22.327Z",
-      info: {
-        title: "title",
-        description: "description",
-      },
+      // clientId: "test_client_id",
+      // hostId: "test_host_id",
+      // fromDateTime: "2025-03-23T19:42:22.327Z",
+      // toDateTime: "2025-03-23T19:42:22.327Z",
+      // info: {
+      //   title: "title",
+      //   description: "description",
+      // },
     });
     const createBookingSaga = new CreateBookingSaga(
       new CreateBookingInBookingServiceStep(

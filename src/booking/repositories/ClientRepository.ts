@@ -4,6 +4,11 @@ import { saveClient, getClientById } from "../sql";
 import { Client } from "../domain";
 
 export class ClientRepository {
+  constructor() {
+    this.save = this.save.bind(this);
+    this.getById = this.getById.bind(this);
+  }
+
   save(client: Client) {
     logger.info(this.constructor.name + " save");
     const sql = saveClient(client);
