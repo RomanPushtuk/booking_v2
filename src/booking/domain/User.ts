@@ -2,29 +2,29 @@ import { shared } from "../imports";
 import { UserProperties } from "../types";
 
 export class User {
-  id: string;
-  role: shared.enums.Roles;
-  deleted: boolean;
+  _id: string;
+  _role: shared.enums.Roles;
+  _deleted: boolean;
 
   constructor(data: UserProperties) {
-    this.id = data.id;
-    this.role = data.role as shared.enums.Roles;
-    this.deleted = data.deleted;
+    this._id = data.id;
+    this._role = data.role as shared.enums.Roles;
+    this._deleted = data.deleted;
   }
 
   getId() {
-    return this.id;
+    return this._id;
   }
 
   getRole() {
-    return this.role;
+    return this._role;
   }
 
   setDeleted(flag: boolean) {
-    this.deleted = flag;
+    this._deleted = flag;
   }
 
   getDeleted() {
-    return this.deleted;
+    return this._deleted;
   }
 }

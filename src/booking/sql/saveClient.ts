@@ -1,6 +1,6 @@
 export type ClientDbModel = {
   id: string;
-}
+};
 
 export const saveClient = (clientModel: ClientDbModel): string => {
   const { id } = clientModel;

@@ -50,7 +50,7 @@ export class ClientService {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("booking not found");
-    booking.deleted = false;
+    booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
   }
 

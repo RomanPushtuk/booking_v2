@@ -26,7 +26,7 @@ export class HostService {
     logger.info({ bookingId }, this.constructor.name + " deleteBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("bookign not find");
-    booking.deleted = true;
+    booking.setDeleted(true);
     this._uow.bookingRepository.save(booking);
   }
 
@@ -34,7 +34,7 @@ export class HostService {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("bookign not find");
-    booking.deleted = false;
+    booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
   }
 

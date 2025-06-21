@@ -1,31 +1,47 @@
 import { BookingProperties } from "../types";
 
 export class Booking {
-  id: string;
-  clientId: string;
-  hostId: string;
-  fromDateTime: string;
-  toDateTime: string;
-  deleted: boolean;
+  private _id: string;
+  private _clientId: string;
+  private _hostId: string;
+  private _fromDateTime: string;
+  private _toDateTime: string;
+  private _deleted: boolean;
 
   constructor(data: BookingProperties) {
-    this.id = data.id;
-    this.clientId = data.clientId;
-    this.hostId = data.hostId;
-    this.fromDateTime = data.fromDateTime;
-    this.toDateTime = data.toDateTime;
-    this.deleted = Boolean(data.deleted);
+    this._id = data.id;
+    this._clientId = data.clientId;
+    this._hostId = data.hostId;
+    this._fromDateTime = data.fromDateTime;
+    this._toDateTime = data.toDateTime;
+    this._deleted = Boolean(data.deleted);
   }
 
   getId() {
-    return this.id;
+    return this._id;
+  }
+
+  getClientId() {
+    return this._clientId;
   }
 
   getHostId() {
-    return this.hostId;
+    return this._hostId;
+  }
+
+  getFromDateTime() {
+    return this._fromDateTime;
+  }
+
+  getToDateTime() {
+    return this._toDateTime;
+  }
+
+  getDeleted() {
+    return this._deleted;
   }
 
   setDeleted(flag: boolean) {
-    this.deleted = flag;
+    this._deleted = flag;
   }
 }

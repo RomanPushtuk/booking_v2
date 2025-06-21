@@ -14,8 +14,11 @@ export class ClientRepository {
     logger.info(this.constructor.name + " save");
     const clientdbModel = ClientMapper.toDbModel(client);
     const sql = saveClient(clientdbModel);
-    logger.info(this._uow.db.exec(sql), 'saving client to DB');
-    return { id: client.id };
+    logger.info(this._uow.db.exec(sql), "saving client to DB");
+
+    const user = client.getUser();
+    this._uow.userRepository.save(user);
+    return { id: client.getId() };
   }
 
   getById(clientId: string) {
@@ -31,8 +34,8 @@ export class ClientRepository {
     const sql = getClientById(clientId);
     const data = this._uow.db.prepare(sql).get() as
       | {
-        id: string;
-      }
+          id: string;
+        }
       | undefined;
     if (!data) return null;
 

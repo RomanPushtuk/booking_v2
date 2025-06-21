@@ -8,7 +8,7 @@ export class HostMapper {
     workHours: string;
     workDays: string;
     bookings: Booking[];
-    role: string,
+    role: string;
     deleted: boolean;
   }): Host {
     return new Host({
@@ -22,10 +22,10 @@ export class HostMapper {
   }
   static toDbModel(host: Host): HostDbModel {
     return {
-      id: host.id,
-      forwardBooking: host.forwardBooking,
-      workDays: JSON.stringify(host.workDays),
-      workHours: JSON.stringify(host.workHours),
+      id: host.getId(),
+      forwardBooking: host.getForwardBooking(),
+      workDays: JSON.stringify(host.getWorkDays()),
+      workHours: JSON.stringify(host.getWorkHours()),
     };
   }
 }

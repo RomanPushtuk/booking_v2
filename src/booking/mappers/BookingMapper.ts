@@ -20,12 +20,12 @@ export class BookingMapper {
     BookingMapper.bookingRegistry.save(booking);
 
     return {
-      id: booking.id,
-      clientId: booking.clientId,
-      hostId: booking.hostId,
-      fromDateTime: booking.fromDateTime,
-      toDateTime: booking.toDateTime,
-      deleted: booking.deleted,
+      id: booking.getId(),
+      clientId: booking.getClientId(),
+      hostId: booking.getHostId(),
+      fromDateTime: booking.getFromDateTime(),
+      toDateTime: booking.getToDateTime(),
+      deleted: booking.getDeleted(),
     };
   }
 }
