@@ -1,3 +1,4 @@
+import { logger } from "../logger";
 import { HostProperties } from "../types";
 import { Booking } from "./Booking";
 
@@ -10,6 +11,7 @@ export class Host {
   }[];
   workDays: string[];
   bookings: Booking[];
+  role: string;
   deleted: boolean;
 
   constructor(data: HostProperties) {
@@ -18,6 +20,7 @@ export class Host {
     this.workHours = data.workHours;
     this.workDays = data.workDays;
     this.bookings = data.bookings;
+    this.role = data.role;
     this.deleted = data.deleted;
   }
 
@@ -29,6 +32,7 @@ export class Host {
     // 3. Check that the booking does not fall during non-business hours
 
     this.bookings.push(booking);
+    logger.info('Added to Host new Booking');
   }
 
   deleteBooking(booking: Booking) {

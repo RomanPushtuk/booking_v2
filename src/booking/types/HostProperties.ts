@@ -9,5 +9,6 @@ export type HostProperties = {
   }[];
   workDays: string[];
   bookings: Booking[];
+  role: string;
   deleted: boolean;
 };

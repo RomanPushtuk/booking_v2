@@ -1,19 +1,37 @@
+// import { DatabaseSync } from "node:sqlite";
 import { Service } from "typedi";
+import { db } from "../db";
 import {
   ClientRepository,
   HostRepository,
   BookingRepository,
   UserRepository,
 } from "../repositories";
+import { logger } from "../logger";
 
 @Service()
 export class UnitOfWork {
-  constructor() { }
+  // db: DatabaseSync;
+  // sqlStatements: string[] = [];
+  // isTransaction: boolean = false;
 
-  async begin() { }
+  constructor() {
+    logger.info('New UnitOfWork instance was created')
+    // this.db = new DatabaseSync("src/booking/db/database.db");
+  }
+
+  get db() {
+    return db;
+  }
+
+  async begin() {
+    // this.isTransaction = true;
+    db.exec('BEGIN TRANSACTION;')
+    logger.info({}, 'Begin Transaction');
+  }
 
   get clientRepository() {
-    return new ClientRepository();
+    return new ClientRepository(this);
   }
 
   get hostRepository() {
@@ -21,12 +39,22 @@ export class UnitOfWork {
   }
 
   get bookingRepository() {
-    return new BookingRepository();
+    return new BookingRepository(this);
   }
 
   get userRepository() {
-    return new UserRepository();
+    return new UserRepository(this);
   }
 
-  async commit() { }
+  async commit() {
+    // this.isTransaction = false;
+    // const statements = this.sqlStatements.join('');
+    // this.sqlStatements = [];
+    // db.exec('BEGIN;')
+    // db.prepare(statements).run();
+    // logger.info('!!!!!' + statements)
+    // logger.info({}, 'Commit Transaction');
+    db.exec('COMMIT;');
+    logger.info({}, 'Commit Transaction');
+  }
 }

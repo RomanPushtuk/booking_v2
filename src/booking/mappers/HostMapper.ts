@@ -8,6 +8,7 @@ export class HostMapper {
     workHours: string;
     workDays: string;
     bookings: Booking[];
+    role: string,
     deleted: boolean;
   }): Host {
     return new Host({
@@ -25,7 +26,6 @@ export class HostMapper {
       forwardBooking: host.forwardBooking,
       workDays: JSON.stringify(host.workDays),
       workHours: JSON.stringify(host.workHours),
-      deleted: host.deleted,
     };
   }
 }

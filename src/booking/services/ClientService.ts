@@ -21,6 +21,7 @@ export class ClientService {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
     const hostId = bookingDTO.hostId;
 
+    this._uow.begin();
     const host = this._uow.hostRepository.getById(hostId);
     if (!host) throw new Error("host not found");
 
@@ -28,6 +29,7 @@ export class ClientService {
     host.addBooking(booking);
 
     this._uow.hostRepository.save(host);
+    this._uow.commit();
   }
 
   async deleteBooking(bookingId: string) {

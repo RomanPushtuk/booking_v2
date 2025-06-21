@@ -3,22 +3,19 @@ export interface HostDbModel {
   forwardBooking: string;
   workHours: string;
   workDays: string;
-  deleted: boolean;
 }
 
 export const saveHost = (hostModel: HostDbModel): string => {
-  const { id, forwardBooking, workDays, workHours, deleted } = hostModel;
+  const { id, forwardBooking, workDays, workHours } = hostModel;
   return `INSERT OR REPLACE INTO \`hosts\` (
     \`id\`,
     \`forwardBooking\`,   
     \`workDays\`, 
-    \`workHours\`,
-    \`deleted\`
+    \`workHours\`
   ) values (
    '${id}',
    '${forwardBooking}',
    '${workDays}', 
-   '${workHours}',
-   ${deleted}, 
+   '${workHours}'
   );`;
 };

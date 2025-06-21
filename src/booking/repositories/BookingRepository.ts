@@ -1,12 +1,12 @@
 import { shared } from "../imports";
 import { Booking } from "../domain";
 import { logger } from "../logger";
-import { db } from "../db";
 import { saveBooking, getBookingById, getAllBookings } from "../sql";
 import { BookingMapper } from "../mappers";
+import { UnitOfWork } from "../services";
 
 export class BookingRepository {
-  constructor() {
+  constructor(private _uow: UnitOfWork) {
     this.save = this.save.bind(this);
     this.getById = this.getById.bind(this);
     this.getAll = this.getAll.bind(this);
@@ -14,17 +14,16 @@ export class BookingRepository {
   }
   save(booking: Booking) {
     logger.info(this.constructor.name + " save");
-
     const bookingDbModel = BookingMapper.toDbModel(booking);
     const sql = saveBooking(bookingDbModel);
-    db.exec(sql);
+    logger.info(this._uow.db.exec(sql), 'saving Booking to DB');
     return { id: booking.id };
   }
 
   getById(bookingId: string): Booking | null {
     logger.info(this.constructor.name + " getById");
     const sql = getBookingById(bookingId);
-    const data = db.prepare(sql).get() as
+    const data = this._uow.db.prepare(sql).get() as
       | {
         id: string;
         clientId: string;
@@ -46,8 +45,9 @@ export class BookingRepository {
     sorting?: shared.application.BookingSorting;
     filters?: shared.application.BookingFilters;
   }): Booking[] | null {
+    logger.info(this.constructor.name + " getAll");
     const sql = getAllBookings(filters);
-    const data = db.prepare(sql).all() as
+    const data = this._uow.db.prepare(sql).all() as
       | {
         id: string;
         clientId: string;
