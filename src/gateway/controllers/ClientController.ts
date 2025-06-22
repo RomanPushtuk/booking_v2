@@ -21,7 +21,6 @@ import {
 import {
   ClientDTO,
   CreateBookingDTO,
-  // DeleteUserDTO,
   UpdateBookingDTO,
   UpdateClientDTO,
   ClientDeletedDTO,

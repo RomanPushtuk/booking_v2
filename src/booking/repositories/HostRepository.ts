@@ -13,15 +13,16 @@ export class HostRepository {
 
   save(host: Host) {
     logger.info(this.constructor.name + " save");
+
+    const user = host.getUser();
+    this._uow.userRepository.save(user);
+
     const hostDbModel = HostMapper.toDbModel(host);
     const sql = saveHost(hostDbModel);
     logger.info(this._uow.db.exec(sql), "saving Host to DB");
 
     const bookings = host.getBookings();
     this._uow.bookingRepository.saveAll(bookings);
-
-    const user = host.getUser();
-    this._uow.userRepository.save(user);
 
     return { id: host.getId() };
   }
@@ -40,11 +41,11 @@ export class HostRepository {
     const sql = getHostById(hostId);
     const hostData = this._uow.db.prepare(sql).get() as
       | {
-          id: string;
-          forwardBooking: string;
-          workHours: string;
-          workDays: string;
-        }
+        id: string;
+        forwardBooking: string;
+        workHours: string;
+        workDays: string;
+      }
       | undefined;
     logger.info(hostData, " hostData");
     if (!hostData) return null;

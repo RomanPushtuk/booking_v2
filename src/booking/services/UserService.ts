@@ -2,7 +2,7 @@ import { Inject, Service } from "typedi";
 import { gateway, shared } from "../imports";
 import { logger } from "../logger";
 import { UnitOfWork } from "./UnitOfWork";
-import { Client, Host, User } from "../domain";
+import { Client, Host } from "../domain";
 
 @Service()
 export class UserService {
@@ -15,15 +15,8 @@ export class UserService {
     logger.info({ userDTO }, this.constructor.name + " createUser");
 
     this._uow.begin();
-    const user = new User({
-      id: userDTO.id,
-      role: userDTO.role,
-      deleted: false,
-    });
-
-    this._uow.userRepository.save(user);
-
-    if (user.getRole() === shared.enums.Roles.CLIENT) {
+    
+    if (userDTO.role === shared.enums.Roles.CLIENT) {
       const client = new Client({
         id: userDTO.id,
         bookings: [],
@@ -33,7 +26,7 @@ export class UserService {
       this._uow.clientRepository.save(client);
     }
 
-    if (user.getRole() === shared.enums.Roles.HOST) {
+    if (userDTO.role === shared.enums.Roles.HOST) {
       const host = new Host({
         id: userDTO.id,
         forwardBooking: "1 week",

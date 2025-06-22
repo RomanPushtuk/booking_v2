@@ -32,8 +32,8 @@ if (mode == "up") {
 if (mode == "down") {
   authDb.exec(dropAuthModuleUsersTable);
 
-  bookingDb.exec(dropBookingModuleUsersTable);
+  bookingDb.exec(dropBookingModuleBookingsTable);
   bookingDb.exec(dropBookingModuleClientsTable);
   bookingDb.exec(dropBookingModuleHostsTable);
-  bookingDb.exec(dropBookingModuleBookingsTable);
+  bookingDb.exec(dropBookingModuleUsersTable);
 }
