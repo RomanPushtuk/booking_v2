@@ -23,7 +23,7 @@ export class UserService {
 
     this._uow.userRepository.save(user);
 
-    if (user.role === shared.enums.Roles.CLIENT) {
+    if (user.getRole() === shared.enums.Roles.CLIENT) {
       const client = new Client({
         id: userDTO.id,
         bookings: [],
@@ -33,7 +33,7 @@ export class UserService {
       this._uow.clientRepository.save(client);
     }
 
-    if (user.role === shared.enums.Roles.HOST) {
+    if (user.getRole() === shared.enums.Roles.HOST) {
       const host = new Host({
         id: userDTO.id,
         forwardBooking: "1 week",
