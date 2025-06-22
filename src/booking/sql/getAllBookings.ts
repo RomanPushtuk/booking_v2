@@ -1,10 +1,10 @@
 import { shared } from "../imports";
 
-export const getAllBookings = (data: {
+export const getAllBookings = (data?: {
   sorting?: shared.application.BookingSorting;
   filters?: shared.application.BookingFilters;
 }): string => {
-  const { sorting, filters } = data;
+  const { sorting, filters } = data || {};
 
   let orderBySql = "";
   let filtersSql: string[] = [];

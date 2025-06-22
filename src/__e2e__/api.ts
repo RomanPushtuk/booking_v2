@@ -27,7 +27,12 @@ export const api = {
     deleteMe: () => {},
     getMyBookings: () => {},
     getBookingById: () => {},
-    createBooking: () => {},
+    createBooking: (body: gateway.dtos.CreateBookingDTO) => {
+      return axios.post<gateway.dtos.BookingCreatedDTO>(
+        base + "/me/bookings",
+        body,
+      );
+    },
     deleteBooking: () => {},
     updateBooking: () => {},
   },

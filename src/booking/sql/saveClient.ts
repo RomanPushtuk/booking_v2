@@ -1,7 +1,8 @@
-export const saveClient = (clientModel: {
+export type ClientDbModel = {
   id: string;
-  deleted: boolean;
-}): string => {
-  const { id, deleted } = clientModel;
-  return `INSERT OR REPLACE INTO \`clients\` (\`id\`, \`deleted\`) VALUES ('${id}', ${deleted});`;
+};
+
+export const saveClient = (clientModel: ClientDbModel): string => {
+  const { id } = clientModel;
+  return `INSERT OR REPLACE INTO \`clients\` (\`id\`) VALUES ('${id}');`;
 };

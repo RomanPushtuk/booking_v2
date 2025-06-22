@@ -40,8 +40,9 @@ const createBookingModuleBookingsTable = `
         hostId TEXT NOT NULL,
         fromDateTime TEXT NOT NULL, -- ISO8601
         toDateTime TEXT NOT NULL, -- ISO8601
+        deleted INTEGER NOT NULL DEFAULT 0,
         FOREIGN KEY (clientId) REFERENCES clients(id) ON DELETE CASCADE,
-        FOREIGN KEY (hostId) REFERENCES specialists(id) ON DELETE CASCADE
+        FOREIGN KEY (hostId) REFERENCES hosts(id) ON DELETE CASCADE
     );
 `;
 

@@ -19,23 +19,38 @@ export class ClientService {
 
   async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
+    const hostId = bookingDTO.hostId;
+
+    this._uow.begin();
+    const host = this._uow.hostRepository.getById(hostId);
+    if (!host) throw new Error("host not found");
+
     const booking = new Booking({ ...bookingDTO, deleted: false });
-    this._uow.bookingRepository.save(booking);
+    host.addBooking(booking);
+
+    this._uow.hostRepository.save(host);
+    this._uow.commit();
   }
 
   async deleteBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " deleteBooking");
+
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("booking not found");
-    booking.deleted = true;
-    this._uow.bookingRepository.save(booking);
+
+    const hostId = booking?.getHostId();
+    const host = this._uow.hostRepository.getById(hostId);
+    if (!host) throw new Error("host not found");
+
+    host.deleteBooking(booking);
+    this._uow.hostRepository.save(host);
   }
 
   async restoreBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("booking not found");
-    booking.deleted = false;
+    booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
   }
 

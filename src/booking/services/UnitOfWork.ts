@@ -1,32 +1,46 @@
 import { Service } from "typedi";
+import { db } from "../db";
 import {
   ClientRepository,
   HostRepository,
   BookingRepository,
   UserRepository,
 } from "../repositories";
+import { logger } from "../logger";
 
 @Service()
 export class UnitOfWork {
-  constructor() {}
+  constructor() {
+    logger.info("New UnitOfWork instance was created");
+  }
 
-  async begin() {}
+  get db() {
+    return db;
+  }
+
+  async begin() {
+    db.exec("BEGIN TRANSACTION;");
+    logger.info({}, "Begin Transaction");
+  }
 
   get clientRepository() {
-    return new ClientRepository();
+    return new ClientRepository(this);
   }
 
   get hostRepository() {
-    return new HostRepository();
+    return new HostRepository(this);
   }
 
   get bookingRepository() {
-    return new BookingRepository();
+    return new BookingRepository(this);
   }
 
   get userRepository() {
-    return new UserRepository();
+    return new UserRepository(this);
   }
 
-  async commit() {}
+  async commit() {
+    db.exec("COMMIT;");
+    logger.info({}, "Commit Transaction");
+  }
 }

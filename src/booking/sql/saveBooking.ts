@@ -1,29 +1,30 @@
-export const saveBooking = (bookingModel: {
+export interface BookingDbModel {
   id: string;
   clientId: string;
   hostId: string;
   fromDateTime: string;
   toDateTime: string;
   deleted: boolean;
-}): string => {
+}
+
+export const saveBooking = (bookingModel: BookingDbModel): string => {
   const { id, clientId, hostId, fromDateTime, toDateTime, deleted } =
     bookingModel;
   return `
-    INSERT OR REPLACE INTO
-      \`bookings\` (
+    INSERT OR REPLACE INTO \`bookings\` (
       \`id\`,
       \`clientId\`,
       \`hostId\`,
       \`fromDateTime\`,
       \`toDateTime\`,
-      \`deleted\`,
+      \`deleted\`
     ) values (
      '${id}', 
      '${clientId}', 
      '${hostId}', 
      '${fromDateTime}', 
      '${toDateTime}', 
-     ${Number(deleted)},
+     ${Number(deleted)}
     );
   `;
 };
