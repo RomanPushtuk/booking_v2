@@ -48,26 +48,26 @@ import {
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor() { }
+  constructor() {}
 
-  // TODO - Add typing for return 
+  // TODO - Add typing for return
   @Authorized([shared.enums.Roles.CLIENT])
   @Get("/me")
   async getMe(@CurrentUser() user?: auth.domain.User): Promise<unknown> {
-    if (!user) throw new Error('user not found');
+    if (!user) throw new Error("user not found");
     const client = booking.services.clientService.getClientById(user?.id);
 
     return {
       ...client,
       info: {},
-    }
+    };
   }
 
   // private
   @Authorized([shared.enums.Roles.CLIENT])
   @Delete("/me")
   async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
-    : Promise<ClientDeletedDTO> {
+  : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),

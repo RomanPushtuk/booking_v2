@@ -112,5 +112,6 @@
   },
   "exclude": [
     "./jest.setup.ts",
+    "./webpack.config.js",
   ]
 }

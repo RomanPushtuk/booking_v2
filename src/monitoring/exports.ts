@@ -13,7 +13,7 @@ const monitor = (): void => {
 };
 
 const start = (): NodeJS.Timeout => {
-  return setTimeout(monitor, 99999999);
+  return setTimeout(monitor, 5000);
 };
 
 export { start };

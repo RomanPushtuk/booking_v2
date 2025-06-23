@@ -29,6 +29,7 @@ useLogPresenter(app);
 
 const start = () => {
   useExpressServer(app, {
+    cors: true,
     authorizationChecker,
     currentUserChecker,
     classTransformer: true,
