@@ -28,7 +28,7 @@ module.exports = {
   },
 	plugins: [
     new webpack.IgnorePlugin({
-      resourceRegExp: /(@koa\/cors|@babel\/preset-typescript)/,
+      resourceRegExp: /(@koa|koa|@babel)/,
     }),
 		new CopyPlugin({
       patterns: [
@@ -39,7 +39,7 @@ module.exports = {
       transports: ['pino-pretty'],
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
+      analyzerMode: 'server',
     }),
   ],
   optimization: {
