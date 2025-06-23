@@ -28,7 +28,7 @@ module.exports = {
   },
 	plugins: [
     new webpack.IgnorePlugin({
-      resourceRegExp: /(@koa|koa|@babel)/,
+      resourceRegExp: /(@koa|@babel)/,
     }),
 		new CopyPlugin({
       patterns: [
