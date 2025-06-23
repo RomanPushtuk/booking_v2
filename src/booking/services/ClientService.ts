@@ -17,6 +17,32 @@ export class ClientService {
     this.revertClient = this.revertClient.bind(this);
   }
 
+  async getClientById(clientId: string) {
+    const client = this._uow.clientRepository.getById(clientId);
+    if (!client) throw new Error('client not found');
+    return {
+      id: client.getId(),
+      role: client.getRole(),
+      deleted: client.getDeleted(),
+      bookings: await this.getClientBookings(clientId),
+    }
+  }
+
+  async getClientBookings(clientId: string) {
+    const client = this._uow.clientRepository.getById(clientId);
+    if (!client) throw new Error('client not found');
+
+    const clientBookings = client.getBookings();
+    return clientBookings.map((booking) => ({
+      id: booking.getId(),
+      clientId: booking.getClientId(),
+      hostId: booking.getHostId(),
+      fromDateTime: booking.getFromDateTime(),
+      toDateTime: booking.getToDateTime(),
+      deleted: booking.getDeleted(),
+    }))
+  }
+
   async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
     logger.info({ bookingDTO }, this.constructor.name + " createBooking");
     const hostId = bookingDTO.hostId;

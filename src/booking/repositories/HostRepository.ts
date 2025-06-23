@@ -41,11 +41,11 @@ export class HostRepository {
     const sql = getHostById(hostId);
     const hostData = this._uow.db.prepare(sql).get() as
       | {
-        id: string;
-        forwardBooking: string;
-        workHours: string;
-        workDays: string;
-      }
+          id: string;
+          forwardBooking: string;
+          workHours: string;
+          workDays: string;
+        }
       | undefined;
     logger.info(hostData, " hostData");
     if (!hostData) return null;

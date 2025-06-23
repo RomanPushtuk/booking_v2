@@ -15,7 +15,7 @@ export class UserService {
     logger.info({ userDTO }, this.constructor.name + " createUser");
 
     this._uow.begin();
-    
+
     if (userDTO.role === shared.enums.Roles.CLIENT) {
       const client = new Client({
         id: userDTO.id,

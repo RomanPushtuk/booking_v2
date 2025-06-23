@@ -3,13 +3,16 @@ import {
   IsString,
   ValidateNested,
   validateSync,
+  IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
 
 class _Info {
+  @IsOptional()
   @IsString()
   firstName: string;
 
+  @IsOptional()
   @IsString()
   lastName: string;
 }

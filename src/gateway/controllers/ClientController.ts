@@ -9,8 +9,9 @@ import {
   Patch,
   QueryParam,
   Authorized,
+  CurrentUser,
 } from "routing-controllers";
-import { shared, booking } from "../imports";
+import { shared, booking, auth } from "../imports";
 import {
   DeleteUserSaga,
   CreateBookingSaga,
@@ -19,7 +20,7 @@ import {
   UpdateClientSaga,
 } from "../sagas";
 import {
-  ClientDTO,
+  // ClientDTO,
   CreateBookingDTO,
   UpdateBookingDTO,
   UpdateClientDTO,
@@ -47,22 +48,26 @@ import {
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor() {}
+  constructor() { }
 
-  // private
+  // TODO - Add typing for return 
   @Authorized([shared.enums.Roles.CLIENT])
   @Get("/me")
-  async getMe(): Promise<ClientDTO> {
-    return new ClientDTO({
-      id: "test_id",
-      info: { firstName: "first_name", lastName: "last_name" },
-    });
+  async getMe(@CurrentUser() user?: auth.domain.User): Promise<unknown> {
+    if (!user) throw new Error('user not found');
+    const client = booking.services.clientService.getClientById(user?.id);
+
+    return {
+      ...client,
+      info: {},
+    }
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Delete("/me")
   async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
-  : Promise<ClientDeletedDTO> {
+    : Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
@@ -73,6 +78,7 @@ export class ClientController {
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Patch("/me")
   async updateClient(
     @Body() updateClientDTO: UpdateClientDTO,
@@ -90,6 +96,7 @@ export class ClientController {
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Get("/me/bookings")
   async getBookings(
     @QueryParam("sortDirection")
@@ -110,6 +117,7 @@ export class ClientController {
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Get("/me/bookings/:bookingId")
   async getBookingById(): Promise<BookingDTO> {
     return new BookingDTO({
@@ -126,6 +134,7 @@ export class ClientController {
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Post("/me/bookings")
   public async createBooking(
     @Body() createBookingDTO: CreateBookingDTO,
@@ -146,6 +155,7 @@ export class ClientController {
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
     @Param("bookingId") bookingId: string,
@@ -163,6 +173,7 @@ export class ClientController {
   }
 
   // private
+  @Authorized([shared.enums.Roles.CLIENT])
   @Delete("/me/bookings/:bookingId")
   async cancelBooking(
     @Param("bookingId") bookingId: string,

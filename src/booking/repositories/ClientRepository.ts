@@ -15,7 +15,7 @@ export class ClientRepository {
 
     const user = client.getUser();
     this._uow.userRepository.save(user);
-    
+
     const clientdbModel = ClientMapper.toDbModel(client);
     const sql = saveClient(clientdbModel);
     logger.info(this._uow.db.exec(sql), "saving client to DB");

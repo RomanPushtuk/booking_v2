@@ -1,10 +1,10 @@
 {
-	"allowOverlapingBookings": false,
-	"allowPastTimeBookings": false,
-	"allowBookingСancelByClient ": true,
-	"allowBookingСancelByHost ": false,
-	"allowBookingUpdateByClient": false,
-	"allowBookingUpdateByHost": false,
-	"allowBookingApprove": false,
-	"allowAnalyticalEndpoints": false
+  "allowOverlapingBookings": false,
+  "allowPastTimeBookings": false,
+  "allowBookingСancelByClient ": true,
+  "allowBookingСancelByHost ": false,
+  "allowBookingUpdateByClient": false,
+  "allowBookingUpdateByHost": false,
+  "allowBookingApprove": false,
+  "allowAnalyticalEndpoints": false
 }
