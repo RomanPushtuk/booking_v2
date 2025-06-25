@@ -3,6 +3,8 @@ import { gateway } from "./imports";
 
 const base = "http://localhost:3000";
 
+const axiosInstance = axios.create({ validateStatus: () => true });
+
 export const api = {
   public: {
     getHostById: () => {},
@@ -17,14 +19,40 @@ export const api = {
     },
     login: (body: gateway.dtos.LogInUserDTO) => {
       return axios.post<gateway.dtos.UserLoggedInDTO>(
-        base + "/auth/register",
+        base + "/auth/login",
         body,
       );
     },
   },
   clients: {
-    getMe: () => {},
-    deleteMe: () => {},
+    getMe: (accessToken: string) => {
+      return axiosInstance.get<gateway.dtos.ClientDTO>(base + "/clients/me", {
+        headers: {
+          Authorization: `${accessToken}`,
+        },
+      });
+    },
+    updateMe: (accessToken: string, body: gateway.dtos.UpdateClientDTO) => {
+      return axiosInstance.patch<gateway.dtos.ClientUpdatedDTO>(
+        base + "/clients/me",
+        body,
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        },
+      );
+    },
+    deleteMe: (accessToken: string) => {
+      return axiosInstance.delete<gateway.dtos.ClientDeletedDTO>(
+        base + "/clients/me",
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        },
+      );
+    },
     getMyBookings: () => {},
     getBookingById: () => {},
     createBooking: (body: gateway.dtos.CreateBookingDTO) => {

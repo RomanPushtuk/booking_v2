@@ -22,7 +22,8 @@ export class ClientDTO {
   id: string;
 
   @ValidateNested()
-  info: _Info;
+  @IsOptional()
+  info?: _Info;
 
   constructor(data: shared.types.GetInterface<ClientDTO>) {
     this.id = data.id;

@@ -170,7 +170,13 @@ paths:
     post:
       summary: Login
       deprecated: false
-      description: ""
+      description: |
+        Authenticate user and receive JWT token.
+
+        **Important**: When using the returned token in other endpoints:
+        - Copy the `access_token` from the response
+        - Use it directly in the Authorization field (do not add 'Bearer ' prefix)
+        - Example: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
       operationId: AUTH_LOGIN
       tags:
         - auth
@@ -180,60 +186,147 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AuthUserDTO"
+            example:
+              login: "client_test"
+              password: "password123"
       responses:
         "200":
-          description: ""
+          description: "Login successful"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserAuthorizedDTO"
+              example:
+                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaWVudF90ZXN0Iiwicm9sZSI6IkNMSUVOVCIsImlhdCI6MTY0MDk5NTIwMH0.signature"
+                message: "Login successful"
           headers: {}
+        "401":
+          description: "Invalid credentials"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid login or password"
       security: []
   /clients/me:
     get:
       summary: GetMe
       deprecated: false
-      description: Get a client
+      description: Get current client information
       operationId: CLIENTS_GET_CLIENT
-      tags: []
-      parameters: []
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientDTO"
-          headers: {}
-      security: []
-    delete:
-      summary: DeleteMe
-      deprecated: false
-      description: Mark a client as deleted from the system
-      operationId: CLIENTS_DETELE_CLIENT
       tags:
         - clients
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Client information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientDTO"
+              example:
+                id: "client_123"
+                info:
+                  firstName: "John"
+                  lastName: "Doe"
+          headers: {}
+        "401":
+          description: Unauthorized - Invalid or missing JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Unauthorized"
+        "403":
+          description: Forbidden - User is not a client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Access denied"
+      security:
+        - bearerAuth: []
+    patch:
+      summary: UpdateMe
+      deprecated: false
+      description: Update current client information
+      operationId: CLIENTS_UPDATE_CLIENT
+      tags:
+        - clients
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientDTO"
+            example:
+              info:
+                firstName: "John"
+                lastName: "Smith"
+      responses:
+        "200":
+          description: Client updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientUpdatedDTO"
+              example:
+                id: "client_123"
+          headers: {}
+        "400":
+          description: Bad Request - Invalid input data
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+      security:
+        - bearerAuth: []
+    delete:
+      summary: DeleteMe
+      deprecated: false
+      description: Mark current client as deleted from the system
+      operationId: CLIENTS_DELETE_CLIENT
+      tags:
+        - clients
+      parameters: []
+      responses:
+        "200":
+          description: Client deleted successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientDeletedDTO"
+              example:
+                id: "client_123"
           headers: {}
-      security: []
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+      security:
+        - bearerAuth: []
   /clients/me/bookings:
     get:
       summary: GetMyBookings
       deprecated: false
-      description: Get user bookings
+      description: Get current client's bookings with filtering and sorting
       operationId: CLIENTS_GET_BOOKINGS
-      tags: []
+      tags:
+        - clients
       parameters:
         - name: sortDirection
           in: query
-          description: ""
+          description: Sort direction for results
           required: false
           example: DESC
           schema:
@@ -244,144 +337,236 @@ paths:
             default: DESC
         - name: sortProperty
           in: query
-          description: ""
+          description: Property to sort by
           required: false
-          example: dateFrom
+          example: fromDateTime
           schema:
             type: string
-            enum:
-              - dateFrom
-              - dateTo
-              - timeFrom
-              - timeTo
-            default: dateFrom
-        - name: dateFrom
+            default: fromDateTime
+        - name: fromDateTime
           in: query
-          description: ""
+          description: Filter bookings from this datetime (ISO8601)
           required: false
-          example: YYYY-MM-DD
+          example: "2025-06-21T10:00:00Z"
           schema:
             type: string
-        - name: dateTo
+            format: date-time
+        - name: toDateTime
           in: query
-          description: ""
+          description: Filter bookings to this datetime (ISO8601)
           required: false
-          example: YYYY-MM-DD
+          example: "2025-06-28T18:00:00Z"
           schema:
             type: string
-        - name: timeFrom
+            format: date-time
+        - name: hostId
           in: query
-          description: ""
+          description: Filter bookings by host ID
           required: false
-          example: HH:mm
-          schema:
-            type: string
-        - name: timeTo
-          in: query
-          description: ""
-          required: false
-          example: HH:mm
+          example: "host_456"
           schema:
             type: string
       responses:
         "200":
-          description: ""
+          description: List of client's bookings retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/BookingDTO"
+              example:
+                - id: "booking_789"
+                  clientId: "client_123"
+                  hostId: "host_456"
+                  fromDateTime: "2025-06-25T10:00:00Z"
+                  toDateTime: "2025-06-25T11:00:00Z"
+                  info:
+                    title: "Consultation"
+                    description: "Regular checkup"
           headers: {}
-      security: []
-  /clients/me/booking:
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+      security:
+        - bearerAuth: []
     post:
       summary: CreateBooking
       deprecated: false
-      description: Send a request to create a new booking
+      description: Create a new booking for current client
       operationId: CLIENTS_CREATE_BOOKING
       tags:
         - clients
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateBookingDTO"
+            example:
+              hostId: "host_456"
+              fromDateTime: "2025-06-25T10:00:00Z"
+              toDateTime: "2025-06-25T11:00:00Z"
+              info:
+                title: "Consultation"
+                description: "Regular checkup"
       responses:
         "201":
-          description: ""
+          description: Booking created successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BookingCreatedDTO"
+              example:
+                id: "booking_789"
           headers: {}
-      security: []
-  /client/me/bookings/{id}:
-    delete:
-      summary: DeleteBooking
+        "400":
+          description: Bad Request - Invalid input data
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+        "409":
+          description: Conflict - Time slot not available
+      security:
+        - bearerAuth: []
+  /clients/me/bookings/{bookingId}:
+    get:
+      summary: GetBookingById
       deprecated: false
-      description: Delete (cancel) booking
-      operationId: CLIENTS_DELETE_BOOKING
+      description: Get specific booking by ID for current client
+      operationId: CLIENTS_GET_BOOKING_BY_ID
       tags:
         - clients
       parameters:
-        - name: id
+        - name: bookingId
           in: path
-          description: ""
+          description: ID of the booking to retrieve
           required: true
           schema:
             type: string
+          example: "booking_789"
       responses:
         "200":
-          description: ""
+          description: Booking retrieved successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookingDeletedDTO"
+                $ref: "#/components/schemas/BookingDTO"
+              example:
+                id: "booking_789"
+                clientId: "client_123"
+                hostId: "host_456"
+                fromDateTime: "2025-06-25T10:00:00Z"
+                toDateTime: "2025-06-25T11:00:00Z"
+                info:
+                  title: "Consultation"
+                  description: "Regular checkup"
           headers: {}
-      security: []
-  /clients/my/bookings/{id}:
+        "404":
+          description: Booking not found or access denied
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+      security:
+        - bearerAuth: []
     patch:
       summary: UpdateBooking
       deprecated: false
-      description: Update booking
+      description: Update specific booking for current client
       operationId: CLIENTS_UPDATE_BOOKING
       tags:
         - clients
       parameters:
-        - name: id
+        - name: bookingId
           in: path
-          description: ""
+          description: ID of the booking to update
           required: true
           schema:
             type: string
+          example: "booking_789"
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateBookingDTO"
+            example:
+              fromDateTime: "2025-06-25T14:00:00Z"
+              toDateTime: "2025-06-25T15:00:00Z"
+              info:
+                title: "Updated Consultation"
+                description: "Updated description"
       responses:
         "200":
-          description: ""
+          description: Booking updated successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BookingUpdatedDTO"
+              example:
+                id: "booking_789"
           headers: {}
-      security: []
+        "400":
+          description: Bad Request - Invalid input data
+        "404":
+          description: Booking not found or access denied
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+        "409":
+          description: Conflict - Time slot not available
+      security:
+        - bearerAuth: []
+    delete:
+      summary: CancelBooking
+      deprecated: false
+      description: Cancel (soft delete) specific booking for current client
+      operationId: CLIENTS_CANCEL_BOOKING
+      tags:
+        - clients
+      parameters:
+        - name: bookingId
+          in: path
+          description: ID of the booking to cancel
+          required: true
+          schema:
+            type: string
+          example: "booking_789"
+      responses:
+        "200":
+          description: Booking cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingDeletedDTO"
+              example:
+                id: "booking_789"
+          headers: {}
+        "404":
+          description: Booking not found or access denied
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - User is not a client
+      security:
+        - bearerAuth: []
   /hosts/me:
     get:
       summary: GetMe
       deprecated: false
-      description: Get information about the host
+      description: Get information about the current host
       operationId: HOSTS_GET_ME
       tags:
         - hosts
       parameters: []
       responses:
         "200":
-          description: ""
+          description: "Host information"
           content:
             application/json:
               schema: *ref_0
@@ -395,7 +580,12 @@ paths:
                   - SUNDAY
                   - THURSDAY
           headers: {}
-      security: []
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+      security:
+        - bearerAuth: []
     delete:
       summary: DeleteMe
       deprecated: false
@@ -406,14 +596,18 @@ paths:
       parameters: []
       responses:
         "200":
-          description: ""
+          description: "Host deleted successfully"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HostDeletedDTO"
           headers: {}
-      security: []
-  /host/me:
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+      security:
+        - bearerAuth: []
     patch:
       summary: UpdateMe
       deprecated: false
@@ -423,60 +617,102 @@ paths:
         - hosts
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateHostDTO"
       responses:
         "200":
-          description: ""
+          description: "Host updated successfully"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/HostUpdatedDTO"
           headers: {}
-      security: []
-  /hosts/me/booking:
+        "400":
+          description: "Bad Request - Invalid input data"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+      security:
+        - bearerAuth: []
+  /hosts/me/bookings:
     post:
       summary: CreateBooking
       deprecated: false
-      description: Send a request to create a new booking
+      description: |
+        Create a new booking as a host (administrative function).
+
+        **Important:** The hostId in the request body will be IGNORED and automatically 
+        set to the current authenticated user's ID. This is an administrative endpoint 
+        where hosts create bookings for their clients.
+
+        **Use cases:**
+        - Medical receptionist booking patient appointments
+        - Service provider scheduling client meetings  
+        - Host creating appointments for existing clients
+
+        **Note:** The hostId field is required in the request body for DTO validation,
+        but its value is overridden by the current user's ID in the implementation.
       operationId: HOSTS_CREATE_BOOKING
       tags:
         - hosts
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateBookingDTO3"
+            example:
+              clientId: "client_123"
+              hostId: "ignored_will_be_overridden"
+              fromDateTime: "2025-06-25T10:00:00Z"
+              toDateTime: "2025-06-25T11:00:00Z"
+              info:
+                title: "Medical Consultation"
+                description: "General health checkup and consultation"
       responses:
         "201":
-          description: ""
+          description: "Booking created successfully"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BookingCreatedDTO4"
+              example:
+                id: "booking_456"
           headers: {}
-      security: []
-  /hosts/me/bookings:
+        "400":
+          description: "Bad Request - Invalid input data or time slot not available"
+        "401":
+          description: "Unauthorized - Invalid or missing authentication token"
+        "403":
+          description: "Forbidden - User is not a host"
+        "404":
+          description: "Not Found - Client not found"
+        "409":
+          description: "Conflict - Time slot already booked or outside working hours"
+      security:
+        - bearerAuth: []
     get:
       summary: GetMyBookings
       deprecated: false
-      description: ""
+      description: "Get all bookings for the current host with optional filtering and sorting"
       operationId: HOSTS_GET_MY_BOOKINGS
       tags:
         - hosts
       parameters:
         - name: clientId
           in: query
-          description: ""
+          description: "Filter by client ID"
           required: false
           schema:
             type: string
         - name: sortDirection
           in: query
-          description: ""
+          description: "Sort direction"
           required: false
           example: DESC
           schema:
@@ -487,50 +723,34 @@ paths:
             default: DESC
         - name: sortProperty
           in: query
-          description: ""
+          description: "Property to sort by"
           required: false
-          example: dateFrom
+          example: fromDateTime
           schema:
             type: string
-            default: dateFrom
+            default: fromDateTime
             enum:
-              - dateFrom
-              - dateTo
-              - timeFrom
-              - timeTo
-        - name: dateFrom
+              - fromDateTime
+              - toDateTime
+        - name: fromDateTime
           in: query
-          description: YYYY-MM-DD
+          description: "Filter bookings from this date-time (ISO8601)"
           required: false
-          example: 22-01-2025
+          example: "2025-06-25T00:00:00Z"
           schema:
             type: string
-        - name: dateTo
+            format: date-time
+        - name: toDateTime
           in: query
-          description: YYYY-MM-DD
+          description: "Filter bookings until this date-time (ISO8601)"
           required: false
-          example: 28-01-2025
+          example: "2025-06-30T23:59:59Z"
           schema:
             type: string
-        - name: timeFrom
-          in: query
-          description: HH:mm
-          required: false
-          example: "08:00"
-          schema:
-            type: string
-            default: "00:00"
-        - name: timeto
-          in: query
-          description: HH:mm
-          required: false
-          example: "23:59"
-          schema:
-            type: string
-            default: "23:59"
+            format: date-time
       responses:
         "200":
-          description: ""
+          description: "List of host's bookings"
           content:
             application/json:
               schema:
@@ -538,59 +758,127 @@ paths:
                 items:
                   $ref: "#/components/schemas/BookingDTO1"
           headers: {}
-      security: []
-  /hosts/me/bookings/{id}:
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+      security:
+        - bearerAuth: []
+  /hosts/me/bookings/{bookingId}:
+    get:
+      summary: GetBookingById
+      deprecated: false
+      description: "Get specific booking by ID for current host"
+      operationId: HOSTS_GET_BOOKING_BY_ID
+      tags:
+        - hosts
+      parameters:
+        - name: bookingId
+          in: path
+          description: "ID of the booking to retrieve"
+          required: true
+          schema:
+            type: string
+          example: "booking_123"
+      responses:
+        "200":
+          description: "Booking details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingDTO1"
+              example:
+                id: "booking_123"
+                clientId: "client_456"
+                hostId: "host_789"
+                fromDateTime: "2025-06-25T10:00:00Z"
+                toDateTime: "2025-06-25T11:00:00Z"
+                info:
+                  title: "Consultation"
+                  description: "Medical consultation"
+          headers: {}
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+        "404":
+          description: "Booking not found"
+      security:
+        - bearerAuth: []
     delete:
       summary: DeleteBooking
       deprecated: false
       description: Delete(cancel) booking
-      operationId: HOSTS_DELETE_BOOKIN
+      operationId: HOSTS_DELETE_BOOKING
       tags:
         - hosts
       parameters:
-        - name: id
+        - name: bookingId
           in: path
-          description: ""
+          description: "ID of the booking to delete"
           required: true
           schema:
             type: string
+          example: "booking_123"
       responses:
         "200":
-          description: ""
+          description: "Booking deleted successfully"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/BookingDeletedDTO2"
+              example:
+                id: "booking_123"
           headers: {}
-      security: []
-  /hosts/my/bookings/{id}:
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+        "404":
+          description: "Booking not found"
+      security:
+        - bearerAuth: []
     patch:
       summary: UpdateBooking
       deprecated: false
       description: Update booking
+      operationId: HOSTS_UPDATE_BOOKING
       tags:
         - hosts
       parameters:
-        - name: id
+        - name: bookingId
           in: path
-          description: ""
+          description: "ID of the booking to update"
           required: true
           schema:
             type: string
+          example: "booking_123"
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateBookingDTO5"
       responses:
         "200":
-          description: ""
+          description: "Booking updated successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookingUpdatedDTO6"
+                $ref: "#/components/schemas/BookingUpdatedDTO3"
+              example:
+                id: "booking_123"
           headers: {}
-      security: []
+        "400":
+          description: "Bad Request - Invalid input data"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden - User is not a host"
+        "404":
+          description: "Booking not found"
+      security:
+        - bearerAuth: []
   /hosts/me/settings:
     get:
       summary: GetMySettings
@@ -640,103 +928,177 @@ components:
     AuthUserDTO:
       type: object
       properties:
-        email:
+        login:
           type: string
+          description: User login
         password:
           type: string
+          description: User password
       required:
-        - email
+        - login
         - password
-      title: Auth_AuthUserDTO
+      title: Auth_LogInUserDTO
+      example:
+        login: "user123"
+        password: "StrongPassword123!"
     CreateUserDTO:
       type: object
       properties:
-        email:
+        login:
           type: string
+          description: User login (max 36 characters)
+          maxLength: 36
         password:
           type: string
+          description: Strong password
         role:
           type: string
           enum:
             - CLIENT
             - HOST
+          description: User role
       required:
-        - email
+        - login
         - password
         - role
       title: Auth_CreateUserDTO
+      example:
+        login: "newuser123"
+        password: "StrongPassword123!"
+        role: "CLIENT"
     UserCreatedDTO:
       type: object
       properties:
-        token:
+        accessToken:
           type: string
+          description: JWT access token
       required:
-        - token
-      title: Auth_UserCreatedDTO
+        - accessToken
+      title: Auth_UserLoggedInDTO
+      example:
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     UserAuthorizedDTO:
       type: object
       properties:
-        token:
+        accessToken:
           type: string
+          description: JWT access token
       required:
-        - token
-      title: Auth_UserAuthorizedDTO
+        - accessToken
+      title: Auth_UserLoggedInDTO
+      example:
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     ClientDTO:
       type: object
       properties:
         id:
           type: string
+          description: Client ID
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Client's first name
+            lastName:
+              type: string
+              description: Client's last name
       required:
         - id
       title: Clients_ClientDTO
+      example:
+        id: "client_123"
+        info:
+          firstName: "John"
+          lastName: "Doe"
     BookingDTO:
       type: object
       properties:
         id:
           type: string
-          description: ID
+          description: Booking ID
         clientId:
           type: string
+          description: Client ID who made the booking
         hostId:
           type: string
-        date:
+          description: Host ID providing the service
+        fromDateTime:
           type: string
-        time:
+          format: date-time
+          description: Booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: Booking end time (ISO8601)
+        info:
           type: object
           properties:
-            from:
+            title:
               type: string
-            to:
+              description: Booking title
+            description:
               type: string
+              description: Booking description
           required:
-            - from
-            - to
+            - title
+            - description
       required:
         - id
         - clientId
         - hostId
-        - date
-        - time
+        - fromDateTime
+        - toDateTime
+        - info
       title: Clients_BookingDTO
+      example:
+        id: "booking_789"
+        clientId: "client_123"
+        hostId: "host_456"
+        fromDateTime: "2025-06-25T10:00:00Z"
+        toDateTime: "2025-06-25T11:00:00Z"
+        info:
+          title: "Consultation"
+          description: "Regular checkup"
     CreateBookingDTO:
       type: object
       properties:
         hostId:
           type: string
-        date:
+          description: ID of the host to book
+        fromDateTime:
           type: string
-        timeFrom:
+          format: date-time
+          description: Booking start time (ISO8601)
+        toDateTime:
           type: string
-        timeTo:
-          type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          format: date-time
+          description: Booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Booking title
+            description:
+              type: string
+              description: Booking description
+          required:
+            - title
+            - description
       required:
         - hostId
-        - date
-        - timeFrom
+        - fromDateTime
+        - toDateTime
+        - info
       title: Clients_CreateBookingDTO
+      example:
+        hostId: "host_456"
+        fromDateTime: "2025-06-25T10:00:00Z"
+        toDateTime: "2025-06-25T11:00:00Z"
+        info:
+          title: "Consultation"
+          description: "Regular checkup"
     BookingCreatedDTO:
       type: object
       properties:
@@ -750,9 +1112,40 @@ components:
       properties:
         id:
           type: string
+          description: ID of deleted client
       required:
         - id
       title: Clients_ClientDeletedDTO
+      example:
+        id: "client_123"
+    ClientUpdatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of updated client
+      required:
+        - id
+      title: Clients_ClientUpdatedDTO
+      example:
+        id: "client_123"
+    UpdateClientDTO:
+      type: object
+      properties:
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Updated first name
+            lastName:
+              type: string
+              description: Updated last name
+      title: Clients_UpdateClientDTO
+      example:
+        info:
+          firstName: "John"
+          lastName: "Smith"
     BookingDeletedDTO:
       type: object
       properties:
@@ -765,20 +1158,30 @@ components:
     UpdateBookingDTO:
       type: object
       properties:
-        hostId:
+        fromDateTime:
           type: string
-        date:
+          format: date-time
+          description: New booking start time (ISO8601)
+        toDateTime:
           type: string
-        timeFrom:
-          type: string
-        timeTo:
-          type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          format: date-time
+          description: New booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Updated booking title
+            description:
+              type: string
+              description: Updated booking description
       title: Clients_UpdateBookingDTO
-      required:
-        - hostId
+      example:
+        fromDateTime: "2025-06-25T14:00:00Z"
+        toDateTime: "2025-06-25T15:00:00Z"
+        info:
+          title: "Updated Consultation"
+          description: "Updated description"
     BookingUpdatedDTO:
       type: object
       properties:
@@ -834,33 +1237,50 @@ components:
       properties:
         id:
           type: string
-          description: ID
+          description: "Booking ID"
         clientId:
           type: string
+          description: "Client ID"
         hostId:
           type: string
-        date:
+          description: "Host ID"
+        fromDateTime:
           type: string
-          description: YYYY-MM-DD
-        time:
+          format: date-time
+          description: "Booking start time (ISO8601)"
+        toDateTime:
+          type: string
+          format: date-time
+          description: "Booking end time (ISO8601)"
+        info:
           type: object
           properties:
-            from:
+            title:
               type: string
-              description: HH:mm
-            to:
+              description: "Booking title"
+            description:
               type: string
-              description: HH:mm
+              description: "Booking description"
           required:
-            - from
-            - to
+            - title
+            - description
       required:
         - id
         - clientId
         - hostId
-        - date
-        - time
+        - fromDateTime
+        - toDateTime
+        - info
       title: Hosts_BookingDTO
+      example:
+        id: "booking_123"
+        clientId: "client_456"
+        hostId: "host_789"
+        fromDateTime: "2025-06-25T10:00:00Z"
+        toDateTime: "2025-06-25T11:00:00Z"
+        info:
+          title: "Consultation"
+          description: "Medical consultation"
     HostDeletedDTO:
       type: object
       properties:
@@ -921,19 +1341,75 @@ components:
       properties:
         clientId:
           type: string
-        date:
+          description: |
+            ID of the client for whom the booking is being created.
+            This client must exist in the system.
+          maxLength: 36
+          example: "client_123"
+        hostId:
           type: string
-        timeFrom:
+          description: |
+            **IMPORTANT:** This field is required for DTO validation but its value is IGNORED.
+            The actual hostId will be automatically set to the current authenticated user's ID.
+
+            TODO: Consider removing this field from DTO or making it optional to better reflect the actual behavior.
+          maxLength: 36
+          example: "any_value_will_be_ignored"
+        fromDateTime:
           type: string
-        timeTo:
+          format: date-time
+          description: |
+            Booking start time in ISO8601 format.
+            Must be within host's working hours and available time slots.
+          example: "2025-06-25T10:00:00Z"
+        toDateTime:
           type: string
-          description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
+          format: date-time
+          description: |
+            Booking end time in ISO8601 format.
+            Must be after fromDateTime and within host's working hours.
+          example: "2025-06-25T11:00:00Z"
+        info:
+          type: object
+          description: Additional information about the booking/service
+          properties:
+            title:
+              type: string
+              description: Title or name of the service/appointment
+              example: "Medical Consultation"
+            description:
+              type: string
+              description: Detailed description of the service or special notes
+              example: "General health checkup and consultation with Dr. Smith"
+          required:
+            - title
+            - description
       required:
-        - date
-        - timeFrom
+        - clientId
+        - hostId
+        - fromDateTime
+        - toDateTime
+        - info
       title: Hosts_CreateBookingDTO
+      description: |
+        Data required to create a booking as a host.
+
+        **Note:** The hostId field is required in the schema but is ignored in implementation.
+        The actual hostId is taken from the authenticated user's token.
+
+        **TODO:** This DTO is shared between HostController and ClientController with different behaviors:
+        - HostController: ignores hostId, uses currentUser.id as hostId
+        - ClientController: uses hostId from request, ignores clientId and uses currentUser.id as clientId
+
+        Consider creating separate DTOs for each use case to improve API clarity.
+      example:
+        clientId: "client_123"
+        hostId: "ignored_value"
+        fromDateTime: "2025-06-25T10:00:00Z"
+        toDateTime: "2025-06-25T11:00:00Z"
+        info:
+          title: "Medical Consultation"
+          description: "General health checkup and consultation"
     BookingCreatedDTO4:
       type: object
       properties:
@@ -1054,5 +1530,14 @@ components:
         allowBookingApprove:
           type: boolean
       title: Hosts_UpdateHostSettingsDTO
-  securitySchemes: {}
-servers: []
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: JWT token authentication. Use the token returned from /auth/login endpoint. Do not include 'Bearer ' prefix.
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.booking.example.com
+    description: Production server
