@@ -110,10 +110,10 @@ export class ClientService {
       { updateClientDTO, clientId },
       this.constructor.name + " updateClient",
     );
-    const client = this._uow.bookingRepository.getById(clientId);
+    const client = this._uow.clientRepository.getById(clientId);
     if (!client) throw new Error("client not found");
     // TODO Make update
-    this._uow.bookingRepository.save(client);
+    this._uow.clientRepository.save(client);
   }
 
   async revertClient(clientId: string) {

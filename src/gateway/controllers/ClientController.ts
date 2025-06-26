@@ -20,7 +20,6 @@ import {
   UpdateClientSaga,
 } from "../sagas";
 import {
-  // ClientDTO,
   CreateBookingDTO,
   UpdateBookingDTO,
   UpdateClientDTO,
@@ -30,6 +29,7 @@ import {
   BookingDTO,
   BookingUpdatedDTO,
   BookingDeletedDTO,
+  ClientDTO,
 } from "../dtos";
 import {
   CreateBookingInBookingServiceStep,
@@ -50,40 +50,35 @@ import {
 export class ClientController {
   constructor() {}
 
-  // TODO - Add typing for return
   @Authorized([shared.enums.Roles.CLIENT])
   @Get("/me")
-  async getMe(@CurrentUser() user?: auth.domain.User): Promise<unknown> {
-    if (!user) throw new Error("user not found");
-    const client = booking.services.clientService.getClientById(user?.id);
+  async getMe(@CurrentUser() user: auth.domain.User): Promise<ClientDTO> {
+    const client = await booking.services.clientService.getClientById(user.id);
 
-    return {
-      ...client,
-      info: {},
-    };
+    return new ClientDTO({ ...client });
   }
 
-  // private
   @Authorized([shared.enums.Roles.CLIENT])
   @Delete("/me")
-  async deleteClient() // @Body() deleteUserDTO: DeleteUserDTO,
-  : Promise<ClientDeletedDTO> {
+  async deleteClient(
+    @CurrentUser() user: auth.domain.User,
+  ): Promise<ClientDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
       new DeleteUserInInfoServiceStep(),
     );
-    await deleteUserSaga.execute("test_id");
-    return new ClientDeletedDTO({ id: "test_id" });
+    await deleteUserSaga.execute(user.id);
+    return new ClientDeletedDTO({ id: user.id });
   }
 
-  // private
   @Authorized([shared.enums.Roles.CLIENT])
   @Patch("/me")
   async updateClient(
+    @CurrentUser() user: auth.domain.User,
     @Body() updateClientDTO: UpdateClientDTO,
   ): Promise<ClientUpdatedDTO> {
-    const userId = "test_id";
+    const userId = user.id;
     const updateClientSaga = new UpdateClientSaga(
       new UpdateClientInBookingServiceStep(
         booking.services.clientService.updateClient,
@@ -92,7 +87,7 @@ export class ClientController {
       new UpdateClientInInfoServiceStep(),
     );
     await updateClientSaga.execute(updateClientDTO, userId);
-    return new ClientUpdatedDTO({ id: "test_id" });
+    return new ClientUpdatedDTO({ id: user.id });
   }
 
   // private
