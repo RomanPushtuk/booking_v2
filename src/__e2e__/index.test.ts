@@ -1,5 +1,6 @@
 import { api } from "./api";
 import { gateway } from "./imports";
+import { AxiosRequestConfig } from "axios";
 
 describe("Auth testing", () => {
   test("Register new client", async () => {
@@ -30,8 +31,9 @@ describe("Auth testing", () => {
 });
 
 describe("Client testing", () => {
-  let clientAccessUserToken: string;
-  let hostAccessHostToken: string;
+  let clientConfig: AxiosRequestConfig;
+  let hostConfig: AxiosRequestConfig;
+  let invalidConfig: AxiosRequestConfig;
 
   beforeAll(async () => {
     const [client, host] = await Promise.all([
@@ -47,12 +49,27 @@ describe("Client testing", () => {
       }),
     ]);
 
-    clientAccessUserToken = client.data.accessToken;
-    hostAccessHostToken = host.data.accessToken;
+    clientConfig = {
+      headers: {
+        Authorization: client.data.accessToken,
+      },
+    };
+
+    hostConfig = {
+      headers: {
+        Authorization: host.data.accessToken,
+      },
+    };
+
+    invalidConfig = {
+      headers: {
+        Authorization: "invalid_token",
+      },
+    };
   });
 
   test("Get me success", async () => {
-    const response = await api.clients.getMe(clientAccessUserToken);
+    const response = await api.clients.getMe(clientConfig);
 
     expect(() => {
       new gateway.dtos.ClientDTO({ ...response.data });
@@ -62,15 +79,13 @@ describe("Client testing", () => {
   });
 
   test("Get me with invalid token", async () => {
-    const response = await api.clients.getMe("invalid_token");
-    // TODO: 401, unauthorized
-    expect(response.status).toBe(500);
+    const response = await api.clients.getMe(invalidConfig);
+    expect(response.status).toBe(401);
   });
 
   test("Get me with another role", async () => {
-    const response = await api.clients.getMe(hostAccessHostToken);
-    // TODO: 403, forbidden
-    expect(response.status).toBe(500);
+    const response = await api.clients.getMe(hostConfig);
+    expect(response.status).toBe(403);
   });
 
   test("Update me success", async () => {
@@ -78,10 +93,7 @@ describe("Client testing", () => {
       info: { firstName: "Test" },
     };
 
-    const response = await api.clients.updateMe(
-      clientAccessUserToken,
-      updateClientDTO,
-    );
+    const response = await api.clients.updateMe(updateClientDTO, clientConfig);
 
     expect(() => {
       new gateway.dtos.ClientUpdatedDTO({ ...response.data });
@@ -95,12 +107,9 @@ describe("Client testing", () => {
       info: { firstName: "Test" },
     };
 
-    const response = await api.clients.updateMe(
-      "invalid_token",
-      updateClientDTO,
-    );
-    // TODO: 401, unauthorized
-    expect(response.status).toBe(500);
+    const response = await api.clients.updateMe(updateClientDTO, invalidConfig);
+
+    expect(response.status).toBe(401);
   });
 
   test("Update me with another role", async () => {
@@ -108,16 +117,13 @@ describe("Client testing", () => {
       info: { firstName: "Test" },
     };
 
-    const response = await api.clients.updateMe(
-      hostAccessHostToken,
-      updateClientDTO,
-    );
-    // TODO: 403, forbidden
-    expect(response.status).toBe(500);
+    const response = await api.clients.updateMe(updateClientDTO, hostConfig);
+
+    expect(response.status).toBe(403);
   });
 
   test("Delete me success", async () => {
-    const response = await api.clients.deleteMe(clientAccessUserToken);
+    const response = await api.clients.deleteMe(clientConfig);
 
     expect(() => {
       new gateway.dtos.ClientDeletedDTO({ ...response.data });
@@ -127,14 +133,14 @@ describe("Client testing", () => {
   });
 
   test("Delete me with invalid token", async () => {
-    const response = await api.clients.deleteMe("invalid_token");
-    // TODO: 401, unauthorized
-    expect(response.status).toBe(500);
+    const response = await api.clients.deleteMe(invalidConfig);
+
+    expect(response.status).toBe(401);
   });
 
   test("Delete me with another role", async () => {
-    const response = await api.clients.deleteMe(hostAccessHostToken);
-    // TODO: 403, forbidden
-    expect(response.status).toBe(500);
+    const response = await api.clients.deleteMe(hostConfig);
+
+    expect(response.status).toBe(403);
   });
 });

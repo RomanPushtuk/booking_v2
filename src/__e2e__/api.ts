@@ -1,9 +1,10 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { gateway } from "./imports";
 
-const base = "http://localhost:3000";
-
-const axiosInstance = axios.create({ validateStatus: () => true });
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:3000",
+  validateStatus: () => true,
+});
 
 export const api = {
   public: {
@@ -12,52 +13,43 @@ export const api = {
   },
   auth: {
     register: (body: gateway.dtos.CreateUserDTO) => {
-      return axios.post<gateway.dtos.UserLoggedInDTO>(
-        base + "/auth/register",
+      return axiosInstance.post<gateway.dtos.UserLoggedInDTO>(
+        "/auth/register",
         body,
       );
     },
     login: (body: gateway.dtos.LogInUserDTO) => {
-      return axios.post<gateway.dtos.UserLoggedInDTO>(
-        base + "/auth/login",
+      return axiosInstance.post<gateway.dtos.UserLoggedInDTO>(
+        "/auth/login",
         body,
       );
     },
   },
   clients: {
-    getMe: (accessToken: string) => {
-      return axiosInstance.get<gateway.dtos.ClientDTO>(base + "/clients/me", {
-        headers: {
-          Authorization: `${accessToken}`,
-        },
-      });
+    getMe: (config: AxiosRequestConfig) => {
+      return axiosInstance.get<gateway.dtos.ClientDTO>("/clients/me", config);
     },
-    updateMe: (accessToken: string, body: gateway.dtos.UpdateClientDTO) => {
+    updateMe: (
+      body: gateway.dtos.UpdateClientDTO,
+      config: AxiosRequestConfig,
+    ) => {
       return axiosInstance.patch<gateway.dtos.ClientUpdatedDTO>(
-        base + "/clients/me",
+        "/clients/me",
         body,
-        {
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        },
+        config,
       );
     },
-    deleteMe: (accessToken: string) => {
+    deleteMe: (config: AxiosRequestConfig) => {
       return axiosInstance.delete<gateway.dtos.ClientDeletedDTO>(
-        base + "/clients/me",
-        {
-          headers: {
-            Authorization: `${accessToken}`,
-          },
-        },
+        "/clients/me",
+        config,
       );
     },
     getMyBookings: () => {},
     getBookingById: () => {},
     createBooking: (body: gateway.dtos.CreateBookingDTO) => {
-      return axios.post<gateway.dtos.BookingCreatedDTO>(
-        base + "/me/bookings",
+      return axiosInstance.post<gateway.dtos.BookingCreatedDTO>(
+        "/me/bookings",
         body,
       );
     },
