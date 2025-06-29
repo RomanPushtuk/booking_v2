@@ -17,14 +17,21 @@ export const getAllBookings = (data?: {
     if (filters.clientId) {
       filtersSql.push(`\`clientId\` = '${filters.clientId}'`);
     }
+
     if (filters.hostId) {
       filtersSql.push(`\`hostId\` = '${filters.hostId}'`);
     }
-    if (filters.dateTimeFrom) {
-      filtersSql.push(`\`dateTimeFrom\` >= '${filters.dateTimeFrom}'`);
+
+    if (filters.fromDateTime) {
+      filtersSql.push(`\`fromDateTime\` >= '${filters.fromDateTime}'`);
     }
-    if (filters.dateTimeTo) {
-      filtersSql.push(`\`dateTimeTo\` <=  '${filters.dateTimeTo}'`);
+
+    if (filters.toDateTime) {
+      filtersSql.push(`\`toDateTime\` <=  '${filters.toDateTime}'`);
+    }
+
+    if (filters.deleted) {
+      filtersSql.push(`\`deleted\` = ${filters.deleted}`);
     }
 
     filtersSql = filtersSql.map((statement, index) => {
