@@ -6,10 +6,12 @@ export { DeleteUserInBookingServiceStep } from "./DeleteUserInBookingServiceStep
 export { DeleteUserInInfoServiceStep } from "./DeleteUserInInfoServiceStep";
 export { CreateBookingInBookingServiceStep } from "./CreateBookingInBookingServiceStep";
 export { CreateBookingInInfoServiceStep } from "./CreateBookingInInfoServiceStep";
+export { CreateClientBookingInBookingServiceStep } from "./CreateClientBookingInBookingServiceStep";
 export { DeleteBookingInBookingServiceStep } from "./DeleteBookingInBookingServiceStep";
 export { DeleteBookingInInfoServiceStep } from "./DeleteBookingInInfoServiceStep";
 export { UpdateBookingInBookingServiceStep } from "./UpdateBookingInBookingServiceStep";
 export { UpdateBookingInInfoServiceStep } from "./UpdateBookingInInfoServiceStep";
+export { UpdateClientBookingInBookingServiceStep } from "./UpdateClientBookingInBookingServiceStep";
 export { UpdateClientInBookingServiceStep } from "./UpdateClientInBookingServiceStep";
 export { UpdateClientInInfoServiceStep } from "./UpdateClientInInfoServiceStep";
 export { UpdateHostInBookingServiceStep } from "./UpdateHostInBookingServiceStep";

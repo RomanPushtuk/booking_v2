@@ -1,8 +1,8 @@
 {
-  "allowOverlapingBookings": false,
+  "allowOverlappingBookings": false,
   "allowPastTimeBookings": false,
-  "allowBookingCancelByClient ": true,
-  "allowBookingCancelByHost ": false,
+  "allowBookingCancelByClient": true,
+  "allowBookingCancelByHost": false,
   "allowBookingUpdateByClient": false,
   "allowBookingUpdateByHost": false,
   "allowBookingApprove": false,
