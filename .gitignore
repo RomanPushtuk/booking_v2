@@ -3,4 +3,5 @@ node_modules/
 logs/
 src/booking/db/database.db
 src/auth/db/database.db
+.vscode
 
