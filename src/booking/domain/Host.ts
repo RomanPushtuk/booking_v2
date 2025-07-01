@@ -4,6 +4,12 @@ import { HostProperties } from "../types";
 import { Booking } from "./Booking";
 import { User } from "./User";
 import config from "../../config.json";
+import {
+  isSameDay,
+  getDayOfWeek,
+  getTimeFromDateTime,
+  isTimeInWorkingHours,
+} from "../../shared/utils/date";
 
 export class Host {
   private _id: string;
@@ -44,18 +50,18 @@ export class Host {
   }
 
   addBooking(booking: Booking) {
-    // TODO: discuss with Roman
-    // this.validateWorkingHoursHost();
+    this.validateWorkingHoursHost(
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
 
     this.validateExistClientBooking(
-      this,
       booking.getClientId(),
       booking.getFromDateTime(),
       booking.getToDateTime(),
     );
 
     this.validateOverlapBooking(
-      this,
       booking.getFromDateTime(),
       booking.getToDateTime(),
     );
@@ -65,18 +71,18 @@ export class Host {
   }
 
   updateBooking(booking: Booking) {
-    // TODO: discuss with Roman
-    // this.validateWorkingHoursHost();
+    this.validateWorkingHoursHost(
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
 
     this.validateExistClientBooking(
-      this,
       booking.getClientId(),
       booking.getFromDateTime(),
       booking.getToDateTime(),
     );
 
     this.validateOverlapBooking(
-      this,
       booking.getFromDateTime(),
       booking.getToDateTime(),
     );
@@ -110,14 +116,10 @@ export class Host {
     });
   }
 
-  private validateOverlapBooking(
-    host: Host,
-    fromDateTime: string,
-    toDateTime: string,
-  ) {
+  private validateOverlapBooking(fromDateTime: string, toDateTime: string) {
     if (config.allowOverlappingBookings) return;
 
-    const hostBookings = host.getBookings();
+    const hostBookings = this.getBookings();
     for (const booking of hostBookings) {
       if (booking.getDeleted()) continue;
 
@@ -133,12 +135,11 @@ export class Host {
   }
 
   private validateExistClientBooking(
-    host: Host,
     clientId: string,
     fromDateTime: string,
     toDateTime: string,
   ) {
-    const bookings = host.getBookings();
+    const bookings = this.getBookings();
 
     for (const booking of bookings) {
       if (
@@ -152,5 +153,24 @@ export class Host {
     }
   }
 
-  private validateWorkingHoursHost() {}
+  private validateWorkingHoursHost(fromDateTime: string, toDateTime: string) {
+    if (!isSameDay(fromDateTime, toDateTime))
+      throw new Error("Booking must be within the same day");
+
+    const dayOfWeek = getDayOfWeek(fromDateTime);
+
+    if (!dayOfWeek) throw new Error("Invalid day of week");
+
+    if (!this._workDays.includes(dayOfWeek))
+      throw new Error(`Host does not work on ${dayOfWeek}`);
+
+    const fromTime = getTimeFromDateTime(fromDateTime);
+    const toTime = getTimeFromDateTime(toDateTime);
+
+    if (
+      !isTimeInWorkingHours(fromTime, this._workHours) ||
+      !isTimeInWorkingHours(toTime, this._workHours)
+    )
+      throw new Error("Booking time is outside host working hours");
+  }
 }
