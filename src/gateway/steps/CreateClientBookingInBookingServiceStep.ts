@@ -9,6 +9,7 @@ export class CreateClientBookingInBookingServiceStep extends Step<
   private _invokeCb: (
     createClientBookingDTO: CreateClientBookingDTO,
     clientId: string,
+    bookingId: string,
   ) => Promise<void>;
   private _withCompenstationCb: (bookingId: string) => Promise<void>;
 
@@ -16,6 +17,7 @@ export class CreateClientBookingInBookingServiceStep extends Step<
     invokeCb: (
       createClientBookingDTO: CreateClientBookingDTO,
       clientId: string,
+      bookingId: string,
     ) => Promise<void>,
     withCompenstationCb: (bookingId: string) => Promise<void>,
   ) {
@@ -27,9 +29,10 @@ export class CreateClientBookingInBookingServiceStep extends Step<
   override async invoke(
     createClientBookingDTO: CreateClientBookingDTO,
     clientId: string,
+    bookingId: string,
   ): Promise<void> {
     logger.info(this.constructor.name + " invoke");
-    await this._invokeCb(createClientBookingDTO, clientId);
+    await this._invokeCb(createClientBookingDTO, clientId, bookingId);
     return;
   }
 

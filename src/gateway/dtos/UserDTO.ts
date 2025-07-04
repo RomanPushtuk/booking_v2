@@ -12,7 +12,7 @@ export class UserDTO {
   password: string;
 
   @IsIn(Object.values(shared.enums.Roles))
-  role: string;
+  role: shared.enums.Roles;
 
   constructor(data: shared.types.GetInterface<UserDTO>) {
     this.id = data.id;

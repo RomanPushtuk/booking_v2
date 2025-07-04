@@ -345,7 +345,7 @@ paths:
             default: fromDateTime
         - name: fromDateTime
           in: query
-          description: Filter bookings from this datetime (ISO8601)
+          description: Filter bookings with exact fromDateTime match (ISO8601)
           required: false
           example: "2025-06-21T10:00:00Z"
           schema:
@@ -353,9 +353,41 @@ paths:
             format: date-time
         - name: toDateTime
           in: query
-          description: Filter bookings to this datetime (ISO8601)
+          description: Filter bookings with exact toDateTime match (ISO8601)
           required: false
           example: "2025-06-28T18:00:00Z"
+          schema:
+            type: string
+            format: date-time
+        - name: fromDateTimeStart
+          in: query
+          description: Filter bookings with fromDateTime >= this value (ISO8601)
+          required: false
+          example: "2025-06-01T00:00:00Z"
+          schema:
+            type: string
+            format: date-time
+        - name: fromDateTimeEnd
+          in: query
+          description: Filter bookings with fromDateTime <= this value (ISO8601)
+          required: false
+          example: "2025-06-30T23:59:59Z"
+          schema:
+            type: string
+            format: date-time
+        - name: toDateTimeStart
+          in: query
+          description: Filter bookings with toDateTime >= this value (ISO8601)
+          required: false
+          example: "2025-06-01T00:00:00Z"
+          schema:
+            type: string
+            format: date-time
+        - name: toDateTimeEnd
+          in: query
+          description: Filter bookings with toDateTime <= this value (ISO8601)
+          required: false
+          example: "2025-06-30T23:59:59Z"
           schema:
             type: string
             format: date-time

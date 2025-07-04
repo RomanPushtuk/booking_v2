@@ -42,14 +42,13 @@ import {
   UpdateClientInBookingServiceStep,
   UpdateClientInInfoServiceStep,
 } from "../steps";
-import { AllowBookingPermission } from "../decorators/AllowBookingPermission";
 
 @Service()
 @JsonController("/clients")
 export class ClientController {
   constructor() {}
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_READ_PROFILE])
   @Get("/me")
   async getMe(@CurrentUser() user: auth.domain.User): Promise<ClientDTO> {
     const client = await booking.services.clientService.getClientById(user.id);
@@ -57,7 +56,7 @@ export class ClientController {
     return new ClientDTO({ ...client });
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_DELETE_PROFILE])
   @Delete("/me")
   async deleteClient(
     @CurrentUser() user: auth.domain.User,
@@ -71,7 +70,7 @@ export class ClientController {
     return new ClientDeletedDTO({ id: user.id });
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_UPDATE_PROFILE])
   @Patch("/me")
   async updateClient(
     @CurrentUser() user: auth.domain.User,
@@ -89,7 +88,7 @@ export class ClientController {
     return new ClientUpdatedDTO({ id: user.id });
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_READ_BOOKINGS])
   @Get("/me/bookings")
   async getBookings(
     @CurrentUser() user: auth.domain.User,
@@ -98,6 +97,10 @@ export class ClientController {
     @QueryParam("sortProperty") sortProperty: string = "fromDateTime",
     @QueryParam("fromDateTime") fromDateTime?: string,
     @QueryParam("toDateTime") toDateTime?: string,
+    @QueryParam("fromDateTimeStart") fromDateTimeStart?: string,
+    @QueryParam("fromDateTimeEnd") fromDateTimeEnd?: string,
+    @QueryParam("toDateTimeStart") toDateTimeStart?: string,
+    @QueryParam("toDateTimeEnd") toDateTimeEnd?: string,
   ): Promise<BookingDTO[]> {
     const sorting = new shared.application.BookingSorting(
       sortDirection,
@@ -108,6 +111,10 @@ export class ClientController {
       clientId: user.id,
       fromDateTime,
       toDateTime,
+      fromDateTimeStart,
+      fromDateTimeEnd,
+      toDateTimeStart,
+      toDateTimeEnd,
       deleted: false,
     });
 
@@ -129,7 +136,7 @@ export class ClientController {
     );
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_READ_BOOKINGS])
   @Get("/me/bookings/:bookingId")
   async getBookingById(
     @CurrentUser() user: auth.domain.User,
@@ -150,7 +157,7 @@ export class ClientController {
     });
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_CREATE_BOOKING])
   @Post("/me/bookings")
   public async createBooking(
     @CurrentUser() user: auth.domain.User,
@@ -172,8 +179,7 @@ export class ClientController {
     return new BookingCreatedDTO({ id: bookingId });
   }
 
-  @AllowBookingPermission("allowBookingUpdateByClient")
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_UPDATE_BOOKING])
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
     @CurrentUser() user: auth.domain.User,
@@ -196,8 +202,7 @@ export class ClientController {
     return new BookingUpdatedDTO({ id: bookingId });
   }
 
-  @AllowBookingPermission("allowBookingCancelByClient")
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_CANCEL_BOOKING])
   @Delete("/me/bookings/:bookingId")
   async cancelBooking(
     @CurrentUser() user: auth.domain.User,

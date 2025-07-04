@@ -71,32 +71,60 @@ export class Client {
     });
   }
 
-  private makeBookingFilter(filters?: shared.application.BookingFilters) {
-    return (b: Booking) => {
-      if (!filters) return true;
+  private makeBookingFilter(filters: shared.application.BookingFilters) {
+    return (booking: Booking) => {
+      const {
+        fromDateTimeStart,
+        fromDateTimeEnd,
+        toDateTimeStart,
+        toDateTimeEnd,
+        clientId,
+        hostId,
+        fromDateTime,
+        toDateTime,
+        deleted,
+      } = filters;
 
-      if (filters.clientId && b.getClientId() !== filters.clientId) {
+      if (clientId && booking.getClientId() !== clientId) return false;
+
+      if (hostId && booking.getHostId() !== hostId) return false;
+
+      if (typeof deleted === "boolean" && booking.getDeleted() !== deleted) {
         return false;
       }
 
-      if (filters.hostId && b.getHostId() !== filters.hostId) {
+      if (fromDateTime && booking.getFromDateTime() !== fromDateTime) {
+        return false;
+      }
+
+      if (toDateTime && booking.getToDateTime() !== toDateTime) {
         return false;
       }
 
       if (
-        filters.fromDateTime &&
-        b.getFromDateTime() !== filters.fromDateTime
+        fromDateTimeStart &&
+        new Date(booking.getFromDateTime()) < new Date(fromDateTimeStart)
       ) {
         return false;
       }
 
-      if (filters.toDateTime && b.getToDateTime() !== filters.toDateTime) {
+      if (
+        fromDateTimeEnd &&
+        new Date(booking.getFromDateTime()) > new Date(fromDateTimeEnd)
+      ) {
         return false;
       }
 
       if (
-        typeof filters.deleted === "boolean" &&
-        b.getDeleted() !== filters.deleted
+        toDateTimeStart &&
+        new Date(booking.getToDateTime()) < new Date(toDateTimeStart)
+      ) {
+        return false;
+      }
+
+      if (
+        toDateTimeEnd &&
+        new Date(booking.getToDateTime()) > new Date(toDateTimeEnd)
       ) {
         return false;
       }
@@ -105,40 +133,29 @@ export class Client {
     };
   }
 
-  private makeBookingSorter(sorting?: shared.application.BookingSorting) {
-    if (!sorting) return () => 0;
-
+  private makeBookingSorter(sorting: shared.application.BookingSorting) {
     const getters: Record<string, (booking: Booking) => Date> = {
       fromDateTime: (booking) => new Date(booking.getFromDateTime()),
-      toDateTime: (booking) => new Date(booking.getToDateTime()),
+      toDateTime: (booking) => new Date(booking.getFromDateTime()),
     };
 
-    if (!sorting) return () => 0;
-    if (!getters[sorting.property]) return () => 0;
+    const getValue = getters[sorting.property];
 
-    if (sorting.direction === shared.enums.SortDirection.ASC) {
-      return (a: Booking, b: Booking) => {
-        const aValue = getters[sorting.property](a);
-        const bValue = getters[sorting.property](b);
+    if (!getValue) return () => 0;
 
-        if (aValue > bValue) return 1;
-        if (aValue < bValue) return -1;
+    const isAscending = sorting.direction === shared.enums.SortDirection.ASC;
 
-        return 0;
-      };
-    }
+    return (bookingA: Booking, bookingB: Booking) => {
+      const aValue = getValue(bookingA);
+      const bValue = getValue(bookingB);
 
-    if (sorting.direction === shared.enums.SortDirection.DESC) {
-      return (a: Booking, b: Booking) => {
-        const aValue = getters[sorting.property](a);
-        const bValue = getters[sorting.property](b);
+      if (aValue === bValue) return 0;
 
-        if (aValue > bValue) return -1;
-        if (aValue < bValue) return 1;
-        return 0;
-      };
-    }
+      const aIsMoreRecent = aValue > bValue;
 
-    return () => 0;
+      if (isAscending) return aIsMoreRecent ? 1 : -1;
+
+      return aIsMoreRecent ? -1 : 1;
+    };
   }
 }
