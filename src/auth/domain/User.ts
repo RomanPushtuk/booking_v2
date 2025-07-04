@@ -4,7 +4,7 @@ export class User {
   id: string;
   login: string;
   password: string;
-  role: string;
+  role: shared.enums.Roles;
   deleted: boolean;
 
   constructor(data: shared.types.GetInterface<User>) {

@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsString,
   ValidateNested,
+  IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
 
@@ -32,7 +33,8 @@ export class BookingDTO {
   toDateTime: string;
 
   @ValidateNested()
-  info: _Info;
+  @IsOptional()
+  info?: _Info;
 
   constructor(data: shared.types.GetInterface<BookingDTO>) {
     this.id = data.id;

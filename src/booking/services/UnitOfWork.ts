@@ -43,4 +43,9 @@ export class UnitOfWork {
     db.exec("COMMIT;");
     logger.info({}, "Commit Transaction");
   }
+
+  async rollback() {
+    db.exec("ROLLBACK;");
+    logger.info({}, "Rollback Transaction");
+  }
 }

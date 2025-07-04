@@ -9,5 +9,5 @@ export class CreateUserDTO {
   password: string;
 
   @IsIn(Object.values(shared.enums.Roles))
-  role: string;
+  role: shared.enums.Roles;
 }

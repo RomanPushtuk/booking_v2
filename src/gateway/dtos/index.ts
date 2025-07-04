@@ -4,6 +4,8 @@ export { AuthUserDTO } from "./AuthUserDTO";
 export { CreateBookingDTO } from "./CreateBookingDTO";
 export { DeleteBookingDTO } from "./DeleteBookingDTO";
 export { UpdateBookingDTO } from "./UpdateBookingDTO";
+export { CreateClientBookingDTO } from "./CreateClientBookingDTO";
+export { UpdateClientBookingDTO } from "./UpdateClientBookingDTO";
 export { UpdateClientDTO } from "./UpdateClientDTO";
 export { UpdateHostDTO } from "./UpdateHostDTO";
 export { UserCreatedDTO } from "./UserCreatedDTO";

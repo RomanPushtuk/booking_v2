@@ -44,4 +44,12 @@ export class Booking {
   setDeleted(flag: boolean) {
     this._deleted = flag;
   }
+
+  setFromDateTime(fromDateTime: string) {
+    this._fromDateTime = fromDateTime;
+  }
+
+  setToDateTime(toDateTime: string) {
+    this._toDateTime = toDateTime;
+  }
 }

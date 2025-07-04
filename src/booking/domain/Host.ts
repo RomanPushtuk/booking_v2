@@ -1,7 +1,15 @@
+import { intervalsOverlap } from "../../shared/utils";
 import { logger } from "../logger";
 import { HostProperties } from "../types";
 import { Booking } from "./Booking";
 import { User } from "./User";
+import config from "../../config.json";
+import {
+  isSameDay,
+  getDayOfWeek,
+  getTimeFromDateTime,
+  isTimeInWorkingHours,
+} from "../../shared/utils/date";
 
 export class Host {
   private _id: string;
@@ -42,14 +50,44 @@ export class Host {
   }
 
   addBooking(booking: Booking) {
-    // Business logic that checks the possibility of adding a given booking
+    this.validateWorkingHoursHost(
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
 
-    // 1. Check if there are no intersecting bookings
-    // 2. Check that the booking is not available on weekends
-    // 3. Check that the booking does not fall during non-business hours
+    this.validateExistClientBooking(
+      booking.getClientId(),
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
+
+    this.validateOverlapBooking(
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
 
     this._bookings.push(booking);
     logger.info("Added to Host new Booking");
+  }
+
+  updateBooking(booking: Booking) {
+    this.validateWorkingHoursHost(
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
+
+    this.validateExistClientBooking(
+      booking.getClientId(),
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
+
+    this.validateOverlapBooking(
+      booking.getFromDateTime(),
+      booking.getToDateTime(),
+    );
+
+    logger.info("Updated booking");
   }
 
   deleteBooking(booking: Booking) {
@@ -76,5 +114,63 @@ export class Host {
       role: this._role,
       deleted: this._deleted,
     });
+  }
+
+  private validateOverlapBooking(fromDateTime: string, toDateTime: string) {
+    if (config.allowOverlappingBookings) return;
+
+    const hostBookings = this.getBookings();
+    for (const booking of hostBookings) {
+      if (booking.getDeleted()) continue;
+
+      const isOverlap = intervalsOverlap(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+        fromDateTime,
+        toDateTime,
+      );
+
+      if (isOverlap) throw new Error("Booking overlaps with existing booking");
+    }
+  }
+
+  private validateExistClientBooking(
+    clientId: string,
+    fromDateTime: string,
+    toDateTime: string,
+  ) {
+    const bookings = this.getBookings();
+
+    for (const booking of bookings) {
+      if (
+        booking.getClientId() === clientId &&
+        !booking.getDeleted() &&
+        booking.getFromDateTime() === toDateTime &&
+        booking.getToDateTime() === fromDateTime
+      ) {
+        throw new Error("Booking already exists");
+      }
+    }
+  }
+
+  private validateWorkingHoursHost(fromDateTime: string, toDateTime: string) {
+    if (!isSameDay(fromDateTime, toDateTime))
+      throw new Error("Booking must be within the same day");
+
+    const dayOfWeek = getDayOfWeek(fromDateTime);
+
+    if (!dayOfWeek) throw new Error("Invalid day of week");
+
+    if (!this._workDays.includes(dayOfWeek))
+      throw new Error(`Host does not work on ${dayOfWeek}`);
+
+    const fromTime = getTimeFromDateTime(fromDateTime);
+    const toTime = getTimeFromDateTime(toDateTime);
+
+    if (
+      !isTimeInWorkingHours(fromTime, this._workHours) ||
+      !isTimeInWorkingHours(toTime, this._workHours)
+    )
+      throw new Error("Booking time is outside host working hours");
   }
 }

@@ -105,17 +105,17 @@ export class HostController {
   public async getMyBookings(
     @QueryParam("sortDirection")
     sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
-    @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
-    @QueryParam("dateTimeFrom") dateTimeFrom: string,
-    @QueryParam("dateTimeTo") dateTimeTo: string,
+    @QueryParam("sortProperty") sortProperty: string = "fromDateTime",
+    @QueryParam("fromDateTime") fromDateTime: string,
+    @QueryParam("toDateTime") toDateTime: string,
     @QueryParam("clientId") clientId: string,
   ): Promise<BookingDTO[]> {
     new shared.application.BookingSorting(sortDirection, sortProperty);
     new shared.application.BookingFilters({
       clientId,
       hostId: "test_id",
-      dateTimeFrom,
-      dateTimeTo,
+      fromDateTime,
+      toDateTime,
     });
     return [];
   }
@@ -217,9 +217,9 @@ export class HostController {
   public async getHostBookings(
     @QueryParam("sortDirection")
     sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
-    @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
-    @QueryParam("dateTimeFrom") dateTimeFrom: string,
-    @QueryParam("dateTimeTo") dateTimeTo: string,
+    @QueryParam("sortProperty") sortProperty: string = "fromDateTime",
+    @QueryParam("fromDateTime") fromDateTime: string,
+    @QueryParam("toDateTime") toDateTime: string,
     @QueryParam("clientId") clientId: string,
     @QueryParam("hostId") hostId: string,
   ): Promise<BookingDTO[]> {
@@ -227,8 +227,8 @@ export class HostController {
     new shared.application.BookingFilters({
       clientId,
       hostId,
-      dateTimeFrom,
-      dateTimeTo,
+      fromDateTime,
+      toDateTime,
     });
     return [];
   }
