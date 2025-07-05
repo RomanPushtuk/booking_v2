@@ -50,42 +50,74 @@ export class Host {
   }
 
   addBooking(booking: Booking) {
-    this.validateWorkingHoursHost(
-      booking.getFromDateTime(),
-      booking.getToDateTime(),
-    );
+    if (
+      this.checkIfWorkingHours(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't create a booking. The host is not working at this time",
+      );
+    }
 
-    this.validateExistClientBooking(
-      booking.getClientId(),
-      booking.getFromDateTime(),
-      booking.getToDateTime(),
-    );
+    if (
+      this.checkIfDuplicateBooking(
+        booking.getClientId(),
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error("Can't create a booking. Booking already exists");
+    }
 
-    this.validateOverlapBooking(
-      booking.getFromDateTime(),
-      booking.getToDateTime(),
-    );
+    if (
+      this.checkOverlapingBookings(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't create a booking. There are overlapping bookings.",
+      );
+    }
 
     this._bookings.push(booking);
     logger.info("Added to Host new Booking");
   }
 
   updateBooking(booking: Booking) {
-    this.validateWorkingHoursHost(
-      booking.getFromDateTime(),
-      booking.getToDateTime(),
-    );
+    if (
+      this.checkIfWorkingHours(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't update a booking. The host is not working at this time",
+      );
+    }
 
-    this.validateExistClientBooking(
-      booking.getClientId(),
-      booking.getFromDateTime(),
-      booking.getToDateTime(),
-    );
+    if (
+      this.checkIfDuplicateBooking(
+        booking.getClientId(),
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error("Can't update a booking. Booking already exists");
+    }
 
-    this.validateOverlapBooking(
-      booking.getFromDateTime(),
-      booking.getToDateTime(),
-    );
+    if (
+      this.checkOverlapingBookings(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't update a booking. There are overlapping bookings.",
+      );
+    }
 
     logger.info("Updated booking");
   }
@@ -116,8 +148,11 @@ export class Host {
     });
   }
 
-  private validateOverlapBooking(fromDateTime: string, toDateTime: string) {
-    if (config.allowOverlappingBookings) return;
+  private checkOverlapingBookings(
+    fromDateTime: string,
+    toDateTime: string,
+  ): boolean {
+    if (config.allowOverlappingBookings) return false;
 
     const hostBookings = this.getBookings();
     for (const booking of hostBookings) {
@@ -130,39 +165,42 @@ export class Host {
         toDateTime,
       );
 
-      if (isOverlap) throw new Error("Booking overlaps with existing booking");
+      if (isOverlap) return true;
     }
+    return false;
   }
 
-  private validateExistClientBooking(
+  private checkIfDuplicateBooking(
     clientId: string,
     fromDateTime: string,
     toDateTime: string,
-  ) {
+  ): boolean {
     const bookings = this.getBookings();
 
     for (const booking of bookings) {
       if (
         booking.getClientId() === clientId &&
         !booking.getDeleted() &&
-        booking.getFromDateTime() === toDateTime &&
-        booking.getToDateTime() === fromDateTime
+        booking.getFromDateTime() === fromDateTime &&
+        booking.getToDateTime() === toDateTime
       ) {
-        throw new Error("Booking already exists");
+        return true;
       }
     }
+    return false;
   }
 
-  private validateWorkingHoursHost(fromDateTime: string, toDateTime: string) {
-    if (!isSameDay(fromDateTime, toDateTime))
-      throw new Error("Booking must be within the same day");
+  private checkIfWorkingHours(
+    fromDateTime: string,
+    toDateTime: string,
+  ): boolean {
+    if (!isSameDay(fromDateTime, toDateTime)) return true;
 
     const dayOfWeek = getDayOfWeek(fromDateTime);
 
-    if (!dayOfWeek) throw new Error("Invalid day of week");
+    if (!dayOfWeek) return true;
 
-    if (!this._workDays.includes(dayOfWeek))
-      throw new Error(`Host does not work on ${dayOfWeek}`);
+    if (!this._workDays.includes(dayOfWeek)) return true;
 
     const fromTime = getTimeFromDateTime(fromDateTime);
     const toTime = getTimeFromDateTime(toDateTime);
@@ -171,6 +209,8 @@ export class Host {
       !isTimeInWorkingHours(fromTime, this._workHours) ||
       !isTimeInWorkingHours(toTime, this._workHours)
     )
-      throw new Error("Booking time is outside host working hours");
+      return true;
+
+    return false;
   }
 }
