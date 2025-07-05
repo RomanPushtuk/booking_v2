@@ -123,7 +123,7 @@ export class ClientService {
       const booking = this._uow.bookingRepository.getById(bookingId);
       if (!booking) throw new Error("Booking not found");
 
-      const hostId = booking?.getHostId();
+      const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
       if (!host) throw new Error("Host not found");
 
@@ -161,7 +161,7 @@ export class ClientService {
       const booking = this._uow.bookingRepository.getById(bookingId);
       if (!booking) throw new Error("Booking not found");
 
-      const hostId = booking?.getHostId();
+      const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
       if (!host) throw new Error("Host not found");
 
