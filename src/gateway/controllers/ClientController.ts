@@ -95,12 +95,8 @@ export class ClientController {
     @QueryParam("sortDirection")
     sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.ASC,
     @QueryParam("sortProperty") sortProperty: string = "fromDateTime",
-    @QueryParam("fromDateTime") fromDateTime?: string,
-    @QueryParam("toDateTime") toDateTime?: string,
-    @QueryParam("fromDateTimeStart") fromDateTimeStart?: string,
-    @QueryParam("fromDateTimeEnd") fromDateTimeEnd?: string,
-    @QueryParam("toDateTimeStart") toDateTimeStart?: string,
-    @QueryParam("toDateTimeEnd") toDateTimeEnd?: string,
+    @QueryParam("fromDateTime") fromDateTime: string = new Date().toISOString(),
+    @QueryParam("toDateTime") toDateTime: string = new Date().toISOString(),
   ): Promise<BookingDTO[]> {
     const sorting = new shared.application.BookingSorting(
       sortDirection,
@@ -111,10 +107,6 @@ export class ClientController {
       clientId: user.id,
       fromDateTime,
       toDateTime,
-      fromDateTimeStart,
-      fromDateTimeEnd,
-      toDateTimeStart,
-      toDateTimeEnd,
       deleted: false,
     });
 

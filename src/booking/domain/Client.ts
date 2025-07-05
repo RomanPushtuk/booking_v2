@@ -74,10 +74,6 @@ export class Client {
   private makeBookingFilter(filters: shared.application.BookingFilters) {
     return (booking: Booking) => {
       const {
-        fromDateTimeStart,
-        fromDateTimeEnd,
-        toDateTimeStart,
-        toDateTimeEnd,
         clientId,
         hostId,
         fromDateTime,
@@ -93,39 +89,11 @@ export class Client {
         return false;
       }
 
-      if (fromDateTime && booking.getFromDateTime() !== fromDateTime) {
+      if (fromDateTime && new Date(booking.getFromDateTime()) < new Date(fromDateTime)) {
         return false;
       }
 
-      if (toDateTime && booking.getToDateTime() !== toDateTime) {
-        return false;
-      }
-
-      if (
-        fromDateTimeStart &&
-        new Date(booking.getFromDateTime()) < new Date(fromDateTimeStart)
-      ) {
-        return false;
-      }
-
-      if (
-        fromDateTimeEnd &&
-        new Date(booking.getFromDateTime()) > new Date(fromDateTimeEnd)
-      ) {
-        return false;
-      }
-
-      if (
-        toDateTimeStart &&
-        new Date(booking.getToDateTime()) < new Date(toDateTimeStart)
-      ) {
-        return false;
-      }
-
-      if (
-        toDateTimeEnd &&
-        new Date(booking.getToDateTime()) > new Date(toDateTimeEnd)
-      ) {
+      if (toDateTime && new Date(booking.getToDateTime()) > new Date(toDateTime)) {
         return false;
       }
 
