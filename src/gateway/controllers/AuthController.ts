@@ -14,7 +14,6 @@ import {
 export class AuthController {
   constructor() {}
 
-  // public
   @Post("/register")
   async register(
     @Body() createUserDTO: CreateUserDTO,
@@ -40,7 +39,6 @@ export class AuthController {
     return this.login(loginUserDTO);
   }
 
-  // public
   @Post("/login")
   async login(@Body() loginUserDTO: LogInUserDTO): Promise<UserLoggedInDTO> {
     return auth.services.authService.login(loginUserDTO);

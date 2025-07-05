@@ -1,4 +1,4 @@
-import { IsDateString, validateSync } from "class-validator";
+import { IsBoolean, IsDateString, validateSync } from "class-validator";
 import { GetInterface } from "../types";
 
 export class BookingFilters {
@@ -7,18 +7,28 @@ export class BookingFilters {
   hostId?: string;
 
   @IsDateString()
-  dateTimeFrom?: string;
+  fromDateTime?: string;
 
   @IsDateString()
-  dateTimeTo?: string;
+  toDateTime?: string;
+
+  @IsBoolean()
+  deleted?: boolean;
 
   constructor(data: Partial<GetInterface<BookingFilters>>) {
-    const { clientId, hostId, dateTimeFrom, dateTimeTo } = data;
+    const {
+      clientId,
+      hostId,
+      fromDateTime,
+      toDateTime,
+      deleted,
+    } = data;
 
     this.clientId = clientId;
     this.hostId = hostId;
-    this.dateTimeFrom = dateTimeFrom;
-    this.dateTimeTo = dateTimeTo;
+    this.fromDateTime = fromDateTime;
+    this.toDateTime = toDateTime;
+    this.deleted = deleted;
 
     const errors = validateSync(this, { skipMissingProperties: true });
     if (errors.length)

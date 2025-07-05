@@ -1,7 +1,15 @@
+import { intervalsOverlap } from "../../shared/utils";
 import { logger } from "../logger";
 import { HostProperties } from "../types";
 import { Booking } from "./Booking";
 import { User } from "./User";
+import config from "../../config.json";
+import {
+  isSameDay,
+  getDayOfWeek,
+  getTimeFromDateTime,
+  isTimeInWorkingHours,
+} from "../../shared/utils/date";
 
 export class Host {
   private _id: string;
@@ -42,14 +50,76 @@ export class Host {
   }
 
   addBooking(booking: Booking) {
-    // Business logic that checks the possibility of adding a given booking
+    if (
+      this.checkIfWorkingHours(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't create a booking. The host is not working at this time",
+      );
+    }
 
-    // 1. Check if there are no intersecting bookings
-    // 2. Check that the booking is not available on weekends
-    // 3. Check that the booking does not fall during non-business hours
+    if (
+      this.checkIfDuplicateBooking(
+        booking.getClientId(),
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error("Can't create a booking. Booking already exists");
+    }
+
+    if (
+      this.checkOverlapingBookings(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't create a booking. There are overlapping bookings.",
+      );
+    }
 
     this._bookings.push(booking);
     logger.info("Added to Host new Booking");
+  }
+
+  updateBooking(booking: Booking) {
+    if (
+      this.checkIfWorkingHours(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't update a booking. The host is not working at this time",
+      );
+    }
+
+    if (
+      this.checkIfDuplicateBooking(
+        booking.getClientId(),
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error("Can't update a booking. Booking already exists");
+    }
+
+    if (
+      this.checkOverlapingBookings(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+      )
+    ) {
+      throw new Error(
+        "Can't update a booking. There are overlapping bookings.",
+      );
+    }
+
+    logger.info("Updated booking");
   }
 
   deleteBooking(booking: Booking) {
@@ -76,5 +146,71 @@ export class Host {
       role: this._role,
       deleted: this._deleted,
     });
+  }
+
+  private checkOverlapingBookings(
+    fromDateTime: string,
+    toDateTime: string,
+  ): boolean {
+    if (config.allowOverlappingBookings) return false;
+
+    const hostBookings = this.getBookings();
+    for (const booking of hostBookings) {
+      if (booking.getDeleted()) continue;
+
+      const isOverlap = intervalsOverlap(
+        booking.getFromDateTime(),
+        booking.getToDateTime(),
+        fromDateTime,
+        toDateTime,
+      );
+
+      if (isOverlap) return true;
+    }
+    return false;
+  }
+
+  private checkIfDuplicateBooking(
+    clientId: string,
+    fromDateTime: string,
+    toDateTime: string,
+  ): boolean {
+    const bookings = this.getBookings();
+
+    for (const booking of bookings) {
+      if (
+        booking.getClientId() === clientId &&
+        !booking.getDeleted() &&
+        booking.getFromDateTime() === fromDateTime &&
+        booking.getToDateTime() === toDateTime
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private checkIfWorkingHours(
+    fromDateTime: string,
+    toDateTime: string,
+  ): boolean {
+    if (!isSameDay(fromDateTime, toDateTime)) return true;
+
+    const dayOfWeek = getDayOfWeek(fromDateTime);
+
+    if (!dayOfWeek) return true;
+
+    if (!this._workDays.includes(dayOfWeek)) return true;
+
+    const fromTime = getTimeFromDateTime(fromDateTime);
+    const toTime = getTimeFromDateTime(toDateTime);
+
+    if (
+      !isTimeInWorkingHours(fromTime, this._workHours) ||
+      !isTimeInWorkingHours(toTime, this._workHours)
+    )
+      return true;
+
+    return false;
   }
 }

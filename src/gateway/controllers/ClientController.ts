@@ -14,14 +14,14 @@ import {
 import { shared, booking, auth } from "../imports";
 import {
   DeleteUserSaga,
-  CreateBookingSaga,
+  CreateClientBookingSaga,
   DeleteBookingSaga,
-  UpdateBookingSaga,
+  UpdateClientBookingSaga,
   UpdateClientSaga,
 } from "../sagas";
 import {
-  CreateBookingDTO,
-  UpdateBookingDTO,
+  CreateClientBookingDTO,
+  UpdateClientBookingDTO,
   UpdateClientDTO,
   ClientDeletedDTO,
   ClientUpdatedDTO,
@@ -32,15 +32,13 @@ import {
   ClientDTO,
 } from "../dtos";
 import {
-  CreateBookingInBookingServiceStep,
-  CreateBookingInInfoServiceStep,
+  CreateClientBookingInBookingServiceStep,
   DeleteBookingInBookingServiceStep,
   DeleteBookingInInfoServiceStep,
   DeleteUserInAuthServiceStep,
   DeleteUserInBookingServiceStep,
   DeleteUserInInfoServiceStep,
-  UpdateBookingInBookingServiceStep,
-  UpdateBookingInInfoServiceStep,
+  UpdateClientBookingInBookingServiceStep,
   UpdateClientInBookingServiceStep,
   UpdateClientInInfoServiceStep,
 } from "../steps";
@@ -50,7 +48,7 @@ import {
 export class ClientController {
   constructor() {}
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_READ_PROFILE])
   @Get("/me")
   async getMe(@CurrentUser() user: auth.domain.User): Promise<ClientDTO> {
     const client = await booking.services.clientService.getClientById(user.id);
@@ -58,7 +56,7 @@ export class ClientController {
     return new ClientDTO({ ...client });
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_DELETE_PROFILE])
   @Delete("/me")
   async deleteClient(
     @CurrentUser() user: auth.domain.User,
@@ -72,7 +70,7 @@ export class ClientController {
     return new ClientDeletedDTO({ id: user.id });
   }
 
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_UPDATE_PROFILE])
   @Patch("/me")
   async updateClient(
     @CurrentUser() user: auth.domain.User,
@@ -90,89 +88,123 @@ export class ClientController {
     return new ClientUpdatedDTO({ id: user.id });
   }
 
-  // private
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_READ_BOOKINGS])
   @Get("/me/bookings")
   async getBookings(
+    @CurrentUser() user: auth.domain.User,
     @QueryParam("sortDirection")
-    sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.DESC,
-    @QueryParam("sortProperty") sortProperty: string = "dateTimeFrom",
-    @QueryParam("dateTimeFrom") dateTimeFrom: string,
-    @QueryParam("dateTimeTo") dateTimeTo: string,
-    @QueryParam("hostId") hostId: string,
+    sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.ASC,
+    @QueryParam("sortProperty") sortProperty: string = "fromDateTime",
+    @QueryParam("fromDateTime") fromDateTime: string = new Date().toISOString(),
+    @QueryParam("toDateTime") toDateTime: string = new Date().toISOString(),
   ): Promise<BookingDTO[]> {
-    new shared.application.BookingSorting(sortDirection, sortProperty);
-    new shared.application.BookingFilters({
-      hostId,
-      clientId: "test_id",
-      dateTimeFrom,
-      dateTimeTo,
+    const sorting = new shared.application.BookingSorting(
+      sortDirection,
+      sortProperty,
+    );
+
+    const filters = new shared.application.BookingFilters({
+      clientId: user.id,
+      fromDateTime,
+      toDateTime,
+      deleted: false,
     });
-    return [];
+
+    const clientBookings =
+      await booking.services.clientService.getClientBookings(user.id, {
+        sorting,
+        filters,
+      });
+
+    return clientBookings.map(
+      (booking) =>
+        new BookingDTO({
+          id: booking.id,
+          clientId: booking.clientId,
+          hostId: booking.hostId,
+          fromDateTime: booking.fromDateTime,
+          toDateTime: booking.toDateTime,
+        }),
+    );
   }
 
-  // private
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_READ_BOOKINGS])
   @Get("/me/bookings/:bookingId")
-  async getBookingById(): Promise<BookingDTO> {
+  async getBookingById(
+    @CurrentUser() user: auth.domain.User,
+    @Param("bookingId") bookingId: string,
+  ): Promise<BookingDTO> {
+    const clientBooking =
+      await booking.services.clientService.getClientBookingById(
+        user.id,
+        bookingId,
+      );
+
     return new BookingDTO({
-      id: "test_id",
-      clientId: "client_id",
-      hostId: "host_id",
-      fromDateTime: "2025-03-23T14:58:00.289Z",
-      toDateTime: "2025-03-23T14:58:00.289Z",
-      info: {
-        title: "title",
-        description: "description",
-      },
+      id: clientBooking.id,
+      clientId: clientBooking.clientId,
+      hostId: clientBooking.hostId,
+      fromDateTime: clientBooking.fromDateTime,
+      toDateTime: clientBooking.toDateTime,
     });
   }
 
-  // private
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_CREATE_BOOKING])
   @Post("/me/bookings")
   public async createBooking(
-    @Body() createBookingDTO: CreateBookingDTO,
+    @CurrentUser() user: auth.domain.User,
+    @Body() createClientBookingDTO: CreateClientBookingDTO,
   ): Promise<BookingCreatedDTO> {
-    const bookingDTO = new BookingDTO({
-      id: shared.utils.generateId(),
-      ...createBookingDTO,
-    });
-    const createBookingSaga = new CreateBookingSaga(
-      new CreateBookingInBookingServiceStep(
+    const bookingId = shared.utils.generateId();
+
+    const createClientBookingSaga = new CreateClientBookingSaga(
+      new CreateClientBookingInBookingServiceStep(
         booking.services.clientService.createBooking,
         booking.services.clientService.deleteBooking,
       ),
-      new CreateBookingInInfoServiceStep(),
     );
-    await createBookingSaga.execute(bookingDTO);
-    return new BookingCreatedDTO({ id: bookingDTO.id });
+    await createClientBookingSaga.execute(
+      createClientBookingDTO,
+      user.id,
+      bookingId,
+    );
+    return new BookingCreatedDTO({ id: bookingId });
   }
 
-  // private
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_UPDATE_BOOKING])
   @Patch("/me/bookings/:bookingId")
   public async updateBooking(
+    @CurrentUser() user: auth.domain.User,
     @Param("bookingId") bookingId: string,
-    @Body() updateBookingDTO: UpdateBookingDTO,
+    @Body() updateClientBookingDTO: UpdateClientBookingDTO,
   ): Promise<BookingUpdatedDTO> {
-    const updateBookingSaga = new UpdateBookingSaga(
-      new UpdateBookingInBookingServiceStep(
+    await booking.services.clientService.getClientBookingById(
+      user.id,
+      bookingId,
+    );
+
+    const updateClientBookingSaga = new UpdateClientBookingSaga(
+      new UpdateClientBookingInBookingServiceStep(
         booking.services.clientService.updateBooking,
         booking.services.clientService.revertBooking,
       ),
-      new UpdateBookingInInfoServiceStep(),
     );
-    await updateBookingSaga.execute(updateBookingDTO, bookingId);
-    return new BookingUpdatedDTO({ id: "test_id" });
+
+    await updateClientBookingSaga.execute(updateClientBookingDTO, bookingId);
+    return new BookingUpdatedDTO({ id: bookingId });
   }
 
-  // private
-  @Authorized([shared.enums.Roles.CLIENT])
+  @Authorized([shared.enums.Permissions.CLIENT_CANCEL_BOOKING])
   @Delete("/me/bookings/:bookingId")
   async cancelBooking(
+    @CurrentUser() user: auth.domain.User,
     @Param("bookingId") bookingId: string,
   ): Promise<BookingDeletedDTO> {
+    await booking.services.clientService.getClientBookingById(
+      user.id,
+      bookingId,
+    );
+
     const deleteBookingSaga = new DeleteBookingSaga(
       new DeleteBookingInBookingServiceStep(
         booking.services.clientService.deleteBooking,
@@ -181,6 +213,6 @@ export class ClientController {
       new DeleteBookingInInfoServiceStep(),
     );
     await deleteBookingSaga.execute(bookingId);
-    return new BookingDeletedDTO({ id: "test_id" });
+    return new BookingDeletedDTO({ id: bookingId });
   }
 }

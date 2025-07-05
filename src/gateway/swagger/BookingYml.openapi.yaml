@@ -326,8 +326,8 @@ paths:
       parameters:
         - name: sortDirection
           in: query
-          description: Sort direction for results
           required: false
+          description: Sort direction for results
           example: DESC
           schema:
             type: string
@@ -345,7 +345,7 @@ paths:
             default: fromDateTime
         - name: fromDateTime
           in: query
-          description: Filter bookings from this datetime (ISO8601)
+          description: Filter bookings that start after this time (ISO8601).
           required: false
           example: "2025-06-21T10:00:00Z"
           schema:
@@ -353,19 +353,12 @@ paths:
             format: date-time
         - name: toDateTime
           in: query
-          description: Filter bookings to this datetime (ISO8601)
+          description: Filter bookings that end before this time (ISO8601).
           required: false
           example: "2025-06-28T18:00:00Z"
           schema:
             type: string
             format: date-time
-        - name: hostId
-          in: query
-          description: Filter bookings by host ID
-          required: false
-          example: "host_456"
-          schema:
-            type: string
       responses:
         "200":
           description: List of client's bookings retrieved successfully
@@ -493,7 +486,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateBookingDTO"
+              $ref: "#/components/schemas/ClientUpdateBookingDTO"
             example:
               fromDateTime: "2025-06-25T14:00:00Z"
               toDateTime: "2025-06-25T15:00:00Z"
@@ -858,7 +851,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateBookingDTO5"
+              $ref: "#/components/schemas/UpdateBookingDTO"
       responses:
         "200":
           description: "Booking updated successfully"
@@ -1155,7 +1148,7 @@ components:
       required:
         - id
       title: Clients_BookingDeletedDTO
-    UpdateBookingDTO:
+    ClientUpdateBookingDTO:
       type: object
       properties:
         fromDateTime:
@@ -1175,8 +1168,39 @@ components:
             description:
               type: string
               description: Updated booking description
-      title: Clients_UpdateBookingDTO
+      title: Clients_ClientUpdateBookingDTO
       example:
+        fromDateTime: "2025-06-25T14:00:00Z"
+        toDateTime: "2025-06-25T15:00:00Z"
+        info:
+          title: "Updated Consultation"
+          description: "Updated description"
+    UpdateBookingDTO:
+      type: object
+      properties:
+        hostId:
+          type: string
+          description: ID of the host (only hosts can change this)
+        fromDateTime:
+          type: string
+          format: date-time
+          description: New booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: New booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Updated booking title
+            description:
+              type: string
+              description: Updated booking description
+      title: Hosts_UpdateBookingDTO
+      example:
+        hostId: "host_123"
         fromDateTime: "2025-06-25T14:00:00Z"
         toDateTime: "2025-06-25T15:00:00Z"
         info:
