@@ -1,0 +1,20 @@
+{
+  "name": "@pushtuk/monitoring",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "RomanPushtuk",
+  "license": "ISC",
+  "description": "Simple monitoring middleware",
+  "dependencies": {
+    "@seald-io/nedb": "4.1.1",
+    "lodash.throttle": "4.1.1",
+    "ws": "8.18.2"
+  },
+  "devDependencies": {
+    "webpack": "5.99.9",
+    "webpack-cli": "6.0.1"
+  }
+}

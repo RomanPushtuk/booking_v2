@@ -1,8 +1,11 @@
+import { BroadcastChannel } from 'worker_threads';
+
 import express from "express";
 import { useExpressServer, useContainer } from "routing-controllers";
 
+import { monitoring } from './imports';
+
 import { useSwagger } from "./swagger";
-import { useLogPresenter } from "./logPresenter";
 import { diContainer } from "./di";
 import { logger } from "./logger";
 import { authorizationChecker, currentUserChecker } from "./utils";
@@ -25,7 +28,14 @@ import {
 const app = express();
 
 useSwagger(app);
-useLogPresenter(app);
+monitoring.useMonitoring(app);
+
+const bus = new BroadcastChannel("monitoring");
+
+bus.onmessage = (event: unknown) => {
+  // @ts-expect-error 123
+  monitoring.insert(event.data)
+}
 
 const start = () => {
   useExpressServer(app, {
