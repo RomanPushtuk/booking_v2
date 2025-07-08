@@ -1,5 +1,7 @@
+import path from "path";
 import pino from "pino";
 import { asyncLocalStorage } from "../../context";
+
 
 const logger = pino({
   base: null,
@@ -37,8 +39,13 @@ const logger = pino({
         target: "pino-pretty",
         options: { destination: process.stdout.fd, colorize: true },
       },
+      {
+        level: "trace",
+        target: path.resolve(__dirname, "./monitoring.js"),
+      },
     ],
   },
 });
+
 
 export { logger };

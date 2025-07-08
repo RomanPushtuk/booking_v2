@@ -1,4 +1,5 @@
 import process from "process";
+const { useMonitoring, insert } = require('./server/dist/index.js');
 import { getCPUUsage, getMemoryUsage } from "./utils";
 import { logger } from "./logger";
 
@@ -16,4 +17,4 @@ const start = (): NodeJS.Timeout => {
   return setTimeout(monitor, 5000);
 };
 
-export { start };
+export { start, useMonitoring, insert };

@@ -113,5 +113,6 @@
   "exclude": [
     "./jest.setup.ts",
     "./webpack.config.js",
+    "./src/monitoring/**/*"
   ]
 }
