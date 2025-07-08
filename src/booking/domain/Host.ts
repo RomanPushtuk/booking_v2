@@ -1,6 +1,6 @@
 import { intervalsOverlap } from "../../shared/utils";
 import { logger } from "../logger";
-import { HostProperties } from "../types";
+import { HostProperties, UpdateBookingData } from "../types";
 import { Booking } from "./Booking";
 import { User } from "./User";
 import config from "../../config.json";
@@ -86,7 +86,9 @@ export class Host {
     logger.info("Added to Host new Booking");
   }
 
-  updateBooking(booking: Booking) {
+  updateBooking(booking: Booking, updateData: UpdateBookingData) {
+    Booking.update(booking, updateData);
+
     if (
       this.checkIfWorkingHours(
         booking.getFromDateTime(),

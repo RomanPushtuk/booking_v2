@@ -3,10 +3,15 @@ import { gateway, shared } from "../imports";
 import { logger } from "../logger";
 import { UnitOfWork } from "./UnitOfWork";
 import { Booking } from "../domain";
+import { vs } from "../vs";
+import { UpdateBookingData } from "../types";
 
 @Service()
 export class ClientService {
-  constructor(@Inject() private _uow: UnitOfWork) {
+  constructor(
+    @Inject() private _uow: UnitOfWork,
+    @Inject("vs") private _vs: typeof vs,
+  ) {
     this.createBooking = this.createBooking.bind(this);
     this.deleteBooking = this.deleteBooking.bind(this);
     this.restoreBooking = this.restoreBooking.bind(this);
@@ -149,6 +154,7 @@ export class ClientService {
   async updateBooking(
     updateClientBookingDTO: gateway.dtos.UpdateClientBookingDTO,
     bookingId: string,
+    versionId: string,
   ) {
     logger.info(
       { updateClientBookingDTO, bookingId },
@@ -165,16 +171,14 @@ export class ClientService {
       const host = this._uow.hostRepository.getById(hostId);
       if (!host) throw new Error("Host not found");
 
-      if (updateClientBookingDTO.fromDateTime) {
-        booking.setFromDateTime(updateClientBookingDTO.fromDateTime);
-      }
-
-      if (updateClientBookingDTO.toDateTime) {
-        booking.setToDateTime(updateClientBookingDTO.toDateTime);
-      }
-
-      host.updateBooking(booking);
+      host.updateBooking(booking, updateClientBookingDTO);
       this._uow.bookingRepository.save(booking);
+
+      await this._vs.insertAsync({
+        id: bookingId,
+        versionId,
+        data: updateClientBookingDTO,
+      });
 
       this._uow.commit();
     } catch (error) {
@@ -183,11 +187,16 @@ export class ClientService {
     }
   }
 
-  async revertBooking(bookingId: string) {
+  async revertBooking(bookingId: string, versionId: string) {
     logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking) throw new Error("booking not found");
-    // TODO Make update revert
+    const verion = await this._vs
+      .findOneAsync({ id: bookingId, versionId })
+      .execAsync();
+    if (!verion) throw new Error("verion not found");
+    const updateData = verion["data"] as UpdateBookingData;
+    Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
   }
 

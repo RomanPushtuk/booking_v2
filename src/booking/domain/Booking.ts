@@ -1,4 +1,4 @@
-import { BookingProperties } from "../types";
+import { BookingProperties, UpdateBookingData } from "../types";
 
 export class Booking {
   private _id: string;
@@ -15,6 +15,27 @@ export class Booking {
     this._fromDateTime = data.fromDateTime;
     this._toDateTime = data.toDateTime;
     this._deleted = Boolean(data.deleted);
+  }
+
+  static update(booking: Booking, updateData: UpdateBookingData) {
+    const entries = Object.entries(updateData);
+
+    for (const [key, value] of entries) {
+      switch (key) {
+        case "clientId":
+          booking.setFromDateTime(value);
+          break;
+        case "hostId":
+          booking.setToDateTime(value);
+          break;
+        case "fromDateTime":
+          booking.setFromDateTime(value);
+          break;
+        case "toDateTime":
+          booking.setToDateTime(value);
+          break;
+      }
+    }
   }
 
   getId() {
