@@ -196,6 +196,8 @@ export class ClientService {
       .execAsync();
     if (!verion) throw new Error("verion not found");
     const updateData = verion["data"] as UpdateBookingData;
+    const numRemoved = await this._vs.removeAsync({ id: bookingId, versionId }, {});
+    if (!numRemoved) throw new Error("verion was not removed from version storage");
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
   }
