@@ -1,2 +1,1 @@
-export * as monitoring from '../monitoring/exports';
-
+export * as monitoring from "../monitoring/exports";

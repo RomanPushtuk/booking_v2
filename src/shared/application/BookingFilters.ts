@@ -16,13 +16,7 @@ export class BookingFilters {
   deleted?: boolean;
 
   constructor(data: Partial<GetInterface<BookingFilters>>) {
-    const {
-      clientId,
-      hostId,
-      fromDateTime,
-      toDateTime,
-      deleted,
-    } = data;
+    const { clientId, hostId, fromDateTime, toDateTime, deleted } = data;
 
     this.clientId = clientId;
     this.hostId = hostId;

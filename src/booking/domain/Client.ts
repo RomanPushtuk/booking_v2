@@ -73,13 +73,7 @@ export class Client {
 
   private makeBookingFilter(filters: shared.application.BookingFilters) {
     return (booking: Booking) => {
-      const {
-        clientId,
-        hostId,
-        fromDateTime,
-        toDateTime,
-        deleted,
-      } = filters;
+      const { clientId, hostId, fromDateTime, toDateTime, deleted } = filters;
 
       if (clientId && booking.getClientId() !== clientId) return false;
 
@@ -89,11 +83,17 @@ export class Client {
         return false;
       }
 
-      if (fromDateTime && new Date(booking.getFromDateTime()) < new Date(fromDateTime)) {
+      if (
+        fromDateTime &&
+        new Date(booking.getFromDateTime()) < new Date(fromDateTime)
+      ) {
         return false;
       }
 
-      if (toDateTime && new Date(booking.getToDateTime()) > new Date(toDateTime)) {
+      if (
+        toDateTime &&
+        new Date(booking.getToDateTime()) > new Date(toDateTime)
+      ) {
         return false;
       }
 

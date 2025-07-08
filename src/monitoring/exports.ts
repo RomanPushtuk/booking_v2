@@ -1,5 +1,5 @@
 import process from "process";
-const { useMonitoring, insert } = require('./server/dist/index.js');
+const { useMonitoring, insert } = require("./server/dist/index.js");
 import { getCPUUsage, getMemoryUsage } from "./utils";
 import { logger } from "./logger";
 

@@ -1,74 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+    <title>Simple Monitoring Tool</title>
+  </head>
 
-<head>
-	<meta charset="UTF-8">
-	<meta
-		name="viewport"
-		content="width=device-width, initial-scale=1.0"
-	>
-	<style>
-
-	</style>
-	<title>Simple Monitoring Tool</title>
-</head>
-
-<body>
-	<div id='root'>
-		<div class="left-panel">
-			<nav class="navigation">
-				<button
-					class="tab-button active"
-					data-tab="tab1"
-				>Logs</button>
-				<button
-					class="tab-button"
-					data-tab="tab2"
-				>Log Rotation</button>
-			</nav>
-		</div>
-		<div
-			class="tab-content active"
-			id="tab1"
-		>
-			<form class="form">
-				<div class="form-filter">
-					<label
-						class="filter-label"
-						for="filter"
-					>Filter:</label>
-					<input
-						class="filter-input"
-						type="text"
-						id="filterInput"
-						name="filter"
-						value='{ "level": 40 }'
-					>
-					<button id="filterButton">Find</button>
-				</div>
-				<div class="form-controls">
-					<label for="realtime">
-						Real-Time Logs:
-					</label>
-					<input
-						id="realtimeModeCheckbox"
-						type="checkbox"
-						checked
-					>
-				</div>
-			</form>
-			<div
-				class="log-container"
-				id="logContainer"
-			></div>
-		</div>
-		<div
-			class="tab-content"
-			id="tab2"
-		>
-		  <!-- Settings for log rotation -->
-		</div>
-	</div>
-</body>
-
+  <body>
+    <div id="root">
+      <div class="left-panel">
+        <nav class="navigation">
+          <button class="tab-button active" data-tab="tab1">Logs</button>
+          <button class="tab-button" data-tab="tab2">Log Rotation</button>
+        </nav>
+      </div>
+      <div class="tab-content active" id="tab1">
+        <form class="form">
+          <div class="form-filter">
+            <label class="filter-label" for="filter">Filter:</label>
+            <input
+              class="filter-input"
+              type="text"
+              id="filterInput"
+              name="filter"
+              value='{ "level": 40 }'
+            />
+            <button id="filterButton">Find</button>
+          </div>
+          <div class="form-controls">
+            <label for="realtime"> Real-Time Logs: </label>
+            <input id="realtimeModeCheckbox" type="checkbox" checked />
+          </div>
+        </form>
+        <div class="log-container" id="logContainer"></div>
+      </div>
+      <div class="tab-content" id="tab2">
+        <!-- Settings for log rotation -->
+      </div>
+    </div>
+  </body>
 </html>

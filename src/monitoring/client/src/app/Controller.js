@@ -1,13 +1,13 @@
 export class Controller {
-	constructor(model) {
-		this.model = model;
-	}
+  constructor(model) {
+    this.model = model;
+  }
 
-	addSystemLog = (data) => {
-		this.model.addSystemLog(data);
-	}
+  addSystemLog = (data) => {
+    this.model.addSystemLog(data);
+  };
 
-	getSystemLogs = () => {
-		return this.model.getSystemLogs();
-	}
+  getSystemLogs = () => {
+    return this.model.getSystemLogs();
+  };
 }

@@ -39,10 +39,13 @@ export class CreateClientBookingDTO {
       this.fromDateTime = data.fromDateTime;
       this.toDateTime = data.toDateTime;
       this.info = data.info;
-      
+
       const errors = validateSync(this);
       if (errors.length) {
-        throw new shared.errors.DTOValidationError(CreateClientBookingDTO.name, errors);
+        throw new shared.errors.DTOValidationError(
+          CreateClientBookingDTO.name,
+          errors,
+        );
       }
     }
   }

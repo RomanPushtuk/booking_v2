@@ -1,67 +1,67 @@
 p {
-	margin: 0;
+  margin: 0;
 }
 
 #root {
-	display: flex;
-	column-gap: 16px;
+  display: flex;
+  column-gap: 16px;
 }
 
 .left-panel {
-	flex: 1;
+  flex: 1;
 }
 
 .navigation {
-	display: flex;
-	flex-direction: column;
-	row-gap: 16px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
 }
 
 .tab-content {
-	flex: 8;
-	display: none;
+  flex: 8;
+  display: none;
 }
 
 .tab-content.active {
-	display: block;
+  display: block;
 }
 
 .tab-button.active {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .form {
-	margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 .form-filter {
-	display: flex;
-	margin-bottom: 8px;
+  display: flex;
+  margin-bottom: 8px;
 }
 
 .filter-label {
-	margin-right: 8px;
+  margin-right: 8px;
 }
 
 .filter-input {
-	width: 100%;
-	margin-right: 8px;
+  width: 100%;
+  margin-right: 8px;
 }
 
 .log-item {
-	display: flex;
-	margin-bottom: 8px;
+  display: flex;
+  margin-bottom: 8px;
 
-	p {
-		font-size: 14px;
-	}
+  p {
+    font-size: 14px;
+  }
 }
 
 .log-item_timeshtamp {
-	width: 180px;
-	margin-right: 16px;
+  width: 180px;
+  margin-right: 16px;
 }
 
 .log-item_log-content {
-	word-break: break-all;
+  word-break: break-all;
 }

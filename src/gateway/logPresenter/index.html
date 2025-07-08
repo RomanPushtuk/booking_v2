@@ -1,475 +1,440 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<meta
-		name="viewport"
-		content="width=device-width, initial-scale=1.0"
-	>
-	<style>
-		p {
-			margin: 0;
-		}
-
-		#root {
-			display: flex;
-			column-gap: 16px;
-		}
-
-		.left-panel {
-			flex: 1;
-		}
-
-		.navigation {
-			display: flex;
-			flex-direction: column;
-			row-gap: 16px;
-		}
-
-		.tab-content {
-			flex: 8;
-			display: none;
-		}
-
-		.tab-content.active {
-			display: block;
-		}
-
-		.tab-button.active {
-			font-weight: bold;
-		}
-
-		.form {
-			margin-bottom: 16px;
-		}
-
-		.form-filter {
-			display: flex;
-			margin-bottom: 8px;
-		}
-
-		.filter-label {
-			margin-right: 8px;
-		}
-
-		.filter-input {
-			width: 100%;
-			margin-right: 8px;
-		}
-
-		.log-item {
-			display: flex;
-			margin-bottom: 8px;
-
-			p {
-				font-size: 14px;
-			}
-		}
-
-		.log-item_timeshtamp {
-			width: 180px;
-			margin-right: 16px;
-		}
-
-		.log-item_log-content {
-			word-break: break-all;
-		}
-	</style>
-	<title>Simple Monitoring Tool</title>
-</head>
-
-<body>
-	<div id='root'>
-		<div class="left-panel">
-			<nav class="navigation">
-				<button
-					class="tab-button active"
-					data-tab="tab1"
-				>System Logs</button>
-				<button
-					class="tab-button"
-					data-tab="tab2"
-				>Monitoring Logs</button>
-				<button
-					class="tab-button"
-					data-tab="tab3"
-				>Log Rotation</button>
-			</nav>
-		</div>
-		<div
-			class="tab-content active"
-			id="tab1"
-		>
-			<form class="form">
-				<div class="form-filter">
-					<label
-						class="filter-label"
-						for="filter"
-					>Filter:</label>
-					<input
-						class="filter-input"
-						type="text"
-						id="filter"
-						name="filter"
-						value="param1=value1,"
-					>
-					<button id="filter-button">Find</button>
-				</div>
-				<div class="form-controls">
-					<label
-						class="filter-input"
-						for="realtime"
-					>Real-Time Logs:</label>
-					<input
-						id="realtime"
-						type="checkbox"
-						checked
-					>
-				</div>
-			</form>
-			<div
-				class="log-container"
-				id="log-container"
-			></div>
-		</div>
-		<div
-			class="tab-content"
-			id="tab2"
-		>
-			<canvas
-				id="cpuChart"
-				width="500"
-				height="300"
-				style="border:1px solid #ccc;"
-			></canvas>
-			<canvas
-				id="heapTotalChart"
-				width="500"
-				height="300"
-				style="border:1px solid #ccc;"
-			></canvas>
-		</div>
-		<div
-			class="tab-content"
-			id="tab3"
-		></div>
-	</div>
-
-	<script>
-		const settings = {
-			amount: 5000,
-		}
-
-		class Model {
-			constructor() {
-				this.systemLogs = [];
-			}
-
-			addSystemLog = (data) => {
-				if (this.systemLogs.length > settings.amount) this.systemLogs.pop();
-				this.systemLogs.unshift(data);
-			}
-
-			getSystemLogs = () => {
-				return this.systemLogs;
-			}
-		}
-
-		class Controller {
-			constructor(model) {
-				this.model = model;
-			}
-
-			addSystemLog = (data) => {
-				this.model.addSystemLog(data);
-			}
-
-			getSystemLogs = () => {
-				return this.model.getSystemLogs();
-			}
-		}
-
-		class View {
-			constructor(controller) {
-				this.showRealtimeLogs = true;
-
-				this.controller = controller;
-				this.filterInput = document.getElementById('filter');
-				this.findButton = document.getElementById('filter-button');
-				this.logContainer = document.getElementById('log-container');
-				this.realtime = document.getElementById('realtime');
-				this.tabButtons = document.querySelectorAll('.tab-button');
-				this.tabContents = document.querySelectorAll('.tab-content');
-
-				const socket = new WebSocket("wss://javascript.info");
-
-				setInterval(() => {
-					this.controller.addSystemLog({
-						time: Math.random().toString(),
-						text: Math.random().toString()
-					});
-					const systemLogs = this.controller.getSystemLogs();
-
-					if (this.showRealtimeLogs) {
-						this.renderLogItemsList(systemLogs);
-					}
-				}, 500);
-
-				socket.onopen = function (e) {
-					console.log("[open] Connection established");
-				};
-				socket.onmessage = function (event) {
-					console.log(`[message] Data received from server: ${event.data}`);
-					this.controller.addSystemLog(event.data);
-					const systemLogs = this.controller.getSystemLogs();
-					if (this.showRealtimeLogs) {
-						this.renderLogItemsList(systemLogs);
-					}
-				};
-				socket.onclose = function (event) {
-					if (event.wasClean) {
-						console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-					} else {
-						// e.g. server process killed or network down
-						// event.code is usually 1006 in this case
-						console.log('[close] Connection died');
-					}
-				};
-				socket.onerror = function (error) {
-					console.log(`[error]`);
-				};
-
-				this.findButton.addEventListener('click', this.handleFilterClick);
-				this.realtime.addEventListener('change', this.handleRealtimeLogsClick);
-				this.tabButtons.forEach(button => {
-					button.addEventListener('click', this.handleTab);
-				});
-			}
-
-			handleFilterClick = () => {
-				const value = this.filterInput.value;
-
-				if (value.length) {
-
-				} else {
-
-				}
-			}
-
-			handleRealtimeLogsClick = (event) => {
-				this.showRealtimeLogs = event.target.checked;
-			}
-
-			renderLogItemsList = (systemLogs) => {
-				const map = {}; // save current elements 
-				const logItems = Array.from(this.logContainer.children);
-
-				for (const component of logItems) {
-					const key = component.dataset.time;
-					map[key] = component;
-				}
-
-				const resultList = [];
-
-				systemLogs.forEach((log) => {
-					const element = map[log.time] ? map[log.time] : this.createLogItem(log.time, log.text);
-					resultList.push(element);
-				});
-
-				while (this.logContainer.lastElementChild) {
-					this.logContainer.removeChild(this.logContainer.lastElementChild);
-				}
-
-				resultList.forEach((element) => {
-					this.logContainer.appendChild(element);
-				})
-			}
-
-			handleTab = (event) => {
-				const tabId = event.target.getAttribute('data-tab');
-
-				// Remove "active" from all buttons and content
-				this.tabButtons.forEach(btn => btn.classList.remove('active'));
-				this.tabContents.forEach(content => content.classList.remove('active'));
-
-				// Add "active" to the clicked button and corresponding tab
-				event.target.classList.add('active');
-				document.getElementById(tabId).classList.add('active');
-			}
-
-			createLogItem = (time, text) => {
-				// Create the container div
-				const logItem = document.createElement('div');
-				logItem.className = 'log-item';
-				logItem.dataset.component = 'log-item';
-				logItem.dataset.key = time;
-
-				// Create the timestamp paragraph
-				const timestamp = document.createElement('p');
-				timestamp.className = 'log-item_timeshtamp';
-				timestamp.textContent = time;
-
-				// Create the log content paragraph
-				const logContent = document.createElement('p');
-				logContent.className = 'log-item_log-content';
-				logContent.textContent = text;
-
-				// Append paragraphs to the container div
-				logItem.appendChild(timestamp);
-				logItem.appendChild(logContent);
-
-				return logItem;
-			}
-		}
-
-		const model = new Model();
-		const controller = new Controller(model);
-		const view = new View(controller);
-	</script>
-
-
-
-	<script>
-		function drawChart(monitoringData, canvasId, xLabel = 'x', yLabel = 'y') {
-			const cpuValues = monitoringData.map(entry => parseFloat(entry));
-
-			// Настройка canvas
-			const canvas = document.getElementById(canvasId);
-			const ctx = canvas.getContext('2d');
-
-			const width = canvas.width;
-			const height = canvas.height;
-			const padding = 80;
-			const chartHeight = height - padding * 2;
-			const chartWidth = width - padding * 2;
-
-			// Максимальное значение CPU для масштаба
-			const maxCpu = Math.ceil(Math.max(...cpuValues));
-			const stepX = chartWidth / (cpuValues.length - 1);
-
-			// Функция для преобразования значения в координаты на канвасе
-			function getY(value) {
-				return height - padding - (value / maxCpu) * chartHeight;
-			}
-
-			// Рисуем оси
-			ctx.beginPath();
-			ctx.moveTo(padding, padding);
-			ctx.lineTo(padding, height - padding); // Y
-			ctx.lineTo(width - padding, height - padding); // X
-			ctx.strokeStyle = "#000";
-			ctx.lineWidth = 2;
-			ctx.stroke();
-
-			// Рисуем деления и подписи по Y (ось CPU)
-			ctx.fillStyle = "black";
-			ctx.font = "12px sans-serif";
-			ctx.textAlign = "right";
-			ctx.textBaseline = "middle";
-
-			for (let i = 0; i <= 5; i++) {
-				const value = (maxCpu / 5) * i;
-				const y = getY(value);
-				ctx.beginPath();
-				ctx.moveTo(padding - 5, y);
-				ctx.lineTo(padding, y);
-				ctx.stroke();
-				ctx.fillText(value.toFixed(0) + '%', padding - 10, y);
-			}
-
-			// Подпись оси Y
-			ctx.save();
-			ctx.translate(20, height / 2);
-			ctx.rotate(-Math.PI / 2);
-			ctx.textAlign = "center";
-			ctx.fillText(xLabel, 0, 0);
-			ctx.restore();
-
-			// Подписи по X (точки времени)
-			ctx.textAlign = "center";
-			ctx.textBaseline = "top";
-			monitoringData.forEach((_, i) => {
-				const x = padding + i * stepX;
-				ctx.beginPath();
-				ctx.moveTo(x, height - padding);
-				ctx.lineTo(x, height - padding + 5);
-				ctx.stroke();
-				// ctx.fillText("T" + (i + 1), x, height - padding + 8);
-			});
-
-			// Подпись оси X
-			ctx.fillText(yLabel, width / 2, height - 40);
-
-			// Рисуем линию и точки
-			ctx.beginPath();
-			cpuValues.forEach((value, i) => {
-				const x = padding + i * stepX;
-				const y = getY(value);
-
-				if (i === 0) {
-					ctx.moveTo(x, y);
-				} else {
-					ctx.lineTo(x, y);
-				}
-			});
-			ctx.strokeStyle = "blue";
-			ctx.lineWidth = 2;
-			ctx.stroke();
-
-			// Отрисовка точек
-			cpuValues.forEach((value, i) => {
-				const x = padding + i * stepX;
-				const y = getY(value);
-
-				ctx.beginPath();
-				ctx.arc(x, y, 4, 0, Math.PI * 2);
-				ctx.fillStyle = "red";
-				ctx.fill();
-			});
-		}
-
-
-		const monitoringData = [
-			"22.16",
-			"30.10",
-			"20.00",
-			"25.50",
-			"28.75",
-			"18.90",
-			"24.30",
-			"21.85",
-			"29.40",
-			"23.00",
-			"27.60",
-			"19.80",
-			"26.25",
-			"22.90",
-			"31.10",
-			"20.50",
-			"24.95",
-			"28.00",
-			"23.75",
-			"21.60",
-			"25.10",
-			"27.85",
-			"19.40",
-			"29.90",
-			"22.55"
-		];
-
-		const heapTotalData = [
-			20.13, 20.70, 21.40, 21.93, 22.74, 22.73, 23.61,
-			24.26, 24.43, 25.03, 25.20, 25.99, 26.54, 27.27,
-			27.24, 27.99, 28.68, 29.10, 29.57, 29.80, 30.37,
-			30.72, 31.25, 31.74, 32.25, 32.44, 32.95, 33.41,
-			33.71, 34.19
-		];
-
-		drawChart(monitoringData, 'cpuChart', 'CPU (%)', 'Time');
-		drawChart(heapTotalData, 'heapTotalChart', 'Memory (%)', 'Time');
-	</script>
-
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      p {
+        margin: 0;
+      }
+
+      #root {
+        display: flex;
+        column-gap: 16px;
+      }
+
+      .left-panel {
+        flex: 1;
+      }
+
+      .navigation {
+        display: flex;
+        flex-direction: column;
+        row-gap: 16px;
+      }
+
+      .tab-content {
+        flex: 8;
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .tab-button.active {
+        font-weight: bold;
+      }
+
+      .form {
+        margin-bottom: 16px;
+      }
+
+      .form-filter {
+        display: flex;
+        margin-bottom: 8px;
+      }
+
+      .filter-label {
+        margin-right: 8px;
+      }
+
+      .filter-input {
+        width: 100%;
+        margin-right: 8px;
+      }
+
+      .log-item {
+        display: flex;
+        margin-bottom: 8px;
+
+        p {
+          font-size: 14px;
+        }
+      }
+
+      .log-item_timeshtamp {
+        width: 180px;
+        margin-right: 16px;
+      }
+
+      .log-item_log-content {
+        word-break: break-all;
+      }
+    </style>
+    <title>Simple Monitoring Tool</title>
+  </head>
+
+  <body>
+    <div id="root">
+      <div class="left-panel">
+        <nav class="navigation">
+          <button class="tab-button active" data-tab="tab1">System Logs</button>
+          <button class="tab-button" data-tab="tab2">Monitoring Logs</button>
+          <button class="tab-button" data-tab="tab3">Log Rotation</button>
+        </nav>
+      </div>
+      <div class="tab-content active" id="tab1">
+        <form class="form">
+          <div class="form-filter">
+            <label class="filter-label" for="filter">Filter:</label>
+            <input
+              class="filter-input"
+              type="text"
+              id="filter"
+              name="filter"
+              value="param1=value1,"
+            />
+            <button id="filter-button">Find</button>
+          </div>
+          <div class="form-controls">
+            <label class="filter-input" for="realtime">Real-Time Logs:</label>
+            <input id="realtime" type="checkbox" checked />
+          </div>
+        </form>
+        <div class="log-container" id="log-container"></div>
+      </div>
+      <div class="tab-content" id="tab2">
+        <canvas
+          id="cpuChart"
+          width="500"
+          height="300"
+          style="border: 1px solid #ccc"
+        ></canvas>
+        <canvas
+          id="heapTotalChart"
+          width="500"
+          height="300"
+          style="border: 1px solid #ccc"
+        ></canvas>
+      </div>
+      <div class="tab-content" id="tab3"></div>
+    </div>
+
+    <script>
+      const settings = {
+        amount: 5000,
+      };
+
+      class Model {
+        constructor() {
+          this.systemLogs = [];
+        }
+
+        addSystemLog = (data) => {
+          if (this.systemLogs.length > settings.amount) this.systemLogs.pop();
+          this.systemLogs.unshift(data);
+        };
+
+        getSystemLogs = () => {
+          return this.systemLogs;
+        };
+      }
+
+      class Controller {
+        constructor(model) {
+          this.model = model;
+        }
+
+        addSystemLog = (data) => {
+          this.model.addSystemLog(data);
+        };
+
+        getSystemLogs = () => {
+          return this.model.getSystemLogs();
+        };
+      }
+
+      class View {
+        constructor(controller) {
+          this.showRealtimeLogs = true;
+
+          this.controller = controller;
+          this.filterInput = document.getElementById("filter");
+          this.findButton = document.getElementById("filter-button");
+          this.logContainer = document.getElementById("log-container");
+          this.realtime = document.getElementById("realtime");
+          this.tabButtons = document.querySelectorAll(".tab-button");
+          this.tabContents = document.querySelectorAll(".tab-content");
+
+          const socket = new WebSocket("wss://javascript.info");
+
+          setInterval(() => {
+            this.controller.addSystemLog({
+              time: Math.random().toString(),
+              text: Math.random().toString(),
+            });
+            const systemLogs = this.controller.getSystemLogs();
+
+            if (this.showRealtimeLogs) {
+              this.renderLogItemsList(systemLogs);
+            }
+          }, 500);
+
+          socket.onopen = function (e) {
+            console.log("[open] Connection established");
+          };
+          socket.onmessage = function (event) {
+            console.log(`[message] Data received from server: ${event.data}`);
+            this.controller.addSystemLog(event.data);
+            const systemLogs = this.controller.getSystemLogs();
+            if (this.showRealtimeLogs) {
+              this.renderLogItemsList(systemLogs);
+            }
+          };
+          socket.onclose = function (event) {
+            if (event.wasClean) {
+              console.log(
+                `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`,
+              );
+            } else {
+              // e.g. server process killed or network down
+              // event.code is usually 1006 in this case
+              console.log("[close] Connection died");
+            }
+          };
+          socket.onerror = function (error) {
+            console.log(`[error]`);
+          };
+
+          this.findButton.addEventListener("click", this.handleFilterClick);
+          this.realtime.addEventListener(
+            "change",
+            this.handleRealtimeLogsClick,
+          );
+          this.tabButtons.forEach((button) => {
+            button.addEventListener("click", this.handleTab);
+          });
+        }
+
+        handleFilterClick = () => {
+          const value = this.filterInput.value;
+
+          if (value.length) {
+          } else {
+          }
+        };
+
+        handleRealtimeLogsClick = (event) => {
+          this.showRealtimeLogs = event.target.checked;
+        };
+
+        renderLogItemsList = (systemLogs) => {
+          const map = {}; // save current elements
+          const logItems = Array.from(this.logContainer.children);
+
+          for (const component of logItems) {
+            const key = component.dataset.time;
+            map[key] = component;
+          }
+
+          const resultList = [];
+
+          systemLogs.forEach((log) => {
+            const element = map[log.time]
+              ? map[log.time]
+              : this.createLogItem(log.time, log.text);
+            resultList.push(element);
+          });
+
+          while (this.logContainer.lastElementChild) {
+            this.logContainer.removeChild(this.logContainer.lastElementChild);
+          }
+
+          resultList.forEach((element) => {
+            this.logContainer.appendChild(element);
+          });
+        };
+
+        handleTab = (event) => {
+          const tabId = event.target.getAttribute("data-tab");
+
+          // Remove "active" from all buttons and content
+          this.tabButtons.forEach((btn) => btn.classList.remove("active"));
+          this.tabContents.forEach((content) =>
+            content.classList.remove("active"),
+          );
+
+          // Add "active" to the clicked button and corresponding tab
+          event.target.classList.add("active");
+          document.getElementById(tabId).classList.add("active");
+        };
+
+        createLogItem = (time, text) => {
+          // Create the container div
+          const logItem = document.createElement("div");
+          logItem.className = "log-item";
+          logItem.dataset.component = "log-item";
+          logItem.dataset.key = time;
+
+          // Create the timestamp paragraph
+          const timestamp = document.createElement("p");
+          timestamp.className = "log-item_timeshtamp";
+          timestamp.textContent = time;
+
+          // Create the log content paragraph
+          const logContent = document.createElement("p");
+          logContent.className = "log-item_log-content";
+          logContent.textContent = text;
+
+          // Append paragraphs to the container div
+          logItem.appendChild(timestamp);
+          logItem.appendChild(logContent);
+
+          return logItem;
+        };
+      }
+
+      const model = new Model();
+      const controller = new Controller(model);
+      const view = new View(controller);
+    </script>
+
+    <script>
+      function drawChart(monitoringData, canvasId, xLabel = "x", yLabel = "y") {
+        const cpuValues = monitoringData.map((entry) => parseFloat(entry));
+
+        // Настройка canvas
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext("2d");
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 80;
+        const chartHeight = height - padding * 2;
+        const chartWidth = width - padding * 2;
+
+        // Максимальное значение CPU для масштаба
+        const maxCpu = Math.ceil(Math.max(...cpuValues));
+        const stepX = chartWidth / (cpuValues.length - 1);
+
+        // Функция для преобразования значения в координаты на канвасе
+        function getY(value) {
+          return height - padding - (value / maxCpu) * chartHeight;
+        }
+
+        // Рисуем оси
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding); // Y
+        ctx.lineTo(width - padding, height - padding); // X
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Рисуем деления и подписи по Y (ось CPU)
+        ctx.fillStyle = "black";
+        ctx.font = "12px sans-serif";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+
+        for (let i = 0; i <= 5; i++) {
+          const value = (maxCpu / 5) * i;
+          const y = getY(value);
+          ctx.beginPath();
+          ctx.moveTo(padding - 5, y);
+          ctx.lineTo(padding, y);
+          ctx.stroke();
+          ctx.fillText(value.toFixed(0) + "%", padding - 10, y);
+        }
+
+        // Подпись оси Y
+        ctx.save();
+        ctx.translate(20, height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.fillText(xLabel, 0, 0);
+        ctx.restore();
+
+        // Подписи по X (точки времени)
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        monitoringData.forEach((_, i) => {
+          const x = padding + i * stepX;
+          ctx.beginPath();
+          ctx.moveTo(x, height - padding);
+          ctx.lineTo(x, height - padding + 5);
+          ctx.stroke();
+          // ctx.fillText("T" + (i + 1), x, height - padding + 8);
+        });
+
+        // Подпись оси X
+        ctx.fillText(yLabel, width / 2, height - 40);
+
+        // Рисуем линию и точки
+        ctx.beginPath();
+        cpuValues.forEach((value, i) => {
+          const x = padding + i * stepX;
+          const y = getY(value);
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        });
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Отрисовка точек
+        cpuValues.forEach((value, i) => {
+          const x = padding + i * stepX;
+          const y = getY(value);
+
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = "red";
+          ctx.fill();
+        });
+      }
+
+      const monitoringData = [
+        "22.16",
+        "30.10",
+        "20.00",
+        "25.50",
+        "28.75",
+        "18.90",
+        "24.30",
+        "21.85",
+        "29.40",
+        "23.00",
+        "27.60",
+        "19.80",
+        "26.25",
+        "22.90",
+        "31.10",
+        "20.50",
+        "24.95",
+        "28.00",
+        "23.75",
+        "21.60",
+        "25.10",
+        "27.85",
+        "19.40",
+        "29.90",
+        "22.55",
+      ];
+
+      const heapTotalData = [
+        20.13, 20.7, 21.4, 21.93, 22.74, 22.73, 23.61, 24.26, 24.43, 25.03,
+        25.2, 25.99, 26.54, 27.27, 27.24, 27.99, 28.68, 29.1, 29.57, 29.8,
+        30.37, 30.72, 31.25, 31.74, 32.25, 32.44, 32.95, 33.41, 33.71, 34.19,
+      ];
+
+      drawChart(monitoringData, "cpuChart", "CPU (%)", "Time");
+      drawChart(heapTotalData, "heapTotalChart", "Memory (%)", "Time");
+    </script>
+  </body>
 </html>

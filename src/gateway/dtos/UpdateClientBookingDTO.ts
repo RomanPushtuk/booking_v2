@@ -37,6 +37,9 @@ export class UpdateClientBookingDTO {
 
     const errors = validateSync(this);
     if (errors.length)
-      throw new shared.errors.DTOValidationError(UpdateClientBookingDTO.name, errors);
+      throw new shared.errors.DTOValidationError(
+        UpdateClientBookingDTO.name,
+        errors,
+      );
   }
 }

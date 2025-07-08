@@ -2,7 +2,6 @@ import path from "path";
 import pino from "pino";
 import { asyncLocalStorage } from "../../context";
 
-
 const logger = pino({
   base: null,
   hooks: {
@@ -46,6 +45,5 @@ const logger = pino({
     ],
   },
 });
-
 
 export { logger };
