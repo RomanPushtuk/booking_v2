@@ -20,7 +20,7 @@ export class View {
     this.findButton.addEventListener("click", this.handleFilterClick);
     this.realtimeModeCheckbox.addEventListener(
       "change",
-      this.handleRealtimeLogsClick
+      this.handleRealtimeLogsClick,
     );
     this.tabButtons.forEach((button) => {
       button.addEventListener("click", this.handleTabClick);
@@ -39,6 +39,8 @@ export class View {
   handleSocketMessage = (event) => {
     // format: { time: number, text: json.string }
     const data = JSON.parse(event.data);
+    data.time = new Date(data.time).toISOString();
+
     this.controller.addSystemLog(data);
     const systemLogs = this.controller.getSystemLogs();
     if (this.showRealtimeLogs) {
@@ -49,7 +51,7 @@ export class View {
   handleSocketClose = (event) => {
     if (event.wasClean) {
       console.log(
-        `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+        `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`,
       );
     } else {
       // e.g. server process killed or network down
@@ -73,8 +75,12 @@ export class View {
 
       // format: Array<{ time: number, text: json.string }>
       const data = await response.json();
+      const messages = data.map((item) => ({
+        ...item,
+        time: new Date(item.time).toISOString(),
+      }));
       this.setRealTimeMode(false);
-      this.renderLogItemsList(data);
+      this.renderLogItemsList(messages);
     } else {
     }
   };

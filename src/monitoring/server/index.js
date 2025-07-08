@@ -91,7 +91,10 @@ const useMonitoring = (app) => {
     if (!req.query.filter) return res.json([]);
     const filter = JSON.parse(req.query.filter);
     const docs = await db.findAsync(filter).execAsync();
-    const messages = docs.map(mapDataToMessage);
+    const messages = docs.map((doc) => ({
+      time: doc.time,
+      text: JSON.stringify(doc),
+    }));
     res.json(messages);
   });
 

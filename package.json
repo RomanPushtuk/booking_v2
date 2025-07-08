@@ -14,7 +14,8 @@
     "test:e2e": "jest ./src/__e2e__/index.test.ts",
     "debug": "nodemon --inspect ./src/index.ts",
     "swagger": "npm run dev -- run swagger",
-    "migration": "node ./src/migrations/run_migrations.js"
+    "migration": "node ./src/migrations/run_migrations.js",
+    "postinstall": "cd ./src/monitoring && bash build.sh"
   },
   "author": "Roman Pushtuk",
   "license": "ISC",
