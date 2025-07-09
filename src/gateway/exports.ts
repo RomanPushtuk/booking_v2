@@ -11,6 +11,7 @@ import { logger } from "./logger";
 import { authorizationChecker, currentUserChecker } from "./utils";
 
 export * as dtos from "./dtos";
+export * as enums from "./enums";
 
 useContainer(diContainer);
 
