@@ -1,3 +1,7 @@
 import { Container } from "typedi";
+import { vs } from "../vs";
 
-export const diContainer = Container.of("booking");
+const diContainer = Container.of("booking");
+diContainer.set("vs", vs);
+
+export { diContainer };

@@ -190,7 +190,8 @@ export class ClientController {
       ),
     );
 
-    await updateClientBookingSaga.execute(updateClientBookingDTO, bookingId);
+    const versionId = shared.utils.generateId();
+    await updateClientBookingSaga.execute(updateClientBookingDTO, bookingId, versionId);
     return new BookingUpdatedDTO({ id: bookingId });
   }
 
