@@ -105,6 +105,7 @@ export class Host {
         booking.getClientId(),
         booking.getFromDateTime(),
         booking.getToDateTime(),
+        booking.getId(),
       )
     ) {
       throw new Error("Can't update a booking. Booking already exists");
@@ -114,6 +115,7 @@ export class Host {
       this.checkOverlapingBookings(
         booking.getFromDateTime(),
         booking.getToDateTime(),
+        booking.getId(),
       )
     ) {
       throw new Error(
@@ -153,12 +155,14 @@ export class Host {
   private checkOverlapingBookings(
     fromDateTime: string,
     toDateTime: string,
+    excludeBookingId?: string,
   ): boolean {
     if (config.allowOverlappingBookings) return false;
 
     const hostBookings = this.getBookings();
     for (const booking of hostBookings) {
       if (booking.getDeleted()) continue;
+      if (booking.getId() === excludeBookingId) continue;
 
       const isOverlap = intervalsOverlap(
         booking.getFromDateTime(),
@@ -176,6 +180,7 @@ export class Host {
     clientId: string,
     fromDateTime: string,
     toDateTime: string,
+    excludeBookingId?: string,
   ): boolean {
     const bookings = this.getBookings();
 
@@ -184,7 +189,8 @@ export class Host {
         booking.getClientId() === clientId &&
         !booking.getDeleted() &&
         booking.getFromDateTime() === fromDateTime &&
-        booking.getToDateTime() === toDateTime
+        booking.getToDateTime() === toDateTime &&
+        booking.getId() !== excludeBookingId
       ) {
         return true;
       }
