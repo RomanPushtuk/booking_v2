@@ -45,19 +45,59 @@ export const api = {
         config,
       );
     },
-    getMyBookings: () => {},
-    getBookingById: () => {},
-    createBooking: (body: gateway.dtos.CreateBookingDTO) => {
-      return axiosInstance.post<gateway.dtos.BookingCreatedDTO>(
-        "/me/bookings",
-        body,
+    getMyBookings: (config: AxiosRequestConfig, params?: {
+      sortDirection?: string;
+      sortProperty?: string;
+      fromDateTime?: string;
+      toDateTime?: string;
+      fromDateTimeStart?: string;
+      fromDateTimeEnd?: string;
+      toDateTimeStart?: string;
+      toDateTimeEnd?: string;
+    }) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO[]>(
+        "/clients/me/bookings",
+        { ...config, params },
       );
     },
-    deleteBooking: () => {},
-    updateBooking: () => {},
+    getBookingById: (bookingId: string, config: AxiosRequestConfig) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO>(
+        `/clients/me/bookings/${bookingId}`,
+        config,
+      );
+    },
+    createBooking: (
+      body: gateway.dtos.CreateClientBookingDTO,
+      config: AxiosRequestConfig,
+    ) => {
+      return axiosInstance.post<gateway.dtos.BookingCreatedDTO>(
+        "/clients/me/bookings",
+        body,
+        config,
+      );
+    },
+    deleteBooking: (bookingId: string, config: AxiosRequestConfig) => {
+      return axiosInstance.delete<gateway.dtos.BookingDeletedDTO>(
+        `/clients/me/bookings/${bookingId}`,
+        config,
+      );
+    },
+    updateBooking: (
+      bookingId: string,
+      body: gateway.dtos.UpdateClientBookingDTO,
+      config: AxiosRequestConfig,
+    ) => {
+      return axiosInstance.patch<gateway.dtos.BookingUpdatedDTO>(
+        `/clients/me/bookings/${bookingId}`,
+        body,
+        config,
+      );
+    },
   },
   hosts: {
-    getMe: () => {},
+    getMe: (config: AxiosRequestConfig) => {
+      return axiosInstance.get<gateway.dtos.HostDTO>("/hosts/me", config);
+    },
     deleteMe: () => {},
     updateMe: () => {},
     getMyBookings: () => {},
