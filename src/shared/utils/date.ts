@@ -27,7 +27,7 @@ export function isSameDay(fromDateTime: string, toDateTime: string): boolean {
 }
 
 export function getDayOfWeek(dateTime: string): Days {
-  const date = DateTime.fromISO(dateTime);
+  const date = DateTime.fromISO(dateTime).setLocale('en');
   const dayName = date.weekdayLong?.toUpperCase();
 
   return Days[dayName as keyof typeof Days];
