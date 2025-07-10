@@ -8,7 +8,7 @@ import * as monitoring from "./monitoring/exports";
 
 let connections: Socket[] = [];
 
-const timeoutId = monitoring.start();
+const timeoutId = process.env["NODE_ENV"] !== 'test' ? monitoring.start() : null;
 const server = gateway.start();
 
 server.on("connection", (connection) => {
@@ -28,7 +28,7 @@ process.on("uncaughtException", (err, origin) => {
 
 process.on("SIGINT", () => {
   shared.logger.info("Received kill signal, shutting down gracefully\n");
-  clearInterval(timeoutId);
+  if (timeoutId) clearInterval(timeoutId);
 
   server.close(() => {
     shared.logger.info("Closed out remaining connections\n");

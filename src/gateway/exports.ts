@@ -29,14 +29,18 @@ import {
 const app = express();
 
 useSwagger(app);
-monitoring.useMonitoring(app);
+if (process.env["NODE_ENV"] !== 'test') {
+  monitoring.useMonitoring(app);
+}
 
-const bus = new BroadcastChannel("monitoring");
-
-bus.onmessage = (event: unknown) => {
-  // @ts-expect-error 123
-  monitoring.insert(event.data);
-};
+let bus: BroadcastChannel | null = null;
+if (process.env["NODE_ENV"] !== 'test') {
+  bus = new BroadcastChannel("monitoring");
+  bus.onmessage = (event: unknown) => {
+    // @ts-expect-error 123
+    monitoring.insert(event.data);
+  };
+}
 
 const start = () => {
   useExpressServer(app, {
