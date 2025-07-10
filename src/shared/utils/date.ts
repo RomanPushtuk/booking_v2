@@ -38,11 +38,12 @@ export function getTimeFromDateTime(dateTime: string): string {
   return date.toFormat("HH:mm");
 }
 
-export function isTimeInWorkingHours(
-  time: string,
+export function isTimeIntervalInWorkingHours(
+  fromTime: string,
+  toTime: string,
   workingHours: { from: string; to: string }[],
 ): boolean {
   return workingHours.some(({ from, to }) => {
-    return time >= from && time <= to;
+    return fromTime >= from && toTime <= to;
   });
 }

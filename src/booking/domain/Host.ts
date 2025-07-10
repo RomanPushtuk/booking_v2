@@ -8,7 +8,7 @@ import {
   isSameDay,
   getDayOfWeek,
   getTimeFromDateTime,
-  isTimeInWorkingHours,
+  isTimeIntervalInWorkingHours,
 } from "../../shared/utils/date";
 
 export class Host {
@@ -213,10 +213,7 @@ export class Host {
     const fromTime = getTimeFromDateTime(fromDateTime);
     const toTime = getTimeFromDateTime(toDateTime);
 
-    if (
-      !isTimeInWorkingHours(fromTime, this._workHours) ||
-      !isTimeInWorkingHours(toTime, this._workHours)
-    )
+    if (!isTimeIntervalInWorkingHours(fromTime, toTime, this._workHours))
       return true;
 
     return false;
