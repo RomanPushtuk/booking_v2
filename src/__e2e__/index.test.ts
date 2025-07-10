@@ -277,7 +277,7 @@ describe("Client Bookings testing", () => {
       new gateway.dtos.BookingCreatedDTO({ ...response.data });
     }).not.toThrow();
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
   });
 
   test("Create booking with invalid token", async () => {
@@ -518,6 +518,78 @@ describe("Client Bookings testing", () => {
     expect(response.status).toBe(400);
   });
 
+  test("Create booking that spans lunch break (before to after lunch)", async () => {
+    const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
+      hostId: hostId,
+      fromDateTime: "2025-07-01T12:00:00Z",
+      toDateTime: "2025-07-01T15:00:00Z",
+    };
+
+    const response = await api.clients.createBooking(
+      createBookingDTO,
+      clientConfig,
+    );
+    expect(response.status).toBe(400);
+  });
+
+  test("Create booking that starts before lunch and ends during lunch", async () => {
+    const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
+      hostId: hostId,
+      fromDateTime: "2025-07-01T12:00:00Z",
+      toDateTime: "2025-07-01T13:30:00Z",
+    };
+
+    const response = await api.clients.createBooking(
+      createBookingDTO,
+      clientConfig,
+    );
+    expect(response.status).toBe(400);
+  });
+
+  test("Create booking that starts during lunch and ends after lunch", async () => {
+    const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
+      hostId: hostId,
+      fromDateTime: "2025-07-01T13:30:00Z",
+      toDateTime: "2025-07-01T15:00:00Z",
+    };
+
+    const response = await api.clients.createBooking(
+      createBookingDTO,
+      clientConfig,
+    );
+    expect(response.status).toBe(400);
+  });
+
+  test("Create booking within single working period before lunch", async () => {
+    const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
+      hostId: hostId,
+      fromDateTime: "2025-07-01T12:00:00Z",
+      toDateTime: "2025-07-01T13:00:00Z",
+    };
+
+    const response = await api.clients.createBooking(
+      createBookingDTO,
+      clientConfig,
+    );
+    expect(response.status).toBe(201);
+    expect(response.data.id).toBeDefined();
+  });
+
+  test("Create booking within single working period after lunch", async () => {
+    const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
+      hostId: hostId,
+      fromDateTime: "2025-07-01T14:00:00Z",
+      toDateTime: "2025-07-01T15:00:00Z",
+    };
+
+    const response = await api.clients.createBooking(
+      createBookingDTO,
+      clientConfig,
+    );
+    expect(response.status).toBe(201);
+    expect(response.data.id).toBeDefined();
+  });
+
   test("Create valid booking within working hours", async () => {
     const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
       hostId: hostId,
@@ -529,7 +601,7 @@ describe("Client Bookings testing", () => {
       createBookingDTO,
       clientConfig,
     );
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
   });
 
   test("Create overlapping booking - config allowOverlappingBookings behavior", async () => {
@@ -563,7 +635,7 @@ describe("Client Bookings testing", () => {
       createBookingDTO,
       clientConfig,
     );
-    expect(createResponse.status).toBe(200);
+    expect(createResponse.status).toBe(201);
 
     const bookingId = createResponse.data.id;
 
@@ -579,4 +651,38 @@ describe("Client Bookings testing", () => {
     );
     expect(updateResponse.status).toBe(400);
   });
+
+  test("Attempt to update deleted booking", async () => {
+    const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
+      hostId: hostId,
+      fromDateTime: "2025-07-01T17:00:00Z",
+      toDateTime: "2025-07-01T18:00:00Z",
+    };
+
+    const createResponse = await api.clients.createBooking(
+      createBookingDTO,
+      clientConfig,
+    );
+    expect(createResponse.status).toBe(201);
+    const bookingId = createResponse.data.id;
+
+    const deleteResponse = await api.clients.deleteBooking(
+      bookingId,
+      clientConfig,
+    );
+    expect(deleteResponse.status).toBe(200);
+
+    const updateBookingDTO: gateway.dtos.UpdateClientBookingDTO = {
+      fromDateTime: "2025-07-01T11:00:00Z",
+      toDateTime: "2025-07-01T12:00:00Z",
+    };
+
+    const updateResponse = await api.clients.updateBooking(
+      bookingId,
+      updateBookingDTO,
+      clientConfig,
+    );
+    expect(updateResponse.status).toBe(404);
+  });
+
 });
