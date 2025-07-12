@@ -3,7 +3,6 @@ import { gateway } from "./imports";
 import { AxiosRequestConfig } from "axios";
 import config from "../config.json";
 
-
 describe("Auth testing", () => {
   test("Register new client", async () => {
     const createUserDTO: gateway.dtos.CreateUserDTO = {
@@ -155,7 +154,6 @@ describe("Client Bookings testing", () => {
   let testBookingId: string;
   let deleteBookingId: string;
 
-
   beforeAll(async () => {
     const [client, host] = await Promise.all([
       api.auth.register({
@@ -201,10 +199,7 @@ describe("Client Bookings testing", () => {
       fromDateTime: "2025-07-01T15:00:00Z",
       toDateTime: "2025-07-01T16:00:00Z",
     };
-    const [
-      testBookingResponse,
-      deleteBookingResponse,
-    ] = await Promise.all([
+    const [testBookingResponse, deleteBookingResponse] = await Promise.all([
       api.clients.createBooking(testBookingDTO, clientConfig),
       api.clients.createBooking(deleteBookingDTO, clientConfig),
     ]);
@@ -427,16 +422,13 @@ describe("Client Bookings testing", () => {
       deleteBookingId,
       clientConfig,
     );
-    
+
     expect(() => {
       new gateway.dtos.BookingDeletedDTO({ ...response.data });
     }).not.toThrow();
 
     expect(response.status).toBe(200);
   });
-
-
-
 
   test("Delete booking with invalid token", async () => {
     const response = await api.clients.deleteBooking(
@@ -615,14 +607,13 @@ describe("Client Bookings testing", () => {
       createBookingDTO,
       clientConfig,
     );
-    
+
     if (config.allowOverlappingBookings) {
       expect(response.status).toBe(200);
     } else {
       expect(response.status).toBe(400);
     }
   });
-
 
   test("Update booking to invalid time", async () => {
     const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
@@ -684,5 +675,4 @@ describe("Client Bookings testing", () => {
     );
     expect(updateResponse.status).toBe(404);
   });
-
 });

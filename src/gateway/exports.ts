@@ -28,21 +28,17 @@ import {
 
 const app = express();
 
-useSwagger(app);
-if (process.env["NODE_ENV"] !== 'test') {
+const start = () => {
+  useSwagger(app);
   monitoring.useMonitoring(app);
-}
 
-let bus: BroadcastChannel | null = null;
-if (process.env["NODE_ENV"] !== 'test') {
+  let bus: BroadcastChannel | null = null;
   bus = new BroadcastChannel("monitoring");
   bus.onmessage = (event: unknown) => {
     // @ts-expect-error 123
     monitoring.insert(event.data);
   };
-}
 
-const start = () => {
   useExpressServer(app, {
     cors: true,
     authorizationChecker,

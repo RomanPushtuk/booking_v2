@@ -45,16 +45,19 @@ export const api = {
         config,
       );
     },
-    getMyBookings: (config: AxiosRequestConfig, params?: {
-      sortDirection?: string;
-      sortProperty?: string;
-      fromDateTime?: string;
-      toDateTime?: string;
-      fromDateTimeStart?: string;
-      fromDateTimeEnd?: string;
-      toDateTimeStart?: string;
-      toDateTimeEnd?: string;
-    }) => {
+    getMyBookings: (
+      config: AxiosRequestConfig,
+      params?: {
+        sortDirection?: string;
+        sortProperty?: string;
+        fromDateTime?: string;
+        toDateTime?: string;
+        fromDateTimeStart?: string;
+        fromDateTimeEnd?: string;
+        toDateTimeStart?: string;
+        toDateTimeEnd?: string;
+      },
+    ) => {
       return axiosInstance.get<gateway.dtos.BookingDTO[]>(
         "/clients/me/bookings",
         { ...config, params },
