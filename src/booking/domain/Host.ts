@@ -72,7 +72,7 @@ export class Host {
     }
 
     if (
-      this.checkOverlapingBookings(
+      this.checkOverlappingBookings(
         booking.getFromDateTime(),
         booking.getToDateTime(),
       )
@@ -112,10 +112,10 @@ export class Host {
     }
 
     if (
-      this.checkOverlapingBookings(
+      this.checkOverlappingBookings(
         booking.getFromDateTime(),
         booking.getToDateTime(),
-        booking.getId(),
+        [booking],
       )
     ) {
       throw new Error(
@@ -152,17 +152,17 @@ export class Host {
     });
   }
 
-  private checkOverlapingBookings(
+  private checkOverlappingBookings(
     fromDateTime: string,
     toDateTime: string,
-    excludeBookingId?: string,
+    exclude?: Booking[],
   ): boolean {
     if (config.allowOverlappingBookings) return false;
 
     const hostBookings = this.getBookings();
     for (const booking of hostBookings) {
       if (booking.getDeleted()) continue;
-      if (booking.getId() === excludeBookingId) continue;
+      if (exclude?.includes(booking)) continue;
 
       const isOverlap = intervalsOverlap(
         booking.getFromDateTime(),
