@@ -10,8 +10,8 @@ export class CreateUserInInfoServiceStep extends Step<UserDTO, void> {
     return;
   }
 
-  override async withCompenstation(userDTO: UserDTO): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+  override async withCompensation(userDTO: UserDTO): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
     await info.services.userService.deleteUser(userDTO.id);
     return;
   }

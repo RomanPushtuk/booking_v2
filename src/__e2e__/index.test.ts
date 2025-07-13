@@ -224,7 +224,7 @@ describe("Client Bookings testing", () => {
     const response = await api.clients.getMyBookings(clientConfig, {
       sortDirection: "DESC",
       sortProperty: "fromDateTime",
-      fromDateTimeStart: "2025-01-01T00:00:00Z",
+      fromDateTime: "2025-01-01T00:00:00Z",
       toDateTime: "2025-12-31T23:59:59.999Z",
     });
 

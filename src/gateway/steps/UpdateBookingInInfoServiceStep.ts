@@ -16,11 +16,11 @@ export class UpdateBookingInInfoServiceStep extends Step<
     return;
   }
 
-  override async withCompenstation(
+  override async withCompensation(
     _updateBookingDTO: UpdateBookingDTO,
     bookingId: string,
   ): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+    logger.info(this.constructor.name + " withCompensation");
     info.services.bookingService.revertBooking(bookingId);
     return;
   }

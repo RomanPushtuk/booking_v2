@@ -4,15 +4,15 @@ import { logger } from "../logger";
 
 export class CreateBookingInBookingServiceStep extends Step<BookingDTO, void> {
   private _invokeCb: (bookingDTO: BookingDTO) => Promise<void>;
-  private _withCompenstationCb: (bookingId: string) => Promise<void>;
+  private _withCompensationCb: (bookingId: string) => Promise<void>;
 
   constructor(
     invokeCb: (bookingDTO: BookingDTO) => Promise<void>,
-    withCompenstationCb: (bookingId: string) => Promise<void>,
+    withCompensationCb: (bookingId: string) => Promise<void>,
   ) {
     super();
     this._invokeCb = invokeCb;
-    this._withCompenstationCb = withCompenstationCb;
+    this._withCompensationCb = withCompensationCb;
   }
   override async invoke(bookingDTO: BookingDTO): Promise<void> {
     logger.info(this.constructor.name + " invoke");
@@ -20,9 +20,9 @@ export class CreateBookingInBookingServiceStep extends Step<BookingDTO, void> {
     return;
   }
 
-  override async withCompenstation(bookingDTO: BookingDTO): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
-    await this._withCompenstationCb(bookingDTO.id);
+  override async withCompensation(bookingDTO: BookingDTO): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
+    await this._withCompensationCb(bookingDTO.id);
     return;
   }
 }

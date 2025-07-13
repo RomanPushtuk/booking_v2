@@ -33,6 +33,6 @@ export class UserRepository {
     logger.info(this.constructor.name + " saveAll");
   }
   getAll() {
-    logger.info(this.constructor.name + " getAll(");
+    logger.info(this.constructor.name + " getAll");
   }
 }

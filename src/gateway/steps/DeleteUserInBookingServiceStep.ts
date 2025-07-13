@@ -9,8 +9,8 @@ export class DeleteUserInBookingServiceStep extends Step<string, void> {
     return;
   }
 
-  override async withCompenstation(userId: string): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+  override async withCompensation(userId: string): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
     await booking.services.userService.restoreUser(userId);
     return;
   }

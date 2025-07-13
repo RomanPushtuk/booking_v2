@@ -15,7 +15,7 @@ export class Saga<T, R> {
         this.successfulSteps.unshift(step);
       } catch (err) {
         this.successfulSteps.forEach(async (step) => {
-          await step.withCompenstation(payload, ...args);
+          await step.withCompensation(payload, ...args);
         });
         throw new SagaFailedError(this.constructor.name, err as Error);
       }

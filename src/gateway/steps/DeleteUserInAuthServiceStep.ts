@@ -9,8 +9,8 @@ export class DeleteUserInAuthServiceStep extends Step<string, void> {
     return;
   }
 
-  override async withCompenstation(userId: string): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+  override async withCompensation(userId: string): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
     await auth.services.authService.restoreUser(userId);
     return;
   }

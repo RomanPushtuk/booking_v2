@@ -52,10 +52,6 @@ export const api = {
         sortProperty?: string;
         fromDateTime?: string;
         toDateTime?: string;
-        fromDateTimeStart?: string;
-        fromDateTimeEnd?: string;
-        toDateTimeStart?: string;
-        toDateTimeEnd?: string;
       },
     ) => {
       return axiosInstance.get<gateway.dtos.BookingDTO[]>(

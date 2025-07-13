@@ -10,8 +10,8 @@ export class CreateBookingInInfoServiceStep extends Step<BookingDTO, void> {
     return;
   }
 
-  override async withCompenstation(bookingDTO: BookingDTO): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+  override async withCompensation(bookingDTO: BookingDTO): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
     info.services.bookingService.deleteBooking(bookingDTO.id);
     return;
   }
