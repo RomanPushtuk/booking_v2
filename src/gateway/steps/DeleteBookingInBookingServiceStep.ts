@@ -3,15 +3,15 @@ import { logger } from "../logger";
 
 export class DeleteBookingInBookingServiceStep extends Step<string, void> {
   private _invokeCb: (bookingId: string) => Promise<void>;
-  private _withCompenstationCb: (bookingId: string) => Promise<void>;
+  private _withCompensationCb: (bookingId: string) => Promise<void>;
 
   constructor(
     invokeCb: (bookingId: string) => Promise<void>,
-    withCompenstationCb: (bookingId: string) => Promise<void>,
+    withCompensationCb: (bookingId: string) => Promise<void>,
   ) {
     super();
     this._invokeCb = invokeCb;
-    this._withCompenstationCb = withCompenstationCb;
+    this._withCompensationCb = withCompensationCb;
   }
   override async invoke(bookingId: string): Promise<void> {
     logger.info(this.constructor.name + " invoke");
@@ -19,9 +19,9 @@ export class DeleteBookingInBookingServiceStep extends Step<string, void> {
     return;
   }
 
-  override async withCompenstation(bookingId: string): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
-    await this._withCompenstationCb(bookingId);
+  override async withCompensation(bookingId: string): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
+    await this._withCompensationCb(bookingId);
     return;
   }
 }

@@ -11,6 +11,7 @@ import { logger } from "./logger";
 import { authorizationChecker, currentUserChecker } from "./utils";
 
 export * as dtos from "./dtos";
+export * as enums from "./enums";
 
 useContainer(diContainer);
 
@@ -27,17 +28,17 @@ import {
 
 const app = express();
 
-useSwagger(app);
-monitoring.useMonitoring(app);
-
-const bus = new BroadcastChannel("monitoring");
-
-bus.onmessage = (event: unknown) => {
-  // @ts-expect-error 123
-  monitoring.insert(event.data);
-};
-
 const start = () => {
+  useSwagger(app);
+  monitoring.useMonitoring(app);
+
+  let bus: BroadcastChannel | null = null;
+  bus = new BroadcastChannel("monitoring");
+  bus.onmessage = (event: unknown) => {
+    // @ts-expect-error 123
+    monitoring.insert(event.data);
+  };
+
   useExpressServer(app, {
     cors: true,
     authorizationChecker,

@@ -10,6 +10,7 @@ import {
   QueryParam,
   Authorized,
   CurrentUser,
+  HttpCode,
 } from "routing-controllers";
 import { shared, booking, auth } from "../imports";
 import {
@@ -151,6 +152,7 @@ export class ClientController {
 
   @Authorized([shared.enums.Permissions.CLIENT_CREATE_BOOKING])
   @Post("/me/bookings")
+  @HttpCode(201)
   public async createBooking(
     @CurrentUser() user: auth.domain.User,
     @Body() createClientBookingDTO: CreateClientBookingDTO,

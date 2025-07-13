@@ -143,7 +143,7 @@ export class View {
 
     // Create the timestamp paragraph
     const timestamp = document.createElement("p");
-    timestamp.className = "log-item_timeshtamp";
+    timestamp.className = "log-item_timestamp";
     timestamp.textContent = time;
 
     // Create the log content paragraph

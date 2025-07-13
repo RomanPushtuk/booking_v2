@@ -27,7 +27,7 @@ export function isSameDay(fromDateTime: string, toDateTime: string): boolean {
 }
 
 export function getDayOfWeek(dateTime: string): Days {
-  const date = DateTime.fromISO(dateTime);
+  const date = DateTime.fromISO(dateTime).setLocale('en');
   const dayName = date.weekdayLong?.toUpperCase();
 
   return Days[dayName as keyof typeof Days];
@@ -38,11 +38,12 @@ export function getTimeFromDateTime(dateTime: string): string {
   return date.toFormat("HH:mm");
 }
 
-export function isTimeInWorkingHours(
-  time: string,
+export function isTimeIntervalInWorkingHours(
+  fromTime: string,
+  toTime: string,
   workingHours: { from: string; to: string }[],
 ): boolean {
   return workingHours.some(({ from, to }) => {
-    return time >= from && time <= to;
+    return fromTime >= from && toTime <= to;
   });
 }

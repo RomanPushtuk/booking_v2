@@ -13,11 +13,11 @@ export class UpdateHostInInfoServiceStep extends Step<UpdateHostDTO, void> {
     return;
   }
 
-  override async withCompenstation(
+  override async withCompensation(
     _updateHostDTO: UpdateHostDTO,
     hostId: string,
   ): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+    logger.info(this.constructor.name + " withCompensation");
     info.services.userService.revertHost(hostId);
     return;
   }

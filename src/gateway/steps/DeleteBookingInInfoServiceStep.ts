@@ -9,8 +9,8 @@ export class DeleteBookingInInfoServiceStep extends Step<string, void> {
     return;
   }
 
-  override async withCompenstation(bookingId: string): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
+  override async withCompensation(bookingId: string): Promise<void> {
+    logger.info(this.constructor.name + " withCompensation");
     info.services.bookingService.restoreBooking(bookingId);
     return;
   }

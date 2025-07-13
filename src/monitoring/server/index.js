@@ -40,7 +40,7 @@ const checkDbSizeAndArchive = throttle(() => {
   const size = getFileSize(DB_FILE_PATH);
   if (size < MAX_DB_SIZE_BYTES) return;
   bufferMode = true;
-  createArchive(MAX_DB_SIZE_BYTES, LOG_ARCHIVES_FOLDER);
+  createArchive(DB_FILE_PATH, LOG_ARCHIVES_FOLDER);
   db.dropDatabase();
   db = new Datastore({ filename: DB_FILE_PATH, autoload: true });
   bufferMode = false;

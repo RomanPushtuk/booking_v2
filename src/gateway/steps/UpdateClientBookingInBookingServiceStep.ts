@@ -11,7 +11,7 @@ export class UpdateClientBookingInBookingServiceStep extends Step<
     bookingId: string,
     versionId: string,
   ) => Promise<void>;
-  private _withCompenstationCb: (
+  private _withCompensationCb: (
     bookingId: string,
     versionId: string,
   ) => Promise<void>;
@@ -22,14 +22,14 @@ export class UpdateClientBookingInBookingServiceStep extends Step<
       bookingId: string,
       versionId: string,
     ) => Promise<void>,
-    withCompenstationCb: (
+    withCompensationCb: (
       bookingId: string,
       versionId: string,
     ) => Promise<void>,
   ) {
     super();
     this._invokeCb = invokeCb;
-    this._withCompenstationCb = withCompenstationCb;
+    this._withCompensationCb = withCompensationCb;
   }
 
   override async invoke(
@@ -42,13 +42,13 @@ export class UpdateClientBookingInBookingServiceStep extends Step<
     return;
   }
 
-  override async withCompenstation(
+  override async withCompensation(
     _updateClientBookingDTO: UpdateClientBookingDTO,
     bookingId: string,
     versionId: string,
   ): Promise<void> {
-    logger.info(this.constructor.name + " withCompenstation");
-    await this._withCompenstationCb(bookingId, versionId);
+    logger.info(this.constructor.name + " withCompensation");
+    await this._withCompensationCb(bookingId, versionId);
     return;
   }
 }

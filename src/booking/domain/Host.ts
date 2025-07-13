@@ -8,7 +8,7 @@ import {
   isSameDay,
   getDayOfWeek,
   getTimeFromDateTime,
-  isTimeInWorkingHours,
+  isTimeIntervalInWorkingHours,
 } from "../../shared/utils/date";
 
 export class Host {
@@ -72,7 +72,7 @@ export class Host {
     }
 
     if (
-      this.checkOverlapingBookings(
+      this.checkOverlappingBookings(
         booking.getFromDateTime(),
         booking.getToDateTime(),
       )
@@ -105,15 +105,17 @@ export class Host {
         booking.getClientId(),
         booking.getFromDateTime(),
         booking.getToDateTime(),
+        booking.getId(),
       )
     ) {
       throw new Error("Can't update a booking. Booking already exists");
     }
 
     if (
-      this.checkOverlapingBookings(
+      this.checkOverlappingBookings(
         booking.getFromDateTime(),
         booking.getToDateTime(),
+        [booking],
       )
     ) {
       throw new Error(
@@ -150,15 +152,17 @@ export class Host {
     });
   }
 
-  private checkOverlapingBookings(
+  private checkOverlappingBookings(
     fromDateTime: string,
     toDateTime: string,
+    exclude?: Booking[],
   ): boolean {
     if (config.allowOverlappingBookings) return false;
 
     const hostBookings = this.getBookings();
     for (const booking of hostBookings) {
       if (booking.getDeleted()) continue;
+      if (exclude?.includes(booking)) continue;
 
       const isOverlap = intervalsOverlap(
         booking.getFromDateTime(),
@@ -176,6 +180,7 @@ export class Host {
     clientId: string,
     fromDateTime: string,
     toDateTime: string,
+    excludeBookingId?: string,
   ): boolean {
     const bookings = this.getBookings();
 
@@ -184,7 +189,8 @@ export class Host {
         booking.getClientId() === clientId &&
         !booking.getDeleted() &&
         booking.getFromDateTime() === fromDateTime &&
-        booking.getToDateTime() === toDateTime
+        booking.getToDateTime() === toDateTime &&
+        booking.getId() !== excludeBookingId
       ) {
         return true;
       }
@@ -207,10 +213,7 @@ export class Host {
     const fromTime = getTimeFromDateTime(fromDateTime);
     const toTime = getTimeFromDateTime(toDateTime);
 
-    if (
-      !isTimeInWorkingHours(fromTime, this._workHours) ||
-      !isTimeInWorkingHours(toTime, this._workHours)
-    )
+    if (!isTimeIntervalInWorkingHours(fromTime, toTime, this._workHours))
       return true;
 
     return false;

@@ -328,13 +328,13 @@ paths:
           in: query
           required: false
           description: Sort direction for results
-          example: DESC
+          example: ASC
           schema:
             type: string
             enum:
               - ASC
               - DESC
-            default: DESC
+            default: ASC
         - name: sortProperty
           in: query
           description: Property to sort by
@@ -397,7 +397,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateBookingDTO"
+              $ref: "#/components/schemas/CreateClientBookingDTO"
             example:
               hostId: "host_456"
               fromDateTime: "2025-06-25T10:00:00Z"
@@ -486,7 +486,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ClientUpdateBookingDTO"
+              $ref: "#/components/schemas/UpdateClientBookingDTO"
             example:
               fromDateTime: "2025-06-25T14:00:00Z"
               toDateTime: "2025-06-25T15:00:00Z"
@@ -894,7 +894,7 @@ paths:
       summary: UpdateSettings
       deprecated: false
       description: ""
-      operationId: HOSTS_UPDATE_SETTIGNS
+      operationId: HOSTS_UPDATE_SETTINGS
       tags:
         - hosts
       parameters: []
@@ -1053,7 +1053,7 @@ components:
         info:
           title: "Consultation"
           description: "Regular checkup"
-    CreateBookingDTO:
+    CreateClientBookingDTO:
       type: object
       properties:
         hostId:
@@ -1084,7 +1084,7 @@ components:
         - fromDateTime
         - toDateTime
         - info
-      title: Clients_CreateBookingDTO
+      title: Clients_CreateClientBookingDTO
       example:
         hostId: "host_456"
         fromDateTime: "2025-06-25T10:00:00Z"
@@ -1148,7 +1148,7 @@ components:
       required:
         - id
       title: Clients_BookingDeletedDTO
-    ClientUpdateBookingDTO:
+    UpdateClientBookingDTO:
       type: object
       properties:
         fromDateTime:
@@ -1168,7 +1168,7 @@ components:
             description:
               type: string
               description: Updated booking description
-      title: Clients_ClientUpdateBookingDTO
+      title: Clients_UpdateClientBookingDTO
       example:
         fromDateTime: "2025-06-25T14:00:00Z"
         toDateTime: "2025-06-25T15:00:00Z"
@@ -1506,16 +1506,16 @@ components:
     HostSettingsDTO:
       type: object
       properties:
-        allowOverlapingBookings:
+        allowOverlappingBookings:
           type: boolean
           default: false
         allowPastTimeBookings:
           type: boolean
           default: false
-        allowBookingСancelByClient:
+        allowBookingCancelByClient:
           type: boolean
           default: true
-        allowBookingСancelByHost:
+        allowBookingCancelByHost:
           type: boolean
           default: true
         allowBookingUpdateByClient:
@@ -1528,10 +1528,10 @@ components:
           type: boolean
           default: false
       required:
-        - allowOverlapingBookings
+        - allowOverlappingBookings
         - allowPastTimeBookings
-        - allowBookingСancelByClient
-        - allowBookingСancelByHost
+        - allowBookingCancelByClient
+        - allowBookingCancelByHost
         - allowBookingUpdateByClient
         - allowBookingUpdateByHost
         - allowBookingApprove
@@ -1539,13 +1539,13 @@ components:
     UpdateHostSettingsDTO:
       type: object
       properties:
-        allowOverlapingBookings:
+        allowOverlappingBookings:
           type: boolean
         allowPastTimeBookings:
           type: boolean
-        allowBookingСancelByClient:
+        allowBookingCancelByClient:
           type: boolean
-        allowBookingСancelByHost:
+        allowBookingCancelByHost:
           type: boolean
         allowBookingUpdateByClient:
           type: boolean

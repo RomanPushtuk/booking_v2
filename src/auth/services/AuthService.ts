@@ -15,7 +15,7 @@ export class AuthService {
   }
 
   async getUserById(userId: string): Promise<User> {
-    logger.info({ userId }, this.constructor.name + " deleteUser");
+    logger.info({ userId }, this.constructor.name + " getUserById");
     const user = await this._authRepository.findById(userId);
     if (!user) throw new Error("User not found");
     return user;
