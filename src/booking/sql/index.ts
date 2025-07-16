@@ -1,6 +1,7 @@
 export { getAllBookings } from "./getAllBookings";
 export { getBookingById } from "./getBookingById";
 export { getClientById } from "./getClientById";
+export { getAllHosts } from "./getAllHosts";
 export { getHostById } from "./getHostById";
 export { saveBooking } from "./saveBooking";
 export { saveClient } from "./saveClient";

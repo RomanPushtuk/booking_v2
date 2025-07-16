@@ -1,6 +1,7 @@
 import { logger } from "../logger";
-import { saveHost, getHostById } from "../sql";
+import { saveHost, getHostById, getAllHosts } from "../sql";
 import { Host } from "../domain";
+import { shared } from "../imports";
 import { UnitOfWork } from "../services";
 import { HostMapper } from "../mappers";
 
@@ -33,10 +34,10 @@ export class HostRepository {
     const user = this._uow.userRepository.getById(hostId);
     if (!user) return null;
 
-    const bookings = this._uow.bookingRepository.getAll({
-      filters: { hostId },
-    });
-    if (!bookings) return null;
+    const bookings =
+      this._uow.bookingRepository.getAll({
+        filters: { hostId },
+      }) || [];
 
     const sql = getHostById(hostId);
     const hostData = this._uow.db.prepare(sql).get() as
@@ -47,7 +48,7 @@ export class HostRepository {
           workDays: string;
         }
       | undefined;
-    logger.info(hostData, " hostData");
+    logger.info("hostData", hostData);
     if (!hostData) return null;
 
     return HostMapper.toDomain({
@@ -56,6 +57,32 @@ export class HostRepository {
       role: user.getRole(),
       deleted: user.getDeleted(),
     });
+  }
+
+  getAll(filters?: {
+    sorting?: shared.application.HostSorting;
+    filters?: shared.application.HostFilters;
+  }): Host[] | null {
+    logger.info(this.constructor.name + " getAll");
+    const sql = getAllHosts(filters);
+    const data = this._uow.db.prepare(sql).all() as
+      | {
+          id: string;
+          forwardBooking: string;
+          workHours: string;
+          workDays: string;
+          role: string;
+          deleted: number;
+        }[]
+      | undefined;
+    if (!data) return null;
+    return data.map((hostData) =>
+      HostMapper.toDomain({
+        ...hostData,
+        bookings: [],
+        deleted: Boolean(hostData.deleted),
+      }),
+    );
   }
 
   saveAll(hosts: Host[]) {

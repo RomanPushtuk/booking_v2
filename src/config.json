@@ -1,6 +1,8 @@
 {
   "allowOverlappingBookings": false,
-  "allowPastTimeBookings": false,
   "allowBookingApprove": false,
-  "allowAnalyticalEndpoints": false
+  "allowAnalyticalEndpoints": false,
+  "allowHostWorkingHoursOverride": true,
+  "allowHostPastTimeBookings": false,
+  "allowHostForwardBookingOverride": false
 }
