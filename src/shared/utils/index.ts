@@ -1,2 +1,2 @@
 export { generateId } from "./generateId";
-export { intervalsOverlap } from "./date";
+export { intervalsOverlap, addDurationToDate, isIntervalInPast } from "./date";

@@ -1,33 +1,271 @@
 import { Inject, Service } from "typedi";
-import { gateway } from "../imports";
+import { gateway, shared } from "../imports";
 import { logger } from "../logger";
 import { UnitOfWork } from "./UnitOfWork";
-import { Booking } from "../domain";
+import { Booking, Host } from "../domain";
+import { vs } from "../vs";
+import { UpdateBookingData, UpdateHostData } from "../types";
 
 @Service()
 export class HostService {
-  constructor(@Inject() private _uow: UnitOfWork) {
+  constructor(
+    @Inject() private _uow: UnitOfWork,
+    @Inject("vs") private _vs: typeof vs,
+  ) {
+    this.updateHost = this.updateHost.bind(this);
+    this.revertHost = this.revertHost.bind(this);
     this.createBooking = this.createBooking.bind(this);
     this.deleteBooking = this.deleteBooking.bind(this);
     this.restoreBooking = this.restoreBooking.bind(this);
     this.updateBooking = this.updateBooking.bind(this);
     this.revertBooking = this.revertBooking.bind(this);
-    this.updateHost = this.updateHost.bind(this);
-    this.revertHost = this.revertHost.bind(this);
   }
 
-  async createBooking(bookingDTO: gateway.dtos.BookingDTO) {
-    logger.info({ bookingDTO }, this.constructor.name + " createBooking");
-    const booking = new Booking({ ...bookingDTO, deleted: false });
-    this._uow.bookingRepository.save(booking);
+  async getAllHosts(options?: {
+    sorting?: shared.application.HostSorting;
+    filters?: shared.application.HostFilters;
+  }) {
+    const hosts = this._uow.hostRepository.getAll(options);
+
+    if (!hosts) return [];
+
+    return hosts.map((host) => ({
+      id: host.getId(),
+      forwardBooking: host.getForwardBooking(),
+      workHours: host.getWorkHours(),
+      workDays: host.getWorkDays(),
+    }));
   }
 
-  async deleteBooking(bookingId: string) {
-    logger.info({ bookingId }, this.constructor.name + " deleteBooking");
+  async getHostById(hostId: string) {
+    const host = this._uow.hostRepository.getById(hostId);
+
+    if (!host || host.getDeleted()) throw new Error("Host not found");
+
+    return {
+      id: host.getId(),
+      deleted: host.getDeleted(),
+      forwardBooking: host.getForwardBooking(),
+      workHours: host.getWorkHours(),
+      workDays: host.getWorkDays(),
+    };
+  }
+
+  async updateHost(
+    updateHostDTO: gateway.dtos.UpdateHostDTO,
+    hostId: string,
+    versionId: string,
+  ) {
+    logger.info(
+      { updateHostDTO, hostId },
+      this.constructor.name + " updateHost",
+    );
+
+    try {
+      this._uow.begin();
+
+      const host = this._uow.hostRepository.getById(hostId);
+      if (!host) throw new Error("host not found");
+
+      Host.update(host, updateHostDTO);
+      this._uow.hostRepository.save(host);
+
+      await this._vs.insertAsync({
+        id: hostId,
+        versionId,
+        data: {
+          forwardBooking: updateHostDTO.forwardBooking,
+          workHours: updateHostDTO.workHours,
+          workDays: updateHostDTO.workDays,
+        },
+      });
+
+      this._uow.commit();
+    } catch (error) {
+      this._uow.rollback();
+      throw error;
+    }
+  }
+
+  async revertHost(hostId: string, versionId: string) {
+    logger.info({ hostId, versionId }, this.constructor.name + " revertHost");
+
+    const host = this._uow.hostRepository.getById(hostId);
+    if (!host) throw new Error("host not found");
+
+    const version = await this._vs
+      .findOneAsync({ id: hostId, versionId })
+      .execAsync();
+    if (!version) throw new Error("version not found");
+
+    const updateData = version["data"] as UpdateHostData;
+    const numRemoved = await this._vs.removeAsync(
+      { id: hostId, versionId },
+      {},
+    );
+    if (!numRemoved)
+      throw new Error("version was not removed from version storage");
+
+    Host.update(host, updateData);
+    this._uow.hostRepository.save(host);
+  }
+
+  async getHostBookings(
+    hostId: string,
+    options?: {
+      sorting?: shared.application.BookingSorting;
+      filters?: shared.application.BookingFilters;
+    },
+  ) {
+    logger.info({ hostId }, "HostService getHostBookings");
+    const host = this._uow.hostRepository.getById(hostId);
+    logger.info({ host: host ? "found" : "not found", hostId }, "HostService getHostBookings result");
+
+    if (!host) throw new Error("Host not found");
+
+    const bookings = host.getBookings(options);
+
+    if (!bookings) return [];
+
+    return bookings.map((booking) => ({
+      id: booking.getId(),
+      clientId: booking.getClientId(),
+      hostId: booking.getHostId(),
+      fromDateTime: booking.getFromDateTime(),
+      toDateTime: booking.getToDateTime(),
+      deleted: booking.getDeleted(),
+    }));
+  }
+
+  async getHostBookingById(hostId: string, bookingId: string) {
+    const host = this._uow.hostRepository.getById(hostId);
+
+    if (!host) throw new Error("Host not found");
+
+    const booking = host.getBookingById(bookingId);
+
+    return {
+      id: booking.getId(),
+      clientId: booking.getClientId(),
+      hostId: booking.getHostId(),
+      fromDateTime: booking.getFromDateTime(),
+      toDateTime: booking.getToDateTime(),
+      deleted: booking.getDeleted(),
+    };
+  }
+
+  async createBooking(
+    createHostBookingDTO: gateway.dtos.CreateHostBookingDTO,
+    hostId: string,
+    bookingId: string,
+  ) {
+    logger.info(
+      { createHostBookingDTO },
+      this.constructor.name + " createBooking",
+    );
+
+    try {
+      this._uow.begin();
+
+      const host = this._uow.hostRepository.getById(hostId);
+      if (!host) throw new Error("Host not found");
+
+      const client = this._uow.clientRepository.getById(createHostBookingDTO.clientId);
+      if (!client) throw new Error("Client not found");
+
+      const booking = new Booking({
+        id: bookingId,
+        hostId: hostId,
+        ...createHostBookingDTO,
+        deleted: false,
+      });
+
+      host.addBookingByHost(booking);
+      this._uow.hostRepository.save(host);
+
+      this._uow.commit();
+    } catch (error) {
+      this._uow.rollback();
+      throw error;
+    }
+  }
+
+  async updateBooking(
+    updateHostBookingDTO: gateway.dtos.UpdateHostBookingDTO,
+    hostId: string,
+    bookingId: string,
+    versionId: string,
+  ) {
+    logger.info(
+      { updateHostBookingDTO, bookingId },
+      this.constructor.name + " updateBooking",
+    );
+
+    try {
+      this._uow.begin();
+
+      const booking = this._uow.bookingRepository.getById(bookingId);
+      if (!booking) throw new Error("Booking not found");
+
+      const host = this._uow.hostRepository.getById(hostId);
+      if (!host) throw new Error("Host not found");
+
+      host.updateBookingByHost(booking, updateHostBookingDTO);
+      this._uow.bookingRepository.save(booking);
+
+      await this._vs.insertAsync({
+        id: bookingId,
+        versionId,
+        data: updateHostBookingDTO,
+      });
+
+      this._uow.commit();
+    } catch (error) {
+      this._uow.rollback();
+      throw error;
+    }
+  }
+
+  async revertBooking(bookingId: string, versionId: string) {
+    logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not find");
-    booking.setDeleted(true);
+    if (!booking) throw new Error("booking not found");
+    const version = await this._vs
+      .findOneAsync({ id: bookingId, versionId })
+      .execAsync();
+    if (!version) throw new Error("version not found");
+    const updateData = version["data"] as UpdateBookingData;
+    const numRemoved = await this._vs.removeAsync(
+      { id: bookingId, versionId },
+      {},
+    );
+    if (!numRemoved)
+      throw new Error("version was not removed from version storage");
+    Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
+  }
+
+  async deleteBooking(bookingId: string, hostId: string) {
+    logger.info({ bookingId }, this.constructor.name + " deleteBooking");
+
+    try {
+      this._uow.begin();
+
+      const booking = this._uow.bookingRepository.getById(bookingId);
+      if (!booking) throw new Error("Booking not found");
+
+      const host = this._uow.hostRepository.getById(hostId);
+      if (!host) throw new Error("Host not found");
+
+      host.deleteBooking(booking);
+
+      this._uow.hostRepository.save(host);
+
+      this._uow.commit();
+    } catch (error) {
+      this._uow.rollback();
+      throw error;
+    }
   }
 
   async restoreBooking(bookingId: string) {
@@ -36,46 +274,5 @@ export class HostService {
     if (!booking) throw new Error("booking not find");
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
-  }
-
-  async updateBooking(
-    updateBookingDTO: gateway.dtos.UpdateBookingDTO,
-    bookingId: string,
-  ) {
-    logger.info(
-      { updateBookingDTO, bookingId },
-      this.constructor.name + " updateBooking",
-    );
-    const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not found");
-    // TODO Make update
-    this._uow.bookingRepository.save(booking);
-  }
-
-  async revertBooking(bookingId: string) {
-    logger.info({ bookingId }, this.constructor.name + " revertBooking");
-    const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not found");
-    // TODO Make update revert
-    this._uow.bookingRepository.save(booking);
-  }
-
-  async updateHost(updateHostDTO: gateway.dtos.UpdateHostDTO, hostId: string) {
-    logger.info(
-      { updateHostDTO, hostId },
-      this.constructor.name + " updateHost",
-    );
-    const host = this._uow.hostRepository.getById(hostId);
-    if (!host) throw new Error("host not found");
-    // TODO Make update
-    this._uow.hostRepository.save(host);
-  }
-
-  async revertHost(hostId: string) {
-    logger.info({ hostId }, this.constructor.name + " revertHost");
-    const host = this._uow.hostRepository.getById(hostId);
-    if (!host) throw new Error("host not found");
-    // TODO Make update revert
-    this._uow.hostRepository.save(host);
   }
 }
