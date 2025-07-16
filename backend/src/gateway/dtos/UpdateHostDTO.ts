@@ -7,6 +7,7 @@ import {
   ValidateNested,
 } from "class-validator";
 import { shared } from "../imports";
+import { IsDurationFormat, IsValidTimeIntervals } from "../../shared/validators";
 
 class _WorkHour {
   @IsDefined()
@@ -30,10 +31,11 @@ class _Info {
 
 export class UpdateHostDTO {
   @IsOptional()
-  @IsString()
+  @IsDurationFormat()
   forwardBooking?: string;
 
   @IsOptional()
+  @IsValidTimeIntervals()
   @ValidateNested({ each: true })
   @Type(() => _WorkHour)
   workHours?: _WorkHour[];
