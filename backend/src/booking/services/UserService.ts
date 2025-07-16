@@ -29,7 +29,7 @@ export class UserService {
     if (userDTO.role === shared.enums.Roles.HOST) {
       const host = new Host({
         id: userDTO.id,
-        forwardBooking: "1 week",
+        forwardBooking: "P1W",
         workHours: [
           { from: "09:00", to: "13:00" },
           { from: "14:00", to: "18:00" },
