@@ -3,8 +3,10 @@ import {
   IsString,
   ValidateNested,
   validateSync,
+  IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
+import { IsDurationFormat, IsValidTimeIntervals } from "../../shared/validators";
 
 class _WorkHour {
   @IsString()
@@ -26,9 +28,10 @@ export class HostDTO {
   @MaxLength(36)
   id: string;
 
-  @IsString()
+  @IsDurationFormat()
   forwardBooking: string;
 
+  @IsValidTimeIntervals()
   @ValidateNested({ each: true })
   workHours: _WorkHour[];
 
@@ -36,7 +39,8 @@ export class HostDTO {
   workDays: string[];
 
   @ValidateNested()
-  info: _Info;
+  @IsOptional()
+  info?: _Info;
 
   constructor(data: shared.types.GetInterface<HostDTO>) {
     this.id = data.id;
