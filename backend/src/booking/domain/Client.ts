@@ -1,5 +1,5 @@
 import { gateway, shared } from "../imports";
-import { ClientProperties } from "../types";
+import { ClientProperties, UpdateClientData } from "../types";
 import { Booking } from "./Booking";
 import { User } from "./User";
 
@@ -69,6 +69,11 @@ export class Client {
       role: this._role,
       deleted: this._deleted,
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static update(_client: Client, _updateData: UpdateClientData) {
+    // now clients don't have updatable properties
   }
 
   private makeBookingFilter(filters: shared.application.BookingFilters) {

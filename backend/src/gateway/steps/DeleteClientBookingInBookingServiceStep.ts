@@ -1,7 +1,7 @@
 import { Step } from "../application";
 import { logger } from "../logger";
 
-export class DeleteBookingInBookingServiceStep extends Step<string, void> {
+export class DeleteClientBookingInBookingServiceStep extends Step<string, void> {
   private _invokeCb: (bookingId: string) => Promise<void>;
   private _withCompensationCb: (bookingId: string) => Promise<void>;
 
