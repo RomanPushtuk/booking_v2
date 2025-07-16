@@ -8,4 +8,11 @@ export enum Permissions {
   CLIENT_CANCEL_BOOKING = "client.cancel.booking",
 
   HOST_READ_PROFILE = "host.read.profile",
+  HOST_UPDATE_PROFILE = "host.update.profile",
+  HOST_DELETE_PROFILE = "host.delete.profile",
+  HOST_READ_BOOKINGS = "host.read.bookings",
+  HOST_CREATE_BOOKING = "host.create.booking",
+  HOST_UPDATE_BOOKING = "host.update.booking",
+  HOST_CANCEL_BOOKING = "host.cancel.booking",
+
 }
