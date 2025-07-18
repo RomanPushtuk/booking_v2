@@ -1,7 +1,19 @@
-dist/
-node_modules/
-logs/
-src/booking/db/database.db
-src/auth/db/database.db
-.vscode
+# Build output
+dist
+build
+logs
+backend/src/monitoring
 
+# Dependency directories
+node_modules/
+
+# VisualStudioCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# MAC OS files
+**/.DS_Store
