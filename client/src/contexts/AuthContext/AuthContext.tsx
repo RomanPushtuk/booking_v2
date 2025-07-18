@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import type { PropsWithChildren } from "react";
 import { operationsByTag } from "../../queries/bookingComponents";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -11,6 +12,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
+  const navigate = useNavigate()
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   const loginMutation = useMutation({
@@ -20,7 +22,12 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const login = async (login: string, password: string) => {
     await loginMutation.mutateAsync(
       { body: { login, password } },
-      { onSuccess: (data) => setAccessToken(data.accessToken) },
+      {
+        onSuccess: (data) => {
+          setAccessToken(data.accessToken);
+          navigate('/');
+        }
+      },
     );
   };
 

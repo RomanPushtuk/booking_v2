@@ -9,4 +9,4 @@ Next steps:
 
 
 http://localhost:3000/analytics - monitoring
-http://localhost:3000/api-docs - swagger
+http://localhost:3000/api-docs - swagger swagger:123

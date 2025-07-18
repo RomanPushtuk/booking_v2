@@ -25,7 +25,7 @@ import { PrivateRoute } from "./widgets";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <BrowserRouter>
+  <BrowserRouter basename="/fe">
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
         <AuthProvider>

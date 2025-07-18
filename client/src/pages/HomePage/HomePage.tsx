@@ -26,11 +26,11 @@ export const HomePage = () => {
         </Container>
       </Center>
 
-      <Footer />
-      <Button size="lg" fullWidth px="48px" onClick={handleCreateBooking}>
-        New Booking
-      </Button>
-      <Footer />
+      <Footer>
+        <Button size="lg" fullWidth px="48px" onClick={handleCreateBooking}>
+          New Booking
+        </Button>
+      </Footer>
     </>
   );
 };

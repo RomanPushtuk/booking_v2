@@ -25,12 +25,18 @@ import {
   TrackBeforeMiddleware,
   TrackAfterMiddleware,
 } from "./middlewares";
+import path from "path";
 
 const app = express();
 
 const start = () => {
   useSwagger(app);
   monitoring.useMonitoring(app);
+
+  app.use('/fe', express.static(path.join(__dirname, 'client')))
+  app.get('/fe/*', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'))
+  })
 
   let bus: BroadcastChannel | null = null;
   bus = new BroadcastChannel("monitoring");

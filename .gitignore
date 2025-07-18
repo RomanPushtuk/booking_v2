@@ -4,6 +4,10 @@ build
 logs
 backend/src/monitoring
 
+# Databases
+backend/src/auth/db/database.db
+backend/src/booking/db/database.db
+
 # Dependency directories
 node_modules/
 

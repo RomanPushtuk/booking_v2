@@ -152,23 +152,23 @@ export const authLogin = (
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
-      status: 401;
-      payload: {
-        /**
-         * @example Unauthorized
-         */
-        error?: string;
-      };
-    }
+    status: 401;
+    payload: {
+      /**
+       * @example Unauthorized
+       */
+      error?: string;
+    };
+  }
   | {
-      status: 403;
-      payload: {
-        /**
-         * @example Access denied
-         */
-        error?: string;
-      };
-    }
+    status: 403;
+    payload: {
+      /**
+       * @example Access denied
+       */
+      error?: string;
+    };
+  }
 >;
 
 /**
@@ -620,7 +620,7 @@ export const hostsUpdateBooking = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingUpdatedDTO3,
+    Schemas.BookingUpdatedDTO,
     HostsUpdateBookingError,
     Schemas.UpdateBookingDTO,
     {},
