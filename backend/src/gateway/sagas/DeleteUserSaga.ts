@@ -1,11 +1,12 @@
 import { Saga } from "../application";
+import { UserDeletedDTO } from "../dtos";
 import {
   DeleteUserInAuthServiceStep,
   DeleteUserInBookingServiceStep,
   DeleteUserInInfoServiceStep,
 } from "../steps";
 
-export class DeleteUserSaga extends Saga<string, void> {
+export class DeleteUserSaga extends Saga<string, UserDeletedDTO> {
   constructor(
     step1: DeleteUserInAuthServiceStep,
     step2: DeleteUserInBookingServiceStep,

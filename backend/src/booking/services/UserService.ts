@@ -50,6 +50,8 @@ export class UserService {
     if (!user) throw new Error("user not found");
     user.setDeleted(true);
     this._uow.userRepository.save(user);
+    
+    return new gateway.dtos.UserDeletedDTO({ id: userId });
   }
 
   async restoreUser(userId: string) {
@@ -58,5 +60,7 @@ export class UserService {
     if (!user) throw new Error("user not found");
     user.setDeleted(false);
     this._uow.userRepository.save(user);
+    
+    return new gateway.dtos.UserDeletedDTO({ id: userId });
   }
 }

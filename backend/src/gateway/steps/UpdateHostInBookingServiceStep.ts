@@ -1,18 +1,18 @@
 import { Step } from "../application";
-import { UpdateHostDTO } from "../dtos";
+import { UpdateHostDTO, HostUpdatedDTO } from "../dtos";
 import { logger } from "../logger";
 
-export class UpdateHostInBookingServiceStep extends Step<UpdateHostDTO, void> {
+export class UpdateHostInBookingServiceStep extends Step<UpdateHostDTO, HostUpdatedDTO> {
   private _invokeCb: (
     updateHostDTO: UpdateHostDTO,
     hostId: string,
     versionId: string,
-  ) => Promise<void>;
-  private _withCompensationCb: (hostId: string, versionId: string) => Promise<void>;
+  ) => Promise<HostUpdatedDTO>;
+  private _withCompensationCb: (hostId: string, versionId: string) => Promise<HostUpdatedDTO>;
 
   constructor(
-    invokeCb: (updateHostDTO: UpdateHostDTO, hostId: string, versionId: string) => Promise<void>,
-    withCompensationCb: (hostId: string, versionId: string) => Promise<void>,
+    invokeCb: (updateHostDTO: UpdateHostDTO, hostId: string, versionId: string) => Promise<HostUpdatedDTO>,
+    withCompensationCb: (hostId: string, versionId: string) => Promise<HostUpdatedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;
@@ -22,19 +22,17 @@ export class UpdateHostInBookingServiceStep extends Step<UpdateHostDTO, void> {
     updateHostDTO: UpdateHostDTO,
     hostId: string,
     versionId: string,
-  ): Promise<void> {
+  ): Promise<HostUpdatedDTO> {
     logger.info(this.constructor.name + " invoke");
-    await this._invokeCb(updateHostDTO, hostId, versionId);
-    return;
+    return await this._invokeCb(updateHostDTO, hostId, versionId);
   }
 
   override async withCompensation(
     _updateHostDTO: UpdateHostDTO,
     hostId: string,
     versionId: string,
-  ): Promise<void> {
+  ): Promise<HostUpdatedDTO> {
     logger.info(this.constructor.name + " withCompensation");
-    await this._withCompensationCb(hostId, versionId);
-    return;
+    return await this._withCompensationCb(hostId, versionId);
   }
 }

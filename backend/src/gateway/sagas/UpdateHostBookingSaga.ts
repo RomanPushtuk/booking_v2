@@ -1,10 +1,10 @@
 import { Saga } from "../application";
-import { UpdateHostBookingDTO } from "../dtos";
+import { UpdateHostBookingDTO, BookingUpdatedDTO } from "../dtos";
 import { UpdateHostBookingInBookingServiceStep } from "../steps";
 
 export class UpdateHostBookingSaga extends Saga<
   UpdateHostBookingDTO,
-  void
+  BookingUpdatedDTO
 > {
   constructor(step1: UpdateHostBookingInBookingServiceStep) {
     super();

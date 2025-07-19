@@ -25,12 +25,12 @@ import {
   BookingDTO,
   BookingUpdatedDTO,
   CreateHostBookingDTO,
-  HostDeletedDTO,
   HostDTO,
   HostUpdatedDTO,
   PublicBookingDTO,
   UpdateHostBookingDTO,
   UpdateHostDTO,
+  UserDeletedDTO,
 } from "../dtos";
 import { UpdateHostSaga } from "../sagas/UpdateHostSaga";
 import {
@@ -54,22 +54,18 @@ export class HostController {
       deleted: false,
     });
 
-    const hosts = await booking.services.hostService.getAllHosts({ filters });
-    return hosts.map((host) => new HostDTO({ ...host }));
+    return await booking.services.hostService.getAllHosts({ filters });
   }
 
   @Authorized([shared.enums.Permissions.HOST_READ_PROFILE])
   @Get("/me")
   async getMe(@CurrentUser() user: auth.domain.User): Promise<HostDTO> {
-    const host = await booking.services.hostService.getHostById(user.id);
-
-    return new HostDTO({ ...host });
+    return await booking.services.hostService.getHostById(user.id);
   }
 
   @Get("/:id")
   async getHost(@Param("id") id: string): Promise<HostDTO> {
-    const host = await booking.services.hostService.getHostById(id);
-    return new HostDTO({ ...host });
+    return await booking.services.hostService.getHostById(id);
   }
 
   @Authorized([shared.enums.Permissions.HOST_READ_BOOKINGS])
@@ -94,23 +90,9 @@ export class HostController {
       deleted: false,
     });
 
-    const hostBookings = await booking.services.hostService.getHostBookings(
+    return await booking.services.hostService.getHostBookings(
       user.id,
-      {
-        sorting,
-        filters,
-      },
-    );
-
-    return hostBookings.map(
-      (booking) =>
-        new BookingDTO({
-          id: booking.id,
-          hostId: booking.hostId,
-          clientId: booking.clientId,
-          fromDateTime: booking.fromDateTime,
-          toDateTime: booking.toDateTime,
-        }),
+      { sorting, filters },
     );
   }
 
@@ -119,6 +101,7 @@ export class HostController {
     @Param("id") hostId: string,
     @QueryParam("sortDirection")
     sortDirection: shared.enums.SortDirection = shared.enums.SortDirection.ASC,
+    @QueryParam("sortProperty") sortProperty: string = "fromDateTime",
   ): Promise<PublicBookingDTO[]> {
     const host = await booking.services.hostService.getHostById(hostId);
 
@@ -127,7 +110,7 @@ export class HostController {
 
     const sorting = new shared.application.BookingSorting(
       sortDirection,
-      "fromDateTime",
+      sortProperty,
     );
     const filters = new shared.application.BookingFilters({
       hostId: hostId,
@@ -136,18 +119,9 @@ export class HostController {
       deleted: false,
     });
 
-    const hostBookings = await booking.services.hostService.getHostBookings(
+    return await booking.services.hostService.getHostBookings(
       hostId,
       { sorting, filters },
-    );
-
-    return hostBookings.map(
-      (booking) =>
-        new PublicBookingDTO({
-          id: booking.id,
-          fromDateTime: booking.fromDateTime,
-          toDateTime: booking.toDateTime,
-        }),
     );
   }
 
@@ -155,14 +129,13 @@ export class HostController {
   @Delete("/me")
   async deleteHost(
     @CurrentUser() user: auth.domain.User,
-  ): Promise<HostDeletedDTO> {
+  ): Promise<UserDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
       new DeleteUserInInfoServiceStep(),
     );
-    await deleteUserSaga.execute(user.id);
-    return new HostDeletedDTO({ id: user.id });
+    return await deleteUserSaga.execute(user.id);
   }
 
   @Authorized([shared.enums.Permissions.HOST_UPDATE_PROFILE])
@@ -178,8 +151,7 @@ export class HostController {
       ),
     );
     const versionId = shared.utils.generateId();
-    await updateHostSaga.execute(updateHostDTO, user.id, versionId);
-    return new HostUpdatedDTO({ id: user.id });
+    return await updateHostSaga.execute(updateHostDTO, user.id, versionId);
   }
 
   @Authorized([shared.enums.Permissions.HOST_CREATE_BOOKING])
@@ -197,12 +169,11 @@ export class HostController {
         booking.services.hostService.deleteBooking,
       ),
     );
-    await createHostBookingSaga.execute(
+    return await createHostBookingSaga.execute(
       createHostBookingDTO,
       user.id,
       bookingId,
     );
-    return new BookingCreatedDTO({ id: bookingId });
   }
 
   @Authorized([shared.enums.Permissions.HOST_READ_BOOKINGS])
@@ -211,18 +182,10 @@ export class HostController {
     @CurrentUser() user: auth.domain.User,
     @Param("bookingId") bookingId: string,
   ): Promise<BookingDTO> {
-    const hostBooking = await booking.services.hostService.getHostBookingById(
+    return await booking.services.hostService.getHostBookingById(
       user.id,
       bookingId,
     );
-
-    return new BookingDTO({
-      id: hostBooking.id,
-      clientId: hostBooking.clientId,
-      hostId: hostBooking.hostId,
-      fromDateTime: hostBooking.fromDateTime,
-      toDateTime: hostBooking.toDateTime,
-    });
   }
 
   @Authorized([shared.enums.Permissions.HOST_UPDATE_BOOKING])
@@ -242,13 +205,12 @@ export class HostController {
     );
 
     const versionId = shared.utils.generateId();
-    await updateHostBookingSaga.execute(
+    return await updateHostBookingSaga.execute(
       updateHostBookingDTO,
       user.id,
       bookingId,
       versionId,
     );
-    return new BookingUpdatedDTO({ id: bookingId });
   }
 
   @Authorized([shared.enums.Permissions.HOST_CANCEL_BOOKING])
@@ -265,7 +227,6 @@ export class HostController {
         booking.services.hostService.restoreBooking,
       ),
     );
-    await deleteHostBookingSaga.execute(bookingId, user.id);
-    return new BookingDeletedDTO({ id: bookingId });
+    return await deleteHostBookingSaga.execute(bookingId, user.id);
   }
 }

@@ -50,7 +50,8 @@ export class AuthService {
     const user = await this._authRepository.findById(userId);
     if (!user) throw new Error("User not found");
     user.deleted = true;
-    return this._authRepository.save(user);
+    const deletedUser = await this._authRepository.save(user);
+    return new gateway.dtos.UserDeletedDTO({ id: deletedUser.id });
   }
 
   async restoreUser(userId: string): Promise<{ id: string }> {

@@ -36,5 +36,6 @@ export class BookingService {
 
   async revertBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
+    return new gateway.dtos.ClientUpdatedDTO({ id: bookingId });
   }
 }
