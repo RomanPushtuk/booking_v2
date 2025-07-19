@@ -6,12 +6,13 @@ export class Saga<T, R> {
   protected steps: Step<T, R>[] = [];
   protected successfulSteps: Step<T, R>[] = [];
 
-  async execute(payload: T, ...args: unknown[]) {
+  async execute(payload: T, ...args: unknown[]): Promise<R> {
     logger.info(`Start execute saga - ${this.constructor.name}`);
 
+    let result: R;
     for (const step of this.steps) {
       try {
-        await step.invoke(payload, ...args);
+        result = await step.invoke(payload, ...args);
         this.successfulSteps.unshift(step);
       } catch (err) {
         this.successfulSteps.forEach(async (step) => {
@@ -21,5 +22,6 @@ export class Saga<T, R> {
       }
     }
     logger.info(`Saga execution finished - ${this.constructor.name}`);
+    return result!;
   }
 }

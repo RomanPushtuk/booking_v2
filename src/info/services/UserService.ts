@@ -20,10 +20,12 @@ export class UserService {
 
   async deleteUser(userId: string) {
     logger.info({ userId }, this.constructor.name + " deleteUser");
+    return new gateway.dtos.UserDeletedDTO({ id: userId });
   }
 
   async restoreUser(userId: string) {
     logger.info({ userId }, this.constructor.name + " restoreUser");
+    return new gateway.dtos.UserDeletedDTO({ id: userId });
   }
 
   async updateClient(
@@ -34,6 +36,7 @@ export class UserService {
       { updateClientDTO, clientId },
       this.constructor.name + " updateClient",
     );
+    return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
   }
 
   async revertClient(clientId: string) {

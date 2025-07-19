@@ -24,13 +24,13 @@ import {
   CreateClientBookingDTO,
   UpdateClientBookingDTO,
   UpdateClientDTO,
-  ClientDeletedDTO,
   ClientUpdatedDTO,
   BookingCreatedDTO,
   BookingDTO,
   BookingUpdatedDTO,
   BookingDeletedDTO,
   ClientDTO,
+  UserDeletedDTO,
 } from "../dtos";
 import {
   CreateClientBookingInBookingServiceStep,
@@ -51,23 +51,20 @@ export class ClientController {
   @Authorized([shared.enums.Permissions.CLIENT_READ_PROFILE])
   @Get("/me")
   async getMe(@CurrentUser() user: auth.domain.User): Promise<ClientDTO> {
-    const client = await booking.services.clientService.getClientById(user.id);
-
-    return new ClientDTO({ ...client });
+    return await booking.services.clientService.getClientById(user.id);
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_DELETE_PROFILE])
   @Delete("/me")
   async deleteClient(
     @CurrentUser() user: auth.domain.User,
-  ): Promise<ClientDeletedDTO> {
+  ): Promise<UserDeletedDTO> {
     const deleteUserSaga = new DeleteUserSaga(
       new DeleteUserInAuthServiceStep(),
       new DeleteUserInBookingServiceStep(),
       new DeleteUserInInfoServiceStep(),
     );
-    await deleteUserSaga.execute(user.id);
-    return new ClientDeletedDTO({ id: user.id });
+    return await deleteUserSaga.execute(user.id);
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_UPDATE_PROFILE])
@@ -84,8 +81,7 @@ export class ClientController {
       new UpdateClientInInfoServiceStep(),
     );
     const versionId = shared.utils.generateId();
-    await updateClientSaga.execute(updateClientDTO, user.id, versionId);
-    return new ClientUpdatedDTO({ id: user.id });
+    return await updateClientSaga.execute(updateClientDTO, user.id, versionId);
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_READ_BOOKINGS])
@@ -110,22 +106,10 @@ export class ClientController {
       deleted: false,
     });
 
-    const clientBookings =
-      await booking.services.clientService.getClientBookings(user.id, {
-        sorting,
-        filters,
-      });
-
-    return clientBookings.map(
-      (booking) =>
-        new BookingDTO({
-          id: booking.id,
-          clientId: booking.clientId,
-          hostId: booking.hostId,
-          fromDateTime: booking.fromDateTime,
-          toDateTime: booking.toDateTime,
-        }),
-    );
+    return await booking.services.clientService.getClientBookings(user.id, {
+      sorting,
+      filters,
+    });
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_READ_BOOKINGS])
@@ -134,19 +118,10 @@ export class ClientController {
     @CurrentUser() user: auth.domain.User,
     @Param("bookingId") bookingId: string,
   ): Promise<BookingDTO> {
-    const clientBooking =
-      await booking.services.clientService.getClientBookingById(
-        user.id,
-        bookingId,
-      );
-
-    return new BookingDTO({
-      id: clientBooking.id,
-      clientId: clientBooking.clientId,
-      hostId: clientBooking.hostId,
-      fromDateTime: clientBooking.fromDateTime,
-      toDateTime: clientBooking.toDateTime,
-    });
+    return await booking.services.clientService.getClientBookingById(
+      user.id,
+      bookingId,
+    );
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_CREATE_BOOKING])
@@ -164,12 +139,11 @@ export class ClientController {
         booking.services.clientService.deleteBooking,
       ),
     );
-    await createClientBookingSaga.execute(
+    return await createClientBookingSaga.execute(
       createClientBookingDTO,
       user.id,
       bookingId,
     );
-    return new BookingCreatedDTO({ id: bookingId });
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_UPDATE_BOOKING])
@@ -192,8 +166,7 @@ export class ClientController {
     );
 
     const versionId = shared.utils.generateId();
-    await updateClientBookingSaga.execute(updateClientBookingDTO, bookingId, versionId);
-    return new BookingUpdatedDTO({ id: bookingId });
+    return await updateClientBookingSaga.execute(updateClientBookingDTO, bookingId, versionId);
   }
 
   @Authorized([shared.enums.Permissions.CLIENT_CANCEL_BOOKING])
@@ -213,7 +186,6 @@ export class ClientController {
         booking.services.clientService.restoreBooking,
       ),
     );
-    await deleteBookingSaga.execute(bookingId);
-    return new BookingDeletedDTO({ id: bookingId });
+    return await deleteBookingSaga.execute(bookingId);
   }
 }

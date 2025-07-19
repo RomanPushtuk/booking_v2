@@ -26,21 +26,9 @@ export class ClientService {
 
     if (!client) throw new Error("Client not found");
 
-    const bookings = client.getBookings().map((booking) => ({
-      id: booking.getId(),
-      clientId: booking.getClientId(),
-      hostId: booking.getHostId(),
-      fromDateTime: booking.getFromDateTime(),
-      toDateTime: booking.getToDateTime(),
-      deleted: booking.getDeleted(),
-    }));
-
-    return {
+    return new gateway.dtos.ClientDTO({
       id: client.getId(),
-      role: client.getRole(),
-      deleted: client.getDeleted(),
-      bookings,
-    };
+    });
   }
 
   async getClientBookings(
@@ -58,14 +46,15 @@ export class ClientService {
 
     if (!bookings) return [];
 
-    return bookings.map((booking) => ({
-      id: booking.getId(),
-      clientId: booking.getClientId(),
-      hostId: booking.getHostId(),
-      fromDateTime: booking.getFromDateTime(),
-      toDateTime: booking.getToDateTime(),
-      deleted: booking.getDeleted(),
-    }));
+    return bookings.map((booking) => 
+      new gateway.dtos.BookingDTO({
+        id: booking.getId(),
+        clientId: booking.getClientId(),
+        hostId: booking.getHostId(),
+        fromDateTime: booking.getFromDateTime(),
+        toDateTime: booking.getToDateTime(),
+      })
+    );
   }
 
   async getClientBookingById(clientId: string, bookingId: string) {
@@ -75,14 +64,13 @@ export class ClientService {
 
     const booking = client.getBookingById(bookingId);
 
-    return {
+    return new gateway.dtos.BookingDTO({
       id: booking.getId(),
       clientId: booking.getClientId(),
       hostId: booking.getHostId(),
       fromDateTime: booking.getFromDateTime(),
       toDateTime: booking.getToDateTime(),
-      deleted: booking.getDeleted(),
-    };
+    });
   }
 
   async createBooking(
@@ -113,6 +101,8 @@ export class ClientService {
       this._uow.hostRepository.save(host);
 
       this._uow.commit();
+      
+      return new gateway.dtos.BookingCreatedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -137,6 +127,8 @@ export class ClientService {
       this._uow.hostRepository.save(host);
 
       this._uow.commit();
+      
+      return new gateway.dtos.BookingDeletedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -149,6 +141,8 @@ export class ClientService {
     if (!booking) throw new Error("booking not found");
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
+    
+    return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
   }
 
   async updateBooking(
@@ -181,6 +175,8 @@ export class ClientService {
       });
 
       this._uow.commit();
+      
+      return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -204,6 +200,8 @@ export class ClientService {
       throw new Error("version was not removed from version storage");
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
+    
+    return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
   }
 
   async updateClient(
@@ -233,6 +231,8 @@ export class ClientService {
       });
 
       this._uow.commit();
+      
+      return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -260,5 +260,7 @@ export class ClientService {
 
     Client.update(client, updateData);
     this._uow.clientRepository.save(client);
+    
+    return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
   }
 }

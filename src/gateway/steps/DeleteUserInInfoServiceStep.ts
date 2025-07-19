@@ -1,17 +1,16 @@
 import { Step } from "../application";
+import { UserDeletedDTO } from "../dtos";
 import { logger } from "../logger";
 import { info } from "../imports";
 
-export class DeleteUserInInfoServiceStep extends Step<string, void> {
-  override async invoke(userId: string): Promise<void> {
+export class DeleteUserInInfoServiceStep extends Step<string, UserDeletedDTO> {
+  override async invoke(userId: string): Promise<UserDeletedDTO> {
     logger.info(this.constructor.name + " invoke");
-    await info.services.userService.deleteUser(userId);
-    return;
+    return await info.services.userService.deleteUser(userId);
   }
 
-  override async withCompensation(userId: string): Promise<void> {
+  override async withCompensation(userId: string): Promise<UserDeletedDTO> {
     logger.info(this.constructor.name + " withCompensation");
-    await info.services.userService.restoreUser(userId);
-    return;
+    return await info.services.userService.restoreUser(userId);
   }
 }
