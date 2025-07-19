@@ -48,7 +48,7 @@ export class HostRepository {
           workDays: string;
         }
       | undefined;
-    logger.info("hostData", hostData);
+    logger.info(hostData, " hostData");
     if (!hostData) return null;
 
     return HostMapper.toDomain({

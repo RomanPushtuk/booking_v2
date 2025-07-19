@@ -30,7 +30,7 @@ export const getAllBookings = (data?: {
       filtersSql.push(`\`toDateTime\` <=  '${filters.toDateTime}'`);
     }
 
-    if (filters.deleted) {
+    if (typeof filters.deleted === "boolean") {
       filtersSql.push(`\`deleted\` = ${filters.deleted}`);
     }
 

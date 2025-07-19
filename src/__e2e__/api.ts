@@ -16,6 +16,7 @@ export const api = {
     },
     getHostBookings: (id: string, params?: {
       sortDirection?: string;
+      sortProperty?: string;
     }) => {
       return axiosInstance.get<gateway.dtos.BookingDTO[]>(`/hosts/${id}/bookings`, { params });
     },
@@ -49,7 +50,7 @@ export const api = {
       );
     },
     deleteMe: (config: AxiosRequestConfig) => {
-      return axiosInstance.delete<gateway.dtos.ClientDeletedDTO>(
+      return axiosInstance.delete<gateway.dtos.UserDeletedDTO>(
         "/clients/me",
         config,
       );
@@ -107,7 +108,7 @@ export const api = {
       return axiosInstance.get<gateway.dtos.HostDTO>("/hosts/me", config);
     },
     deleteMe: (config: AxiosRequestConfig) => {
-      return axiosInstance.delete<gateway.dtos.HostDeletedDTO>("/hosts/me", config);
+      return axiosInstance.delete<gateway.dtos.UserDeletedDTO>("/hosts/me", config);
     },
     updateMe: (
       body: gateway.dtos.UpdateHostDTO,
