@@ -1,5 +1,6 @@
 import { IsBoolean, IsArray, IsString, validateSync } from "class-validator";
 import { GetInterface } from "../types";
+import { DTOValidationError } from "../errors";
 
 export class HostFilters {
   @IsArray()
@@ -28,6 +29,6 @@ export class HostFilters {
 
     const errors = validateSync(this, { skipMissingProperties: true });
     if (errors.length)
-      throw new Error("HostFilters error", { cause: errors });
+      throw new DTOValidationError("HostFilters", errors);
   }
 }
