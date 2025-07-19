@@ -788,6 +788,71 @@ describe("Client Bookings testing", () => {
     );
     expect(updateResponse.status).toBe(404);
   });
+
+  describe("Client Security Tests - Real Vulnerability Check", () => {
+    let clientA: TestUserConfig;
+    let clientB: TestUserConfig; 
+    let hostConfig: TestUserConfig;
+    let bookingByClientA: string;
+
+    beforeAll(async () => {
+      
+      const [client1, client2, host] = await Promise.all([
+        createIsolatedUser("CLIENT_SECURITY_A", gateway.enums.Roles.CLIENT),
+        createIsolatedUser("CLIENT_SECURITY_B", gateway.enums.Roles.CLIENT),
+        createIsolatedUser("HOST_SECURITY", gateway.enums.Roles.HOST),
+      ]);
+
+      clientA = client1;
+      clientB = client2;
+      hostConfig = host;
+
+      
+      const bookingDTO: gateway.dtos.CreateClientBookingDTO = {
+        hostId: hostConfig.userId,
+        ...generateBookingDates(Days.MONDAY, "10:00", "PT1H"),
+      };
+
+      const response = await api.clients.createBooking(bookingDTO, clientA);
+      expect(response.status).toBe(201);
+      bookingByClientA = response.data.id;
+    });
+
+    test("Client B cannot read Client A's booking by ID", async () => {
+      const response = await api.clients.getBookingById(bookingByClientA, clientB);
+      expect(response.status).toBe(404);
+      
+      const clientAResponse = await api.clients.getBookingById(bookingByClientA, clientA);
+      expect(clientAResponse.status).toBe(200);
+      expect(clientAResponse.data.id).toBe(bookingByClientA);
+    });
+
+    test("Client B cannot update Client A's booking", async () => {
+      const updateDTO: gateway.dtos.UpdateClientBookingDTO = {
+        ...generateBookingDates(Days.MONDAY, "14:00", "PT1H"),
+      };
+
+      const response = await api.clients.updateBooking(bookingByClientA, updateDTO, clientB);
+      expect(response.status).toBe(404);
+      
+      const clientABooking = await api.clients.getBookingById(bookingByClientA, clientA);
+      expect(clientABooking.status).toBe(200);
+      expect(clientABooking.data.fromDateTime).not.toContain("14:00");
+    });
+
+    test("Client B cannot delete Client A's booking", async () => {
+      const response = await api.clients.deleteBooking(bookingByClientA, clientB);
+      expect(response.status).toBe(404);
+      
+      const clientABooking = await api.clients.getBookingById(bookingByClientA, clientA);
+      expect(clientABooking.status).toBe(200);
+      expect(clientABooking.data.id).toBe(bookingByClientA);
+    });
+
+    afterAll(async () => {
+      await api.clients.deleteBooking(bookingByClientA, clientA);
+    });
+  });
 });
 
 describe("Host testing", () => {
@@ -1728,6 +1793,69 @@ describe("Host testing", () => {
       }
     });
 
+  });
+
+  describe("Host Security Tests - Real Vulnerability Check", () => {
+    let hostA: TestUserConfig;
+    let hostB: TestUserConfig;
+    let clientConfig: TestUserConfig;
+    let bookingByHostA: string;
+
+    beforeAll(async () => {
+      const [host1, host2, client] = await Promise.all([
+        createIsolatedUser("HOST_SECURITY_A", gateway.enums.Roles.HOST),
+        createIsolatedUser("HOST_SECURITY_B", gateway.enums.Roles.HOST),
+        createIsolatedUser("CLIENT_SECURITY", gateway.enums.Roles.CLIENT),
+      ]);
+
+      hostA = host1;
+      hostB = host2;
+      clientConfig = client;
+
+      const bookingDTO: gateway.dtos.CreateHostBookingDTO = {
+        clientId: clientConfig.userId,
+        ...generateBookingDates(Days.WEDNESDAY, "10:00", "PT1H"),
+      };
+
+      const response = await api.hosts.createBooking(bookingDTO, hostA);
+      expect(response.status).toBe(201);
+      bookingByHostA = response.data.id;
+    });
+
+    test("Host B cannot read Host A's booking by ID", async () => {
+      const response = await api.hosts.getBookingById(bookingByHostA, hostB);
+      expect(response.status).toBe(404);
+      
+      const hostAResponse = await api.hosts.getBookingById(bookingByHostA, hostA);
+      expect(hostAResponse.status).toBe(200);
+      expect(hostAResponse.data.id).toBe(bookingByHostA);
+    });
+
+    test("Host B cannot update Host A's booking", async () => {
+      const updateDTO: gateway.dtos.UpdateHostBookingDTO = {
+        ...generateBookingDates(Days.WEDNESDAY, "14:00", "PT1H"),
+      };
+
+      const response = await api.hosts.updateBooking(bookingByHostA, updateDTO, hostB);
+      expect(response.status).toBe(404);
+      
+      const hostABooking = await api.hosts.getBookingById(bookingByHostA, hostA);
+      expect(hostABooking.status).toBe(200);
+      expect(hostABooking.data.fromDateTime).not.toContain("14:00");
+    });
+
+    test("Host B cannot delete Host A's booking", async () => {
+      const response = await api.hosts.deleteBooking(bookingByHostA, hostB);
+      expect(response.status).toBe(404);
+      
+      const hostABooking = await api.hosts.getBookingById(bookingByHostA, hostA);
+      expect(hostABooking.status).toBe(200);
+      expect(hostABooking.data.id).toBe(bookingByHostA);
+    });
+
+    afterAll(async () => {
+      await api.hosts.deleteBooking(bookingByHostA, hostA);
+    });
   });
 
   describe("Host-Client Booking Interactions", () => {

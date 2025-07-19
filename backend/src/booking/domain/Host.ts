@@ -129,6 +129,15 @@ export class Host {
   }
 
   updateBookingByHost(booking: Booking, updateData: UpdateBookingData) {
+    
+    if (updateData.hostId && updateData.hostId !== this._id) {
+      throw new Error("Can't update booking. Cannot transfer booking to another host");
+    }
+    
+    if (updateData.clientId && updateData.clientId !== booking.getClientId()) {
+      throw new Error("Can't update booking. Cannot transfer booking to another client");
+    }
+    
     Booking.update(booking, updateData);
     
     const fromDateTime = booking.getFromDateTime();
@@ -150,6 +159,16 @@ export class Host {
   }
 
   updateBookingByClient(booking: Booking, updateData: UpdateBookingData) {
+    
+    if (updateData.hostId && updateData.hostId !== this._id) {
+      throw new Error("Can't update booking. Cannot transfer booking to another host");
+    }
+    
+    
+    if (updateData.clientId && updateData.clientId !== booking.getClientId()) {
+      throw new Error("Can't update booking. Cannot transfer booking to another client");
+    }
+    
     Booking.update(booking, updateData);
     
     const fromDateTime = booking.getFromDateTime();
