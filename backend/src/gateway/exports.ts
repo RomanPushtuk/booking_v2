@@ -35,8 +35,8 @@ const start = () => {
   useSwagger(app);
   monitoring.useMonitoring(app);
 
-  app.use('/fe', express.static(path.join(__dirname, 'client')))
-  app.get('/fe/*', (_req, res) => {
+  app.use('/', express.static(path.join(__dirname, 'client')))
+  app.get('/*', (_req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'))
   })
 
@@ -54,6 +54,7 @@ const start = () => {
     classTransformer: true,
     validation: true,
     defaultErrorHandler: false,
+    routePrefix: '/api',
     controllers: [AuthController, ClientController, HostController],
     middlewares: [
       TrackBeforeMiddleware,
