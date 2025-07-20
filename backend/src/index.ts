@@ -1,5 +1,9 @@
 Error.stackTraceLimit = Infinity;
 import "reflect-metadata";
+
+import dotenv from "dotenv";
+dotenv.config();
+
 import { Socket } from "net";
 
 import * as gateway from "./gateway/exports";

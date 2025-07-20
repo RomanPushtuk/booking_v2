@@ -4,9 +4,6 @@ import path from "path";
 import fs from "fs";
 import yaml from "js-yaml";
 import basicAuth from "basic-auth";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const yamlFilePath = path.join(__dirname, "./BookingYml.openapi.yaml");
 

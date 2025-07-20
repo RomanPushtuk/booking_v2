@@ -5,7 +5,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "webpack",
-    "start": "node ./dist/main.js",
+    "start": "NODE_ENV=production node ./dist/main.js",
     "dev": "nodemon ./src/index.ts",
     "lint": "eslint",
     "prettier": "prettier ./src --write",

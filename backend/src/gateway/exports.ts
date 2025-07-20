@@ -27,6 +27,8 @@ import {
 } from "./middlewares";
 import path from "path";
 
+const APP_PORT = process.env["NODE_ENV"] === 'production' ? 80 : 3000
+
 const app = express();
 
 const start = () => {
@@ -59,8 +61,8 @@ const start = () => {
       ErrorHandlerMiddleware,
     ],
   });
-  return app.listen(3000, () => {
-    logger.info("BackEnd started on 3000 port");
+  return app.listen(APP_PORT, () => {
+    logger.info(`BackEnd started on ${APP_PORT} port`);
   });
 };
 
