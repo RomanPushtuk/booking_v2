@@ -2,7 +2,6 @@
 dist
 build
 logs
-backend/src/monitoring
 
 # Databases
 backend/src/auth/db/database.db
