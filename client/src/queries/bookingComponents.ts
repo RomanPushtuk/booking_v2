@@ -7,6 +7,23 @@ import type * as Fetcher from "./bookingFetcher";
 import { bookingFetch } from "./bookingFetcher";
 import type * as Schemas from "./bookingSchemas";
 
+export type PublicGetHostsError = Fetcher.ErrorWrapper<undefined>;
+
+export type PublicGetHostsResponse = Schemas.HostDTO[];
+
+/**
+ * Get list of all available hosts
+ */
+export const publicGetHosts = (signal?: AbortSignal) =>
+  bookingFetch<
+    PublicGetHostsResponse,
+    PublicGetHostsError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/hosts", method: "get", signal });
+
 export type PublicGetHostByIdPathParams = {
   id: string;
 };
@@ -34,38 +51,19 @@ export const publicGetHostById = (
   >({ url: "/hosts/{id}", method: "get", ...variables, signal });
 
 export type PublicGetHostBookingsPathParams = {
+  /**
+   * Host ID
+   */
   id: string;
 };
 
 export type PublicGetHostBookingsQueryParams = {
   /**
-   * @default DESC
+   * Sort direction for bookings
+   *
+   * @default ASC
    */
   sortDirection?: "DESC" | "ASC";
-  /**
-   * @default dateFrom
-   */
-  sortProperty?: "dateFrom" | "dateTo" | "timeFrom" | "timeTo";
-  /**
-   * YYYY-MM-DD
-   */
-  dateFrom?: string;
-  /**
-   * YYYY-MM-DD
-   */
-  dateTo?: string;
-  /**
-   * HH:mm
-   *
-   * @default 00:00
-   */
-  timeFrom?: string;
-  /**
-   * HH:mm
-   *
-   * @default 23:59
-   */
-  timeto?: string;
 };
 
 export type PublicGetHostBookingsError = Fetcher.ErrorWrapper<undefined>;
@@ -78,7 +76,7 @@ export type PublicGetHostBookingsVariables = {
 };
 
 /**
- * Each user of the system can see the host records without specifying the clients.
+ * Get host's bookings from now until the host's forward booking period. Shows occupied time slots for planning appointments.
  */
 export const publicGetHostBookings = (
   variables: PublicGetHostBookingsVariables,
@@ -152,23 +150,23 @@ export const authLogin = (
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
-    status: 401;
-    payload: {
-      /**
-       * @example Unauthorized
-       */
-      error?: string;
-    };
-  }
+      status: 401;
+      payload: {
+        /**
+         * @example Unauthorized
+         */
+        error?: string;
+      };
+    }
   | {
-    status: 403;
-    payload: {
-      /**
-       * @example Access denied
-       */
-      error?: string;
-    };
-  }
+      status: 403;
+      payload: {
+        /**
+         * @example Access denied
+         */
+        error?: string;
+      };
+    }
 >;
 
 /**
@@ -220,7 +218,7 @@ export type ClientsGetBookingsQueryParams = {
   /**
    * Sort direction for results
    *
-   * @default DESC
+   * @default ASC
    */
   sortDirection?: "ASC" | "DESC";
   /**
@@ -270,7 +268,7 @@ export const clientsGetBookings = (
 export type ClientsCreateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsCreateBookingVariables = {
-  body: Schemas.CreateBookingDTO;
+  body: Schemas.CreateClientBookingDTO;
 };
 
 /**
@@ -283,7 +281,7 @@ export const clientsCreateBooking = (
   bookingFetch<
     Schemas.BookingCreatedDTO,
     ClientsCreateBookingError,
-    Schemas.CreateBookingDTO,
+    Schemas.CreateClientBookingDTO,
     {},
     {},
     {}
@@ -333,7 +331,7 @@ export type ClientsUpdateBookingPathParams = {
 export type ClientsUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsUpdateBookingVariables = {
-  body?: Schemas.ClientUpdateBookingDTO;
+  body?: Schemas.UpdateClientBookingDTO;
   pathParams: ClientsUpdateBookingPathParams;
 };
 
@@ -347,7 +345,7 @@ export const clientsUpdateBooking = (
   bookingFetch<
     Schemas.BookingUpdatedDTO,
     ClientsUpdateBookingError,
-    Schemas.ClientUpdateBookingDTO,
+    Schemas.UpdateClientBookingDTO,
     {},
     {},
     ClientsUpdateBookingPathParams
@@ -620,7 +618,7 @@ export const hostsUpdateBooking = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingUpdatedDTO,
+    Schemas.BookingUpdatedDTO3,
     HostsUpdateBookingError,
     Schemas.UpdateBookingDTO,
     {},
@@ -645,26 +643,26 @@ export const hostsGetHostSettings = (signal?: AbortSignal) =>
     {}
   >({ url: "/hosts/me/settings", method: "get", signal });
 
-export type HostsUpdateSettignsError = Fetcher.ErrorWrapper<undefined>;
+export type HostsUpdateSettingsError = Fetcher.ErrorWrapper<undefined>;
 
-export type HostsUpdateSettignsResponse = {
+export type HostsUpdateSettingsResponse = {
   /**
    * status
    */
   status?: string;
 };
 
-export type HostsUpdateSettignsVariables = {
+export type HostsUpdateSettingsVariables = {
   body?: Schemas.UpdateHostSettingsDTO;
 };
 
-export const hostsUpdateSettigns = (
-  variables: HostsUpdateSettignsVariables,
+export const hostsUpdateSettings = (
+  variables: HostsUpdateSettingsVariables,
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    HostsUpdateSettignsResponse,
-    HostsUpdateSettignsError,
+    HostsUpdateSettingsResponse,
+    HostsUpdateSettingsError,
     Schemas.UpdateHostSettingsDTO,
     {},
     {},
@@ -672,7 +670,7 @@ export const hostsUpdateSettigns = (
   >({ url: "/hosts/me/settings", method: "patch", ...variables, signal });
 
 export const operationsByTag = {
-  public: { publicGetHostById, publicGetHostBookings },
+  public: { publicGetHosts, publicGetHostById, publicGetHostBookings },
   auth: { authRegister, authLogin },
   clients: {
     clientsGetClient,
@@ -694,6 +692,6 @@ export const operationsByTag = {
     hostsDeleteBooking,
     hostsUpdateBooking,
     hostsGetHostSettings,
-    hostsUpdateSettigns,
+    hostsUpdateSettings,
   },
 };

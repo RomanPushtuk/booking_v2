@@ -1,7 +1,6 @@
 {
   "private": false,
-  "name": "@pushtuk/booking",  
-  "type": "module",
+  "name": "@pushtuk/booking",
   "version": "2.0.0",
   "description": "Time booking system",
   "repository": "https://github.com/RomanPushtuk/booking_v2",

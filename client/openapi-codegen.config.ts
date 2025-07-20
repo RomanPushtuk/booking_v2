@@ -6,7 +6,7 @@ import { defineConfig } from '@openapi-codegen/cli';
 export default defineConfig({
   booking: {
     from: {
-      relativePath: './openapi.yaml',
+      relativePath: 'openapi.yaml',
       source: 'file',
     },
     outputDir: 'src/queries',

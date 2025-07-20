@@ -120,7 +120,7 @@ export type BookingDTO = {
 /**
  * @example {"hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
  */
-export type CreateBookingDTO = {
+export type CreateClientBookingDTO = {
   /**
    * ID of the host to book
    */
@@ -199,7 +199,7 @@ export type BookingDeletedDTO = {
 /**
  * @example {"fromDateTime":"2025-06-25T14:00:00Z","toDateTime":"2025-06-25T15:00:00Z","info":{"title":"Updated Consultation","description":"Updated description"}}
  */
-export type ClientUpdateBookingDTO = {
+export type UpdateClientBookingDTO = {
   /**
    * New booking start time (ISO8601)
    *
@@ -263,22 +263,37 @@ export type BookingUpdatedDTO = {
   id: string;
 };
 
+/**
+ * @example {"id":"host_123","forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"],"info":{"firstName":"Dr. John","lastName":"Smith"}}
+ */
 export type HostDTO = {
   /**
    * ID
    */
   id: string;
   /**
-   * How far forward recording is allowed. Example: 1 week, 3 days.
+   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+   *
+   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+   * @example P1W
    */
   forwardBooking: string;
+  /**
+   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
+   */
   workHours: {
     /**
-     * Example: 09:00
+     * Start time in HH:MM format (24-hour)
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 09:00
      */
     from: string;
     /**
-     * Example: 18:00
+     * End time in HH:MM format (24-hour). Must be later than 'from' time.
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 18:00
      */
     to: string;
   }[];
@@ -291,6 +306,16 @@ export type HostDTO = {
     | "SATURDAY"
     | "SUNDAY"
   )[];
+  info?: {
+    /**
+     * Host's first name
+     */
+    firstName?: string;
+    /**
+     * Host's last name
+     */
+    lastName?: string;
+  };
 };
 
 /**
@@ -340,9 +365,34 @@ export type HostDeletedDTO = {
   id: string;
 };
 
+/**
+ * @example {"forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"]}
+ */
 export type UpdateHostDTO = {
+  /**
+   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+   *
+   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+   * @example P1W
+   */
+  forwardBooking?: string;
+  /**
+   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
+   */
   workHours?: {
+    /**
+     * Start time in HH:MM format (24-hour)
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 09:00
+     */
     from: string;
+    /**
+     * End time in HH:MM format (24-hour). Must be later than 'from' time.
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 17:00
+     */
     to: string;
   }[];
   workDays?: (
@@ -492,7 +542,7 @@ export type HostSettingsDTO = {
   /**
    * @default false
    */
-  allowOverlapingBookings: boolean;
+  allowOverlappingBookings: boolean;
   /**
    * @default false
    */
@@ -500,11 +550,11 @@ export type HostSettingsDTO = {
   /**
    * @default true
    */
-  allowBookingСancelByClient: boolean;
+  allowBookingCancelByClient: boolean;
   /**
    * @default true
    */
-  allowBookingСancelByHost: boolean;
+  allowBookingCancelByHost: boolean;
   /**
    * @default false
    */
@@ -520,10 +570,10 @@ export type HostSettingsDTO = {
 };
 
 export type UpdateHostSettingsDTO = {
-  allowOverlapingBookings?: boolean;
+  allowOverlappingBookings?: boolean;
   allowPastTimeBookings?: boolean;
-  allowBookingСancelByClient?: boolean;
-  allowBookingСancelByHost?: boolean;
+  allowBookingCancelByClient?: boolean;
+  allowBookingCancelByHost?: boolean;
   allowBookingUpdateByClient?: boolean;
   allowBookingUpdateByHost?: boolean;
   allowBookingApprove?: boolean;
