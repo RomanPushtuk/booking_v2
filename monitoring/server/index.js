@@ -25,6 +25,7 @@ const MAX_LOG_FOLDER_SIZE_BYTES = 0.03 * 1024 * 1024; // 10 MB
 let bufferMode = false;
 let buffer = [];
 
+
 const DB_FILE_PATH = path.resolve(__dirname, "./monitoring.db");
 createFileIfNotExists(DB_FILE_PATH);
 const LOG_ARCHIVES_FOLDER = path.resolve(__dirname, "./logs");

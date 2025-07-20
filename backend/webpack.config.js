@@ -39,6 +39,10 @@ module.exports = {
         "./node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js",
         "./node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-16x16.png",
         "./node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-32x32.png",
+        {
+          from: "client/**/*",
+          context: path.resolve(__dirname, "src", "gateway"),
+        },
       ],
     }),
     new PinoWebpackPlugin({

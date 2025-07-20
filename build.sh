@@ -56,4 +56,7 @@ rm -rf "$CLIENT_TARGET"/*
 echo "Copying new client build files..."
 cp -r ./client/dist/* "$CLIENT_TARGET"/
 
-echo "Build and deploy completed successfully."
+cd ./backend
+pnpm run build || { echo "Build error in backend"; exit 1; }
+
+echo "Build completed successfully."
