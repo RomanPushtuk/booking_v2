@@ -23,10 +23,10 @@ export class Booking {
     for (const [key, value] of entries) {
       switch (key) {
         case "clientId":
-          booking.setFromDateTime(value);
+          booking.setClientId(value);
           break;
         case "hostId":
-          booking.setToDateTime(value);
+          booking.setHostId(value);
           break;
         case "fromDateTime":
           booking.setFromDateTime(value);
@@ -64,6 +64,14 @@ export class Booking {
 
   setDeleted(flag: boolean) {
     this._deleted = flag;
+  }
+
+  setClientId(clientId: string) {
+    this._clientId = clientId;
+  }
+
+  setHostId(hostId: string) {
+    this._hostId = hostId;
   }
 
   setFromDateTime(fromDateTime: string) {

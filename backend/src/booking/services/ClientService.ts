@@ -2,9 +2,9 @@ import { Inject, Service } from "typedi";
 import { gateway, shared } from "../imports";
 import { logger } from "../logger";
 import { UnitOfWork } from "./UnitOfWork";
-import { Booking } from "../domain";
+import { Booking, Client } from "../domain";
 import { vs } from "../vs";
-import { UpdateBookingData } from "../types";
+import { UpdateBookingData, UpdateClientData } from "../types";
 
 @Service()
 export class ClientService {
@@ -26,21 +26,9 @@ export class ClientService {
 
     if (!client) throw new Error("Client not found");
 
-    const bookings = client.getBookings().map((booking) => ({
-      id: booking.getId(),
-      clientId: booking.getClientId(),
-      hostId: booking.getHostId(),
-      fromDateTime: booking.getFromDateTime(),
-      toDateTime: booking.getToDateTime(),
-      deleted: booking.getDeleted(),
-    }));
-
-    return {
+    return new gateway.dtos.ClientDTO({
       id: client.getId(),
-      role: client.getRole(),
-      deleted: client.getDeleted(),
-      bookings,
-    };
+    });
   }
 
   async getClientBookings(
@@ -58,14 +46,15 @@ export class ClientService {
 
     if (!bookings) return [];
 
-    return bookings.map((booking) => ({
-      id: booking.getId(),
-      clientId: booking.getClientId(),
-      hostId: booking.getHostId(),
-      fromDateTime: booking.getFromDateTime(),
-      toDateTime: booking.getToDateTime(),
-      deleted: booking.getDeleted(),
-    }));
+    return bookings.map((booking) => 
+      new gateway.dtos.BookingDTO({
+        id: booking.getId(),
+        clientId: booking.getClientId(),
+        hostId: booking.getHostId(),
+        fromDateTime: booking.getFromDateTime(),
+        toDateTime: booking.getToDateTime(),
+      })
+    );
   }
 
   async getClientBookingById(clientId: string, bookingId: string) {
@@ -75,14 +64,13 @@ export class ClientService {
 
     const booking = client.getBookingById(bookingId);
 
-    return {
+    return new gateway.dtos.BookingDTO({
       id: booking.getId(),
       clientId: booking.getClientId(),
       hostId: booking.getHostId(),
       fromDateTime: booking.getFromDateTime(),
       toDateTime: booking.getToDateTime(),
-      deleted: booking.getDeleted(),
-    };
+    });
   }
 
   async createBooking(
@@ -109,10 +97,12 @@ export class ClientService {
         deleted: false,
       });
 
-      host.addBooking(booking);
+      host.addBookingByClient(booking);
       this._uow.hostRepository.save(host);
 
       this._uow.commit();
+      
+      return new gateway.dtos.BookingCreatedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -137,6 +127,8 @@ export class ClientService {
       this._uow.hostRepository.save(host);
 
       this._uow.commit();
+      
+      return new gateway.dtos.BookingDeletedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -149,6 +141,8 @@ export class ClientService {
     if (!booking) throw new Error("booking not found");
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
+    
+    return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
   }
 
   async updateBooking(
@@ -171,7 +165,7 @@ export class ClientService {
       const host = this._uow.hostRepository.getById(hostId);
       if (!host) throw new Error("Host not found");
 
-      host.updateBooking(booking, updateClientBookingDTO);
+      host.updateBookingByClient(booking, updateClientBookingDTO);
       this._uow.bookingRepository.save(booking);
 
       await this._vs.insertAsync({
@@ -181,6 +175,8 @@ export class ClientService {
       });
 
       this._uow.commit();
+      
+      return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
       throw error;
@@ -204,29 +200,67 @@ export class ClientService {
       throw new Error("version was not removed from version storage");
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
+    
+    return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
   }
 
   async updateClient(
     updateClientDTO: gateway.dtos.UpdateClientDTO,
     clientId: string,
+    versionId: string,
   ) {
     logger.info(
       { updateClientDTO, clientId },
       this.constructor.name + " updateClient",
     );
-    const client = this._uow.clientRepository.getById(clientId);
-    if (!client) throw new Error("client not found");
-    // TODO Make update
-    this._uow.clientRepository.save(client);
+
+    try {
+      this._uow.begin();
+
+      const client = this._uow.clientRepository.getById(clientId);
+      if (!client) throw new Error("client not found");
+
+      Client.update(client, updateClientDTO);
+
+      this._uow.clientRepository.save(client);
+
+      await this._vs.insertAsync({
+        id: clientId,
+        versionId,
+        data: updateClientDTO,
+      });
+
+      this._uow.commit();
+      
+      return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
+    } catch (error) {
+      this._uow.rollback();
+      throw error;
+    }
   }
 
-  async revertClient(clientId: string) {
-    logger.info({ clientId }, this.constructor.name + " revertClient");
+  async revertClient(clientId: string, versionId: string) {
+    logger.info({ clientId, versionId }, this.constructor.name + " revertClient");
+    
     const client = this._uow.clientRepository.getById(clientId);
-
     if (!client) throw new Error("Client not found");
 
-    // TODO Make update revert
+    const version = await this._vs
+      .findOneAsync({ id: clientId, versionId })
+      .execAsync();
+    if (!version) throw new Error("version not found");
+
+    const updateData = version["data"] as UpdateClientData;
+    const numRemoved = await this._vs.removeAsync(
+      { id: clientId, versionId },
+      {},
+    );
+    if (!numRemoved)
+      throw new Error("version was not removed from version storage");
+
+    Client.update(client, updateData);
     this._uow.clientRepository.save(client);
+    
+    return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
   }
 }

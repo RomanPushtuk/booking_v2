@@ -1,4 +1,4 @@
-import { DateTime, Interval } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 import { Days } from "../enums/Days";
 
 export function intervalsOverlap(
@@ -46,4 +46,71 @@ export function isTimeIntervalInWorkingHours(
   return workingHours.some(({ from, to }) => {
     return fromTime >= from && toTime <= to;
   });
+}
+
+function validateTimeFormat(time: string): void {
+  if (!DateTime.fromFormat(time, "HH:mm").isValid) {
+    throw new Error(`Invalid time format: ${time}. Expected format: HH:MM`);
+  }
+}
+
+export function validateTimeIntervals(
+  timeIntervals: { from: string; to: string }[],
+): void {
+  for (const timeInterval of timeIntervals) {
+    validateTimeFormat(timeInterval.from);
+    validateTimeFormat(timeInterval.to);
+
+    if (timeInterval.from >= timeInterval.to) {
+      throw new Error(
+        `Invalid time interval: from time (${timeInterval.from}) must be earlier than to time (${timeInterval.to})`,
+      );
+    }
+  }
+
+  const intervals = timeIntervals.map(({ from, to }) =>
+    Interval.fromDateTimes(
+      DateTime.fromFormat(from, "HH:mm"),
+      DateTime.fromFormat(to, "HH:mm"),
+    ),
+  );
+
+  const hasOverlap = intervals.some((interval, index) =>
+    intervals.slice(index + 1).some((otherInterval) =>
+      interval.overlaps(otherInterval),
+    ),
+  );
+
+  if (hasOverlap) {
+    throw new Error("Overlapping time intervals detected");
+  }
+}
+
+export function validateDurationFormat(durationString: string): void {
+  if (!Duration.fromISO(durationString).isValid) {
+    throw new Error(
+      `Invalid duration format: ${durationString}. Expected ISO 8601 format like P1D, P1W, P1M, P1Y, PT1H`,
+    );
+  }
+}
+
+export function addDurationToDate(
+  durationString: string,
+  fromDate?: string,
+): string {
+  const baseDate = fromDate ? DateTime.fromISO(fromDate) : DateTime.now();
+
+  validateDurationFormat(durationString);
+
+  const duration = Duration.fromISO(durationString);
+  const resultDate = baseDate.plus(duration);
+  return resultDate.toISO()!;
+}
+
+export function isIntervalInPast(fromDateTime: string, toDateTime: string): boolean {
+  const now = DateTime.now();
+  const fromDate = DateTime.fromISO(fromDateTime);
+  const toDate = DateTime.fromISO(toDateTime);
+  
+  return fromDate < now || toDate < now;
 }

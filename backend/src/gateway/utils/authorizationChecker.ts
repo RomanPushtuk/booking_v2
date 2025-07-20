@@ -12,7 +12,15 @@ const permissionsByRole = {
     shared.enums.Permissions.CLIENT_UPDATE_BOOKING,
     shared.enums.Permissions.CLIENT_CANCEL_BOOKING,
   ],
-  [shared.enums.Roles.HOST]: [shared.enums.Permissions.HOST_READ_PROFILE],
+  [shared.enums.Roles.HOST]: [
+    shared.enums.Permissions.HOST_READ_PROFILE,
+    shared.enums.Permissions.HOST_UPDATE_PROFILE,
+    shared.enums.Permissions.HOST_DELETE_PROFILE,
+    shared.enums.Permissions.HOST_READ_BOOKINGS,
+    shared.enums.Permissions.HOST_CREATE_BOOKING,
+    shared.enums.Permissions.HOST_UPDATE_BOOKING,
+    shared.enums.Permissions.HOST_CANCEL_BOOKING,
+  ],
 } as const;
 
 export const authorizationChecker = async (

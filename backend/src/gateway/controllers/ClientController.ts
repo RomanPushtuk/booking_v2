@@ -34,8 +34,7 @@ import {
 } from "../dtos";
 import {
   CreateClientBookingInBookingServiceStep,
-  DeleteBookingInBookingServiceStep,
-  DeleteBookingInInfoServiceStep,
+  DeleteClientBookingInBookingServiceStep,
   DeleteUserInAuthServiceStep,
   DeleteUserInBookingServiceStep,
   DeleteUserInInfoServiceStep,
@@ -77,7 +76,6 @@ export class ClientController {
     @CurrentUser() user: auth.domain.User,
     @Body() updateClientDTO: UpdateClientDTO,
   ): Promise<ClientUpdatedDTO> {
-    const userId = user.id;
     const updateClientSaga = new UpdateClientSaga(
       new UpdateClientInBookingServiceStep(
         booking.services.clientService.updateClient,
@@ -85,7 +83,8 @@ export class ClientController {
       ),
       new UpdateClientInInfoServiceStep(),
     );
-    await updateClientSaga.execute(updateClientDTO, userId);
+    const versionId = shared.utils.generateId();
+    await updateClientSaga.execute(updateClientDTO, user.id, versionId);
     return new ClientUpdatedDTO({ id: user.id });
   }
 
@@ -213,11 +212,10 @@ export class ClientController {
     );
 
     const deleteBookingSaga = new DeleteBookingSaga(
-      new DeleteBookingInBookingServiceStep(
+      new DeleteClientBookingInBookingServiceStep(
         booking.services.clientService.deleteBooking,
         booking.services.clientService.restoreBooking,
       ),
-      new DeleteBookingInInfoServiceStep(),
     );
     await deleteBookingSaga.execute(bookingId);
     return new BookingDeletedDTO({ id: bookingId });

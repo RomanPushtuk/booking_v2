@@ -8,8 +8,18 @@ const axiosInstance = axios.create({
 
 export const api = {
   public: {
-    getHostById: () => {},
-    getHostBookings: () => {},
+    getHosts: () => {
+      return axiosInstance.get<gateway.dtos.HostDTO[]>("/hosts");
+    },
+    getHostById: (id: string) => {
+      return axiosInstance.get<gateway.dtos.HostDTO>(`/hosts/${id}`);
+    },
+    getHostBookings: (id: string, params?: {
+      sortDirection?: string;
+      sortProperty?: string;
+    }) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO[]>(`/hosts/${id}/bookings`, { params });
+    },
   },
   auth: {
     register: (body: gateway.dtos.CreateUserDTO) => {
@@ -40,7 +50,7 @@ export const api = {
       );
     },
     deleteMe: (config: AxiosRequestConfig) => {
-      return axiosInstance.delete<gateway.dtos.ClientDeletedDTO>(
+      return axiosInstance.delete<gateway.dtos.UserDeletedDTO>(
         "/clients/me",
         config,
       );
@@ -97,14 +107,56 @@ export const api = {
     getMe: (config: AxiosRequestConfig) => {
       return axiosInstance.get<gateway.dtos.HostDTO>("/hosts/me", config);
     },
-    deleteMe: () => {},
-    updateMe: () => {},
-    getMyBookings: () => {},
-    getBookingById: () => {},
-    createBooking: () => {},
-    deleteBooking: () => {},
-    updateBooking: () => {},
-    getMySettings: () => {},
-    updateMySettings: () => {},
+    deleteMe: (config: AxiosRequestConfig) => {
+      return axiosInstance.delete<gateway.dtos.UserDeletedDTO>("/hosts/me", config);
+    },
+    updateMe: (
+      body: gateway.dtos.UpdateHostDTO,
+      config: AxiosRequestConfig,
+    ) => {
+      return axiosInstance.patch<gateway.dtos.HostUpdatedDTO>(
+        "/hosts/me",
+        body,
+        config,
+      );
+    },
+    getMyBookings: (config: AxiosRequestConfig, params?: {
+      sortDirection?: string;
+      sortProperty?: string;
+      fromDateTime?: string;
+      toDateTime?: string;
+    }) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO[]>("/hosts/me/bookings", { ...config, params });
+    },
+    getBookingById: (bookingId: string, config: AxiosRequestConfig) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO>(`/hosts/me/bookings/${bookingId}`, config);
+    },
+    createBooking: (
+      body: gateway.dtos.CreateHostBookingDTO,
+      config: AxiosRequestConfig,
+    ) => {
+      return axiosInstance.post<gateway.dtos.BookingCreatedDTO>(
+        "/hosts/me/bookings",
+        body,
+        config,
+      );
+    },
+    deleteBooking: (bookingId: string, config: AxiosRequestConfig) => {
+      return axiosInstance.delete<gateway.dtos.BookingDeletedDTO>(
+        `/hosts/me/bookings/${bookingId}`,
+        config,
+      );
+    },
+    updateBooking: (
+      bookingId: string,
+      body: gateway.dtos.UpdateHostBookingDTO,
+      config: AxiosRequestConfig,
+    ) => {
+      return axiosInstance.patch<gateway.dtos.BookingUpdatedDTO>(
+        `/hosts/me/bookings/${bookingId}`,
+        body,
+        config,
+      );
+    },
   },
 };

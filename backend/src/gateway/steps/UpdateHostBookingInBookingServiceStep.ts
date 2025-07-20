@@ -1,13 +1,14 @@
 import { Step } from "../application";
-import { UpdateClientBookingDTO, BookingUpdatedDTO } from "../dtos";
+import { UpdateHostBookingDTO, BookingUpdatedDTO } from "../dtos";
 import { logger } from "../logger";
 
-export class UpdateClientBookingInBookingServiceStep extends Step<
-  UpdateClientBookingDTO,
+export class UpdateHostBookingInBookingServiceStep extends Step<
+  UpdateHostBookingDTO,
   BookingUpdatedDTO
 > {
   private _invokeCb: (
-    updateClientBookingDTO: UpdateClientBookingDTO,
+    updateHostBookingDTO: UpdateHostBookingDTO,
+    hostId: string,
     bookingId: string,
     versionId: string,
   ) => Promise<BookingUpdatedDTO>;
@@ -18,11 +19,15 @@ export class UpdateClientBookingInBookingServiceStep extends Step<
 
   constructor(
     invokeCb: (
-      updateClientBookingDTO: UpdateClientBookingDTO,
+      updateHostBookingDTO: UpdateHostBookingDTO,
+      hostId: string,
       bookingId: string,
       versionId: string,
     ) => Promise<BookingUpdatedDTO>,
-    withCompensationCb: (bookingId: string, versionId: string) => Promise<BookingUpdatedDTO>,
+    withCompensationCb: (
+      bookingId: string,
+      versionId: string,
+    ) => Promise<BookingUpdatedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;
@@ -30,16 +35,18 @@ export class UpdateClientBookingInBookingServiceStep extends Step<
   }
 
   override async invoke(
-    updateClientBookingDTO: UpdateClientBookingDTO,
+    updateHostBookingDTO: UpdateHostBookingDTO,
+    hostId: string,
     bookingId: string,
     versionId: string,
   ): Promise<BookingUpdatedDTO> {
     logger.info(this.constructor.name + " invoke");
-    return await this._invokeCb(updateClientBookingDTO, bookingId, versionId);
+    return await this._invokeCb(updateHostBookingDTO, hostId, bookingId, versionId);
   }
 
   override async withCompensation(
-    _updateClientBookingDTO: UpdateClientBookingDTO,
+    _updateHostBookingDTO: UpdateHostBookingDTO,
+    _hostId: string,
     bookingId: string,
     versionId: string,
   ): Promise<BookingUpdatedDTO> {

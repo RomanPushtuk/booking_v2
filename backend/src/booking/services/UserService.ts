@@ -29,7 +29,7 @@ export class UserService {
     if (userDTO.role === shared.enums.Roles.HOST) {
       const host = new Host({
         id: userDTO.id,
-        forwardBooking: "1 week",
+        forwardBooking: "P1W",
         workHours: [
           { from: "09:00", to: "13:00" },
           { from: "14:00", to: "18:00" },
@@ -50,6 +50,8 @@ export class UserService {
     if (!user) throw new Error("user not found");
     user.setDeleted(true);
     this._uow.userRepository.save(user);
+    
+    return new gateway.dtos.UserDeletedDTO({ id: userId });
   }
 
   async restoreUser(userId: string) {
@@ -58,5 +60,7 @@ export class UserService {
     if (!user) throw new Error("user not found");
     user.setDeleted(false);
     this._uow.userRepository.save(user);
+    
+    return new gateway.dtos.UserDeletedDTO({ id: userId });
   }
 }
