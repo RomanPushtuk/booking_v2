@@ -1619,7 +1619,7 @@ components:
       name: Authorization
       description: JWT token authentication. Use the token returned from /auth/login endpoint. Do not include 'Bearer ' prefix.
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3000/api
     description: Development server
-  - url: https://api.booking.example.com
+  - url: https://api.booking.example.com/api
     description: Production server
