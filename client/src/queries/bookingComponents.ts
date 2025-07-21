@@ -146,27 +146,27 @@ export const authLogin = (
     {},
     {},
     {}
-  >({ url: "/auth/login", method: "post", ...variables, signal });
+  >({ url: "/api/auth/login", method: "post", ...variables, signal });
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
-      status: 401;
-      payload: {
-        /**
-         * @example Unauthorized
-         */
-        error?: string;
-      };
-    }
+    status: 401;
+    payload: {
+      /**
+       * @example Unauthorized
+       */
+      error?: string;
+    };
+  }
   | {
-      status: 403;
-      payload: {
-        /**
-         * @example Access denied
-         */
-        error?: string;
-      };
-    }
+    status: 403;
+    payload: {
+      /**
+       * @example Access denied
+       */
+      error?: string;
+    };
+  }
 >;
 
 /**
@@ -263,7 +263,7 @@ export const clientsGetBookings = (
     {},
     ClientsGetBookingsQueryParams,
     {}
-  >({ url: "/clients/me/bookings", method: "get", ...variables, signal });
+  >({ url: "/api/clients/me/bookings", method: "get", ...variables, signal });
 
 export type ClientsCreateBookingError = Fetcher.ErrorWrapper<undefined>;
 

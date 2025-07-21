@@ -19,3 +19,9 @@ How to build project
 1) From root run - bash build.sh (it is also required for local developemnt)
 
 2) Then make cd ./backend, and pnpm run start
+
+
+Run migrations 
+
+cd backend
+node ./src/migrations/run_migrations.js up

@@ -1,6 +1,6 @@
 const { DatabaseSync } = require("node:sqlite");
-const authDb = new DatabaseSync("src/auth/db/database.db");
-const bookingDb = new DatabaseSync("src/booking/db/database.db");
+const authDb = new DatabaseSync("src/auth/db/auth.db");
+const bookingDb = new DatabaseSync("src/booking/db/booking.db");
 
 const {
   createAuthModuleUserTable,

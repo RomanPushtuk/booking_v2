@@ -1,11 +1,10 @@
-import { BroadcastChannel } from "worker_threads";
-
 import express from "express";
 import { useExpressServer, useContainer } from "routing-controllers";
 
 import { monitoring } from "./imports";
+import { swagger } from "./swagger";
+import { cors } from "./cors";
 
-import { useSwagger } from "./swagger";
 import { diContainer } from "./di";
 import { logger } from "./logger";
 import { authorizationChecker, currentUserChecker } from "./utils";
@@ -32,36 +31,34 @@ const APP_PORT = process.env["NODE_ENV"] === 'production' ? 80 : 3000
 const app = express();
 
 const start = () => {
-  useSwagger(app);
+  cors.useCors(app)
+  swagger.useSwagger(app);
   monitoring.useMonitoring(app);
 
-  app.use('/', express.static(path.join(__dirname, 'client')))
-  app.get('/*', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html'))
-  })
-
-  let bus: BroadcastChannel | null = null;
-  bus = new BroadcastChannel("monitoring");
-  bus.onmessage = (event: unknown) => {
-    // @ts-expect-error because it goes from common_js module
-    monitoring.insert(event.data);
-  };
-
   useExpressServer(app, {
-    cors: true,
     authorizationChecker,
     currentUserChecker,
     classTransformer: true,
     validation: true,
     defaultErrorHandler: false,
     routePrefix: '/api',
-    controllers: [AuthController, ClientController, HostController],
+    controllers: [
+      AuthController,
+      ClientController,
+      HostController
+    ],
     middlewares: [
       TrackBeforeMiddleware,
       TrackAfterMiddleware,
       ErrorHandlerMiddleware,
     ],
   });
+
+  app.use('/', express.static(path.join(__dirname, 'client')))
+  app.get('/*', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'))
+  })
+
   return app.listen(APP_PORT, () => {
     logger.info(`BackEnd started on ${APP_PORT} port`);
   });

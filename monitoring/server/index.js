@@ -1,5 +1,6 @@
 const path = require("path");
 const http = require("http");
+const { BroadcastChannel } = require("worker_threads");
 
 const Datastore = require("@seald-io/nedb");
 const throttle = require("lodash.throttle");
@@ -112,6 +113,12 @@ const useMonitoring = (app) => {
       `Monitoring server running at http://localhost:${MONITORING_SERVER_PORT}`,
     );
   });
+};
+
+// BroadcastChannel
+let bus = new BroadcastChannel("monitoring");
+bus.onmessage = (event) => {
+  insert(event.data);
 };
 
 module.exports = {

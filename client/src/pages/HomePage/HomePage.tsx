@@ -2,9 +2,27 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router";
 import { Button, Center, Container } from "@mantine/core";
 import { Footer, NearestBooking, Section } from "../../widgets";
+import { useQuery } from "@tanstack/react-query";
+import { operationsByTag } from "../../queries/bookingComponents";
+import { useAuth } from "../../contexts";
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const { accessToken } = useAuth() as { accessToken: string };
+
+  const bookings = useQuery({
+    queryKey: ['clientBookings'],
+    queryFn: () => {
+      return operationsByTag.clients.clientsGetBookings({
+        // @ts-expect-error 123
+        headers: {
+          'authorization': accessToken
+        }
+      })
+    },
+  });
+
+  console.log(bookings);
 
   const handleCreateBooking = useCallback(() => {
     navigate("/create");

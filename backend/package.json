@@ -20,6 +20,7 @@
     "@eslint/js": "9.22.0",
     "@types/basic-auth": "1.1.8",
     "@types/body-parser": "1.19.5",
+    "@types/cors": "^2.8.19",
     "@types/express": "5.0.0",
     "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
