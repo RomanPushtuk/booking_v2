@@ -11,7 +11,10 @@ export class UpdateClientInBookingServiceStep extends Step<
     clientId: string,
     versionId: string,
   ) => Promise<ClientUpdatedDTO>;
-  private _withCompensationCb: (clientId: string, versionId: string) => Promise<ClientUpdatedDTO>;
+  private _withCompensationCb: (
+    clientId: string,
+    versionId: string,
+  ) => Promise<ClientUpdatedDTO>;
 
   constructor(
     invokeCb: (
@@ -19,7 +22,10 @@ export class UpdateClientInBookingServiceStep extends Step<
       clientId: string,
       versionId: string,
     ) => Promise<ClientUpdatedDTO>,
-    withCompensationCb: (clientId: string, versionId: string) => Promise<ClientUpdatedDTO>,
+    withCompensationCb: (
+      clientId: string,
+      versionId: string,
+    ) => Promise<ClientUpdatedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;

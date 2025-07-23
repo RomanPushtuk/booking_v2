@@ -8,3 +8,4 @@ export { saveClient } from "./saveClient";
 export { saveHost } from "./saveHost";
 export { saveUser } from "./saveUser";
 export { getUserById } from "./getUserById";
+export { getAllClients } from "./getAllClients";

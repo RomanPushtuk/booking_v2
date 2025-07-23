@@ -19,6 +19,40 @@ export class ClientService {
     this.revertBooking = this.revertBooking.bind(this);
     this.updateClient = this.updateClient.bind(this);
     this.revertClient = this.revertClient.bind(this);
+    this.getClients = this.getClients.bind(this);
+    this.createClient = this.createClient.bind(this);
+    this.deleteClient = this.deleteClient.bind(this);
+  }
+
+  async createClient(
+    createClientDto: gateway.dtos.CreateClientDTO & { id: string },
+  ) {
+    const client = new Client({
+      ...createClientDto,
+      bookings: [],
+      deleted: false,
+    });
+    this._uow.clientRepository.save(client);
+    return new gateway.dtos.UserCreatedDTO({ id: createClientDto.id });
+  }
+
+  async deleteClient(clientId: string) {
+    const client = this._uow.clientRepository.getById(clientId);
+    if (!client) throw new Error("Client not found");
+    client.setDeleted(true);
+    this._uow.clientRepository.save(client);
+  }
+
+  async getClients() {
+    const clients = this._uow.clientRepository.getAll();
+
+    if (!clients) throw new Error("No clients");
+
+    return clients.map((client) => {
+      return new gateway.dtos.ClientDTO({
+        id: client.getId(),
+      });
+    });
   }
 
   async getClientById(clientId: string) {
@@ -46,14 +80,15 @@ export class ClientService {
 
     if (!bookings) return [];
 
-    return bookings.map((booking) => 
-      new gateway.dtos.BookingDTO({
-        id: booking.getId(),
-        clientId: booking.getClientId(),
-        hostId: booking.getHostId(),
-        fromDateTime: booking.getFromDateTime(),
-        toDateTime: booking.getToDateTime(),
-      })
+    return bookings.map(
+      (booking) =>
+        new gateway.dtos.BookingDTO({
+          id: booking.getId(),
+          clientId: booking.getClientId(),
+          hostId: booking.getHostId(),
+          fromDateTime: booking.getFromDateTime(),
+          toDateTime: booking.getToDateTime(),
+        }),
     );
   }
 
@@ -101,7 +136,7 @@ export class ClientService {
       this._uow.hostRepository.save(host);
 
       this._uow.commit();
-      
+
       return new gateway.dtos.BookingCreatedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
@@ -127,7 +162,7 @@ export class ClientService {
       this._uow.hostRepository.save(host);
 
       this._uow.commit();
-      
+
       return new gateway.dtos.BookingDeletedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
@@ -141,7 +176,7 @@ export class ClientService {
     if (!booking) throw new Error("booking not found");
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
-    
+
     return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
   }
 
@@ -175,7 +210,7 @@ export class ClientService {
       });
 
       this._uow.commit();
-      
+
       return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
     } catch (error) {
       this._uow.rollback();
@@ -200,8 +235,8 @@ export class ClientService {
       throw new Error("version was not removed from version storage");
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
-    
-    return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
+
+    return new gateway.dtos.BookingRevertedDTO({ id: booking.getId() });
   }
 
   async updateClient(
@@ -231,7 +266,7 @@ export class ClientService {
       });
 
       this._uow.commit();
-      
+
       return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
     } catch (error) {
       this._uow.rollback();
@@ -240,8 +275,11 @@ export class ClientService {
   }
 
   async revertClient(clientId: string, versionId: string) {
-    logger.info({ clientId, versionId }, this.constructor.name + " revertClient");
-    
+    logger.info(
+      { clientId, versionId },
+      this.constructor.name + " revertClient",
+    );
+
     const client = this._uow.clientRepository.getById(clientId);
     if (!client) throw new Error("Client not found");
 
@@ -260,7 +298,7 @@ export class ClientService {
 
     Client.update(client, updateData);
     this._uow.clientRepository.save(client);
-    
+
     return new gateway.dtos.ClientUpdatedDTO({ id: clientId });
   }
 }

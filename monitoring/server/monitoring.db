@@ -1,8 +1,10 @@
 {"level":30,"time":1753084081101,"module":"booking","traceId":"c2f33cdc66ee","msg":"ClientRepository getById","_id":"00jkFXcRqUUiPSwL"}
 {"level":30,"time":1753087210086,"module":"booking","msg":"New UnitOfWork instance was created","_id":"1oPI24paT6Dy0blC"}
 {"level":30,"time":1753084081021,"module":"gateway","host":"localhost","userIp":"::1","method":"POST","url":"/auth/login","params":{},"query":{},"protocol":"http","traceId":"90e18c717376","msg":"Received a new request","_id":"7Dyg6lnvZvyZhfL5"}
+{"level":30,"time":1753087229515,"module":"booking","msg":"New UnitOfWork instance was created","_id":"Ci7xOq43yMiiAhMk"}
 {"level":30,"time":1753084057698,"module":"booking","msg":"New UnitOfWork instance was created","_id":"FiQXLi6Kk4fGbY4h"}
 {"level":30,"time":1753087191198,"module":"booking","msg":"New UnitOfWork instance was created","_id":"ZCiSoWGsrMG0eB51"}
+{"level":30,"time":1753087229729,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"bF5xOLa5WrHU4lqt"}
 {"level":30,"time":1753087191399,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"cVOqEcdKIFBmKtHK"}
 {"level":30,"time":1753084081087,"module":"gateway","host":"localhost","userIp":"::1","method":"GET","url":"/clients/me/bookings","params":{},"query":{},"protocol":"http","traceId":"c2f33cdc66ee","msg":"Received a new request","_id":"ctxUc4pcK2brRMzt"}
 {"level":30,"time":1753084081101,"module":"booking","traceId":"c2f33cdc66ee","msg":"UserRepository getById","_id":"egLMzn4mpYl8VgYv"}
@@ -14,5 +16,5 @@
 {"level":30,"time":1753084057921,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"tlAYVEHPM8B8Hg3l"}
 {"level":30,"time":1753084081035,"module":"auth","loginUserDTO":{"login":"NewClient123","password":"StrongPassword123!"},"traceId":"90e18c717376","userIp":"::1","msg":"AuthService login","_id":"uMiawaiiXYmCMOc0"}
 {"level":30,"time":1753084081048,"module":"gateway","traceId":"90e18c717376","msg":"Request has been processed","_id":"y5iWNoGaBRe0bi6Z"}
-{"level":30,"time":1753087229515,"module":"booking","msg":"New UnitOfWork instance was created","_id":"Ci7xOq43yMiiAhMk"}
-{"level":30,"time":1753087229729,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"bF5xOLa5WrHU4lqt"}
+{"level":30,"time":1753107227435,"module":"booking","msg":"New UnitOfWork instance was created","_id":"wWel5GISkvjdJs8S"}
+{"level":30,"time":1753107227658,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"mqC0xJU4ljHdLmQE"}

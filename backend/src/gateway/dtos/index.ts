@@ -25,3 +25,7 @@ export { BookingUpdatedDTO } from "./BookingUpdatedDTO";
 export { BookingDeletedDTO } from "./BookingDeletedDTO";
 export { PublicBookingDTO } from "./PublicBookingDTO";
 export { UserDeletedDTO } from "./UserDeletedDTO";
+export { CreateHostDTO } from "./CreateHostDTO";
+export { CreateClientDTO } from "./CreateClientDTO";
+export { BookingRestoredDTO } from "./BookingRestoredDTO";
+export { BookingRevertedDTO } from "./BookingRevertedDTO";

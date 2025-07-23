@@ -791,12 +791,11 @@ describe("Client Bookings testing", () => {
 
   describe("Client Security Tests - Real Vulnerability Check", () => {
     let clientA: TestUserConfig;
-    let clientB: TestUserConfig; 
+    let clientB: TestUserConfig;
     let hostConfig: TestUserConfig;
     let bookingByClientA: string;
 
     beforeAll(async () => {
-      
       const [client1, client2, host] = await Promise.all([
         createIsolatedUser("CLIENT_SECURITY_A", gateway.enums.Roles.CLIENT),
         createIsolatedUser("CLIENT_SECURITY_B", gateway.enums.Roles.CLIENT),
@@ -807,7 +806,6 @@ describe("Client Bookings testing", () => {
       clientB = client2;
       hostConfig = host;
 
-      
       const bookingDTO: gateway.dtos.CreateClientBookingDTO = {
         hostId: hostConfig.userId,
         ...generateBookingDates(Days.MONDAY, "10:00", "PT1H"),
@@ -819,10 +817,16 @@ describe("Client Bookings testing", () => {
     });
 
     test("Client B cannot read Client A's booking by ID", async () => {
-      const response = await api.clients.getBookingById(bookingByClientA, clientB);
+      const response = await api.clients.getBookingById(
+        bookingByClientA,
+        clientB,
+      );
       expect(response.status).toBe(404);
-      
-      const clientAResponse = await api.clients.getBookingById(bookingByClientA, clientA);
+
+      const clientAResponse = await api.clients.getBookingById(
+        bookingByClientA,
+        clientA,
+      );
       expect(clientAResponse.status).toBe(200);
       expect(clientAResponse.data.id).toBe(bookingByClientA);
     });
@@ -832,19 +836,32 @@ describe("Client Bookings testing", () => {
         ...generateBookingDates(Days.MONDAY, "14:00", "PT1H"),
       };
 
-      const response = await api.clients.updateBooking(bookingByClientA, updateDTO, clientB);
+      const response = await api.clients.updateBooking(
+        bookingByClientA,
+        updateDTO,
+        clientB,
+      );
       expect(response.status).toBe(404);
-      
-      const clientABooking = await api.clients.getBookingById(bookingByClientA, clientA);
+
+      const clientABooking = await api.clients.getBookingById(
+        bookingByClientA,
+        clientA,
+      );
       expect(clientABooking.status).toBe(200);
       expect(clientABooking.data.fromDateTime).not.toContain("14:00");
     });
 
     test("Client B cannot delete Client A's booking", async () => {
-      const response = await api.clients.deleteBooking(bookingByClientA, clientB);
+      const response = await api.clients.deleteBooking(
+        bookingByClientA,
+        clientB,
+      );
       expect(response.status).toBe(404);
-      
-      const clientABooking = await api.clients.getBookingById(bookingByClientA, clientA);
+
+      const clientABooking = await api.clients.getBookingById(
+        bookingByClientA,
+        clientA,
+      );
       expect(clientABooking.status).toBe(200);
       expect(clientABooking.data.id).toBe(bookingByClientA);
     });
@@ -1792,7 +1809,6 @@ describe("Host testing", () => {
         expect(response.status).toBe(200);
       }
     });
-
   });
 
   describe("Host Security Tests - Real Vulnerability Check", () => {
@@ -1825,8 +1841,11 @@ describe("Host testing", () => {
     test("Host B cannot read Host A's booking by ID", async () => {
       const response = await api.hosts.getBookingById(bookingByHostA, hostB);
       expect(response.status).toBe(404);
-      
-      const hostAResponse = await api.hosts.getBookingById(bookingByHostA, hostA);
+
+      const hostAResponse = await api.hosts.getBookingById(
+        bookingByHostA,
+        hostA,
+      );
       expect(hostAResponse.status).toBe(200);
       expect(hostAResponse.data.id).toBe(bookingByHostA);
     });
@@ -1836,10 +1855,17 @@ describe("Host testing", () => {
         ...generateBookingDates(Days.WEDNESDAY, "14:00", "PT1H"),
       };
 
-      const response = await api.hosts.updateBooking(bookingByHostA, updateDTO, hostB);
+      const response = await api.hosts.updateBooking(
+        bookingByHostA,
+        updateDTO,
+        hostB,
+      );
       expect(response.status).toBe(404);
-      
-      const hostABooking = await api.hosts.getBookingById(bookingByHostA, hostA);
+
+      const hostABooking = await api.hosts.getBookingById(
+        bookingByHostA,
+        hostA,
+      );
       expect(hostABooking.status).toBe(200);
       expect(hostABooking.data.fromDateTime).not.toContain("14:00");
     });
@@ -1847,8 +1873,11 @@ describe("Host testing", () => {
     test("Host B cannot delete Host A's booking", async () => {
       const response = await api.hosts.deleteBooking(bookingByHostA, hostB);
       expect(response.status).toBe(404);
-      
-      const hostABooking = await api.hosts.getBookingById(bookingByHostA, hostA);
+
+      const hostABooking = await api.hosts.getBookingById(
+        bookingByHostA,
+        hostA,
+      );
       expect(hostABooking.status).toBe(200);
       expect(hostABooking.data.id).toBe(bookingByHostA);
     });
@@ -1953,7 +1982,6 @@ describe("Host testing", () => {
   });
 
   describe("Time-based Business Logic", () => {
-
     test("Past bookings are never visible in public API", async () => {
       const response = await api.public.getHostBookings(hostConfig.userId);
       expect(response.status).toBe(200);

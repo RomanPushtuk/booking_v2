@@ -2,17 +2,30 @@ import { Step } from "../application";
 import { UpdateHostDTO, HostUpdatedDTO } from "../dtos";
 import { logger } from "../logger";
 
-export class UpdateHostInBookingServiceStep extends Step<UpdateHostDTO, HostUpdatedDTO> {
+export class UpdateHostInBookingServiceStep extends Step<
+  UpdateHostDTO,
+  HostUpdatedDTO
+> {
   private _invokeCb: (
     updateHostDTO: UpdateHostDTO,
     hostId: string,
     versionId: string,
   ) => Promise<HostUpdatedDTO>;
-  private _withCompensationCb: (hostId: string, versionId: string) => Promise<HostUpdatedDTO>;
+  private _withCompensationCb: (
+    hostId: string,
+    versionId: string,
+  ) => Promise<HostUpdatedDTO>;
 
   constructor(
-    invokeCb: (updateHostDTO: UpdateHostDTO, hostId: string, versionId: string) => Promise<HostUpdatedDTO>,
-    withCompensationCb: (hostId: string, versionId: string) => Promise<HostUpdatedDTO>,
+    invokeCb: (
+      updateHostDTO: UpdateHostDTO,
+      hostId: string,
+      versionId: string,
+    ) => Promise<HostUpdatedDTO>,
+    withCompensationCb: (
+      hostId: string,
+      versionId: string,
+    ) => Promise<HostUpdatedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;

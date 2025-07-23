@@ -1,16 +1,16 @@
-import { registerDecorator, ValidationOptions } from 'class-validator';
-import { validateDurationFormat, validateTimeIntervals } from '../utils/date';
+import { registerDecorator, ValidationOptions } from "class-validator";
+import { validateDurationFormat, validateTimeIntervals } from "../utils/date";
 
 export function IsDurationFormat(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string): void {
     registerDecorator({
-      name: 'isDurationFormat',
+      name: "isDurationFormat",
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       validator: {
         validate(value: unknown): boolean {
-          if (typeof value !== 'string') return false;
+          if (typeof value !== "string") return false;
           try {
             validateDurationFormat(value);
             return true;
@@ -29,7 +29,7 @@ export function IsDurationFormat(validationOptions?: ValidationOptions) {
 export function IsValidTimeIntervals(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string): void {
     registerDecorator({
-      name: 'isValidTimeIntervals',
+      name: "isValidTimeIntervals",
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,

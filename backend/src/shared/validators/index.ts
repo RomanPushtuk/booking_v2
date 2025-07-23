@@ -1,1 +1,1 @@
-export * from './time-validators';
+export * from "./time-validators";

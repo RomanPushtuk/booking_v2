@@ -3,13 +3,19 @@ import { UpdateClientDTO, ClientUpdatedDTO } from "../dtos";
 import { logger } from "../logger";
 import { info } from "../imports";
 
-export class UpdateClientInInfoServiceStep extends Step<UpdateClientDTO, ClientUpdatedDTO> {
+export class UpdateClientInInfoServiceStep extends Step<
+  UpdateClientDTO,
+  ClientUpdatedDTO
+> {
   override async invoke(
     updateClientDTO: UpdateClientDTO,
     clientId: string,
   ): Promise<ClientUpdatedDTO> {
     logger.info(this.constructor.name + " invoke");
-    return await info.services.userService.updateClient(updateClientDTO, clientId);
+    return await info.services.userService.updateClient(
+      updateClientDTO,
+      clientId,
+    );
   }
 
   override async withCompensation(

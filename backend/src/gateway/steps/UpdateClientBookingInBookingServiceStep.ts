@@ -22,7 +22,10 @@ export class UpdateClientBookingInBookingServiceStep extends Step<
       bookingId: string,
       versionId: string,
     ) => Promise<BookingUpdatedDTO>,
-    withCompensationCb: (bookingId: string, versionId: string) => Promise<BookingUpdatedDTO>,
+    withCompensationCb: (
+      bookingId: string,
+      versionId: string,
+    ) => Promise<BookingUpdatedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;

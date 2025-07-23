@@ -11,7 +11,10 @@ export class CreateHostBookingInBookingServiceStep extends Step<
     hostId: string,
     bookingId: string,
   ) => Promise<BookingCreatedDTO>;
-  private _withCompensationCb: (bookingId: string, hostId: string) => Promise<BookingCreatedDTO>;
+  private _withCompensationCb: (
+    bookingId: string,
+    hostId: string,
+  ) => Promise<BookingCreatedDTO>;
 
   constructor(
     invokeCb: (
@@ -19,7 +22,10 @@ export class CreateHostBookingInBookingServiceStep extends Step<
       hostId: string,
       bookingId: string,
     ) => Promise<BookingCreatedDTO>,
-    withCompensationCb: (bookingId: string, hostId: string) => Promise<BookingCreatedDTO>,
+    withCompensationCb: (
+      bookingId: string,
+      hostId: string,
+    ) => Promise<BookingCreatedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;

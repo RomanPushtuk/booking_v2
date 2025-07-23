@@ -11,7 +11,9 @@ export class CreateClientBookingInBookingServiceStep extends Step<
     clientId: string,
     bookingId: string,
   ) => Promise<BookingCreatedDTO>;
-  private _withCompensationCb: (bookingId: string) => Promise<BookingCreatedDTO>;
+  private _withCompensationCb: (
+    bookingId: string,
+  ) => Promise<BookingCreatedDTO>;
 
   constructor(
     invokeCb: (

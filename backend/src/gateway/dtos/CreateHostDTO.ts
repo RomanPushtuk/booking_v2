@@ -1,9 +1,11 @@
+import { Type } from "class-transformer";
 import {
-  MaxLength,
-  IsString,
-  ValidateNested,
-  validateSync,
   IsOptional,
+  IsDefined,
+  IsString,
+  IsIn,
+  ValidateNested,
+  MaxLength,
 } from "class-validator";
 import { shared } from "../imports";
 import {
@@ -12,48 +14,47 @@ import {
 } from "../../shared/validators";
 
 class _WorkHour {
+  @IsDefined()
   @IsString()
   from: string;
 
+  @IsDefined()
   @IsString()
   to: string;
 }
 
 class _Info {
+  @IsOptional()
   @IsString()
   firstName: string;
 
+  @IsOptional()
   @IsString()
   lastName: string;
 }
 
-export class HostDTO {
+export class CreateHostDTO {
   @MaxLength(36)
-  id: string;
+  login: string;
+
+  @IsString()
+  password: string;
+
+  @IsIn(Object.values(shared.enums.Roles))
+  role: shared.enums.Roles;
 
   @IsDurationFormat()
   forwardBooking: string;
 
   @IsValidTimeIntervals()
   @ValidateNested({ each: true })
+  @Type(() => _WorkHour)
   workHours: _WorkHour[];
 
-  @IsString({ each: true })
+  @IsIn(Object.values(shared.enums.Days), { each: true })
   workDays: string[];
 
   @ValidateNested()
-  @IsOptional()
-  info?: _Info;
-
-  constructor(data: shared.types.GetInterface<HostDTO>) {
-    this.id = data.id;
-    this.forwardBooking = data.forwardBooking;
-    this.workHours = data.workHours;
-    this.workDays = data.workDays;
-    this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(HostDTO.name, errors);
-  }
+  @Type(() => _Info)
+  info: _Info;
 }

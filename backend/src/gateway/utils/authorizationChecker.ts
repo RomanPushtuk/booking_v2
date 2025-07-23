@@ -21,6 +21,11 @@ const permissionsByRole = {
     shared.enums.Permissions.HOST_UPDATE_BOOKING,
     shared.enums.Permissions.HOST_CANCEL_BOOKING,
   ],
+  [shared.enums.Roles.ADMIN]: [
+    shared.enums.Permissions.ADMIN_READ_CLIENT,
+    shared.enums.Permissions.ADMIN_READ_HOST,
+    shared.enums.Permissions.ADMIN_READ_BOOKING,
+  ],
 } as const;
 
 export const authorizationChecker = async (
