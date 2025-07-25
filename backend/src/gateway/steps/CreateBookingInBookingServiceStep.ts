@@ -13,7 +13,7 @@ export class CreateBookingInBookingServiceStep extends Step<
 
   constructor(
     invokeCb: (bookingDTO: BookingDTO) => Promise<BookingCreatedDTO>,
-    withCompensationCb: (bookingId: string) => Promise<BookingCreatedDTO>,
+    withCompensationCb: (bookingId: string) => Promise<BookingDeletedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;

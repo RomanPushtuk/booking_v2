@@ -4,7 +4,7 @@ import { CreateBookingInBookingServiceStep } from "../steps";
 
 export class CreateBookingSaga extends Saga<
   CreateBookingDTO & { id: string },
-  void
+  unknown
 > {
   constructor(step1: CreateBookingInBookingServiceStep) {
     super();

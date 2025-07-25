@@ -4,123 +4,10 @@
  * @version 1.0.0
  */
 /**
- * @example {"login":"user123","password":"StrongPassword123!"}
- */
-export type AuthUserDTO = {
-  /**
-   * User login
-   */
-  login: string;
-  /**
-   * User password
-   */
-  password: string;
-};
-
-/**
- * @example {"login":"newuser123","password":"StrongPassword123!","role":"CLIENT"}
- */
-export type CreateUserDTO = {
-  /**
-   * User login (max 36 characters)
-   *
-   * @maxLength 36
-   */
-  login: string;
-  /**
-   * Strong password
-   */
-  password: string;
-  /**
-   * User role
-   */
-  role: "CLIENT" | "HOST";
-};
-
-/**
- * @example {"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
- */
-export type UserCreatedDTO = {
-  /**
-   * JWT access token
-   */
-  accessToken: string;
-};
-
-/**
- * @example {"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
- */
-export type UserAuthorizedDTO = {
-  /**
-   * JWT access token
-   */
-  accessToken: string;
-};
-
-/**
- * @example {"id":"client_123","info":{"firstName":"John","lastName":"Doe"}}
- */
-export type ClientDTO = {
-  /**
-   * Client ID
-   */
-  id: string;
-  info?: {
-    /**
-     * Client's first name
-     */
-    firstName?: string;
-    /**
-     * Client's last name
-     */
-    lastName?: string;
-  };
-};
-
-/**
- * @example {"id":"booking_789","clientId":"client_123","hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
- */
-export type BookingDTO = {
-  /**
-   * Booking ID
-   */
-  id: string;
-  /**
-   * Client ID who made the booking
-   */
-  clientId: string;
-  /**
-   * Host ID providing the service
-   */
-  hostId: string;
-  /**
-   * Booking start time (ISO8601)
-   *
-   * @format date-time
-   */
-  fromDateTime: string;
-  /**
-   * Booking end time (ISO8601)
-   *
-   * @format date-time
-   */
-  toDateTime: string;
-  info: {
-    /**
-     * Booking title
-     */
-    title: string;
-    /**
-     * Booking description
-     */
-    description: string;
-  };
-};
-
-/**
  * @example {"hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
  */
-export type CreateClientBookingDTO = {
+export type CreateBookingDTO = {
+  clientId: string;
   /**
    * ID of the host to book
    */
@@ -137,7 +24,7 @@ export type CreateClientBookingDTO = {
    * @format date-time
    */
   toDateTime: string;
-  info: {
+  info?: {
     /**
      * Booking title
      */
@@ -149,28 +36,94 @@ export type CreateClientBookingDTO = {
   };
 };
 
-export type BookingCreatedDTO = {
-  id: string;
+export type CreateClientDTO = {
+  /**
+   * User login (max 36 characters)
+   */
+  login: string;
+  /**
+   * Strong password
+   */
+  password: string;
+  /**
+   * Additional information that can be attached to the client
+   */
+  info?: {
+    /**
+     * Host's first name
+     */
+    firstName: string;
+    /**
+     * Host's last name
+     */
+    lastName: string;
+  };
+};
+
+export type CreateHostDTO = {
+  /**
+   * User login (max 36 characters)
+   */
+  login: string;
+  /**
+   * Strong password
+   */
+  password: string;
+  forwardBooking: string;
+  workHours: {
+    from: string;
+    to: string;
+  }[];
+  workDays: string[];
+  /**
+   * Additional information that can be attached to the host
+   */
+  info?: {
+    /**
+     * Host's first name
+     */
+    firstName: string;
+    /**
+     * Host's last name
+     */
+    lastName: string;
+  };
 };
 
 /**
- * @example {"id":"client_123"}
+ * @example {"hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
  */
-export type ClientDeletedDTO = {
+export type UpdateBookingDTO = {
   /**
-   * ID of deleted client
+   * Id of the client
    */
-  id: string;
-};
-
-/**
- * @example {"id":"client_123"}
- */
-export type ClientUpdatedDTO = {
+  clientId?: string;
   /**
-   * ID of updated client
+   * Id of the host
    */
-  id: string;
+  hostId?: string;
+  /**
+   * Booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime?: string;
+  /**
+   * Booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime?: string;
+  info?: {
+    /**
+     * Booking title
+     */
+    title: string;
+    /**
+     * Booking description
+     */
+    description: string;
+  };
 };
 
 /**
@@ -181,188 +134,12 @@ export type UpdateClientDTO = {
     /**
      * Updated first name
      */
-    firstName?: string;
+    firstName: string;
     /**
      * Updated last name
      */
-    lastName?: string;
+    lastName: string;
   };
-};
-
-export type BookingDeletedDTO = {
-  /**
-   * ID
-   */
-  id: string;
-};
-
-/**
- * @example {"fromDateTime":"2025-06-25T14:00:00Z","toDateTime":"2025-06-25T15:00:00Z","info":{"title":"Updated Consultation","description":"Updated description"}}
- */
-export type UpdateClientBookingDTO = {
-  /**
-   * New booking start time (ISO8601)
-   *
-   * @format date-time
-   */
-  fromDateTime?: string;
-  /**
-   * New booking end time (ISO8601)
-   *
-   * @format date-time
-   */
-  toDateTime?: string;
-  info?: {
-    /**
-     * Updated booking title
-     */
-    title?: string;
-    /**
-     * Updated booking description
-     */
-    description?: string;
-  };
-};
-
-/**
- * @example {"hostId":"host_123","fromDateTime":"2025-06-25T14:00:00Z","toDateTime":"2025-06-25T15:00:00Z","info":{"title":"Updated Consultation","description":"Updated description"}}
- */
-export type UpdateBookingDTO = {
-  /**
-   * ID of the host (only hosts can change this)
-   */
-  hostId?: string;
-  /**
-   * New booking start time (ISO8601)
-   *
-   * @format date-time
-   */
-  fromDateTime?: string;
-  /**
-   * New booking end time (ISO8601)
-   *
-   * @format date-time
-   */
-  toDateTime?: string;
-  info?: {
-    /**
-     * Updated booking title
-     */
-    title?: string;
-    /**
-     * Updated booking description
-     */
-    description?: string;
-  };
-};
-
-export type BookingUpdatedDTO = {
-  /**
-   * ID
-   */
-  id: string;
-};
-
-/**
- * @example {"id":"host_123","forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"],"info":{"firstName":"Dr. John","lastName":"Smith"}}
- */
-export type HostDTO = {
-  /**
-   * ID
-   */
-  id: string;
-  /**
-   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
-   *
-   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
-   * @example P1W
-   */
-  forwardBooking: string;
-  /**
-   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
-   */
-  workHours: {
-    /**
-     * Start time in HH:MM format (24-hour)
-     *
-     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
-     * @example 09:00
-     */
-    from: string;
-    /**
-     * End time in HH:MM format (24-hour). Must be later than 'from' time.
-     *
-     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
-     * @example 18:00
-     */
-    to: string;
-  }[];
-  workDays: (
-    | "MONDAY"
-    | "TUESDAY"
-    | "WEDNESDAY"
-    | "THURSDAY"
-    | "FRIDAY"
-    | "SATURDAY"
-    | "SUNDAY"
-  )[];
-  info?: {
-    /**
-     * Host's first name
-     */
-    firstName?: string;
-    /**
-     * Host's last name
-     */
-    lastName?: string;
-  };
-};
-
-/**
- * @example {"id":"booking_123","clientId":"client_456","hostId":"host_789","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Medical consultation"}}
- */
-export type BookingDTO1 = {
-  /**
-   * Booking ID
-   */
-  id: string;
-  /**
-   * Client ID
-   */
-  clientId: string;
-  /**
-   * Host ID
-   */
-  hostId: string;
-  /**
-   * Booking start time (ISO8601)
-   *
-   * @format date-time
-   */
-  fromDateTime: string;
-  /**
-   * Booking end time (ISO8601)
-   *
-   * @format date-time
-   */
-  toDateTime: string;
-  info: {
-    /**
-     * Booking title
-     */
-    title: string;
-    /**
-     * Booking description
-     */
-    description: string;
-  };
-};
-
-export type HostDeletedDTO = {
-  /**
-   * ID
-   */
-  id: string;
 };
 
 /**
@@ -406,18 +183,359 @@ export type UpdateHostDTO = {
   )[];
 };
 
-export type HostUpdatedDTO = {
+/**
+ * @example {"hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
+ */
+export type BookingDTO = {
   /**
    * ID
    */
   id: string;
+  clientId: string;
+  /**
+   * ID of the host to book
+   */
+  hostId: string;
+  /**
+   * Booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime: string;
+  /**
+   * Booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime: string;
+  info?: {
+    /**
+     * Booking title
+     */
+    title: string;
+    /**
+     * Booking description
+     */
+    description: string;
+  };
 };
 
-export type BookingDeletedDTO2 = {
+/**
+ * @example {"id":"host_123","forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"],"info":{"firstName":"Dr. John","lastName":"Smith"}}
+ */
+export type HostDTO = {
   /**
    * ID
    */
   id: string;
+  /**
+   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+   *
+   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+   * @example P1W
+   */
+  forwardBooking: string;
+  /**
+   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
+   */
+  workHours: {
+    /**
+     * Start time in HH:MM format (24-hour)
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 09:00
+     */
+    from: string;
+    /**
+     * End time in HH:MM format (24-hour). Must be later than 'from' time.
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 18:00
+     */
+    to: string;
+  }[];
+  /**
+   * Business days for the host
+   */
+  workDays: (
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY"
+    | "SATURDAY"
+    | "SUNDAY"
+  )[];
+  /**
+   * Additional information that can be attached to the host
+   */
+  info?: {
+    /**
+     * Host's first name
+     */
+    firstName: string;
+    /**
+     * Host's last name
+     */
+    lastName: string;
+  };
+};
+
+/**
+ * @example {"id":"client_123","info":{"firstName":"John","lastName":"Doe"}}
+ */
+export type ClientDTO = {
+  /**
+   * Client ID
+   */
+  id: string;
+  info?: {
+    /**
+     * Client's first name
+     */
+    firstName?: string;
+    /**
+     * Client's last name
+     */
+    lastName?: string;
+  };
+};
+
+/**
+ * @example {"id":"booking_789","clientId":"client_123","hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
+ */
+export type BookingDTO1 = {
+  /**
+   * Booking ID
+   */
+  id: string;
+  /**
+   * Client ID who made the booking
+   */
+  clientId: string;
+  /**
+   * Host ID providing the service
+   */
+  hostId: string;
+  /**
+   * Booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime: string;
+  /**
+   * Booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime: string;
+  info: {
+    /**
+     * Booking title
+     */
+    title: string;
+    /**
+     * Booking description
+     */
+    description: string;
+  };
+};
+
+/**
+ * @example {"id":"client_123","info":{"firstName":"John","lastName":"Doe"}}
+ */
+export type ClientDTO2 = {
+  /**
+   * Client ID
+   */
+  id: string;
+  info?: {
+    /**
+     * Client's first name
+     */
+    firstName?: string;
+    /**
+     * Client's last name
+     */
+    lastName?: string;
+  };
+};
+
+/**
+ * @example {"hostId":"host_456","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Regular checkup"}}
+ */
+export type CreateBookingDTO3 = {
+  /**
+   * ID of the host to book
+   */
+  hostId: string;
+  /**
+   * Booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime: string;
+  /**
+   * Booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime: string;
+  info: {
+    /**
+     * Booking title
+     */
+    title: string;
+    /**
+     * Booking description
+     */
+    description: string;
+  };
+};
+
+/**
+ * @example {"fromDateTime":"2025-06-25T14:00:00Z","toDateTime":"2025-06-25T15:00:00Z","info":{"title":"Updated Consultation","description":"Updated description"}}
+ */
+export type UpdateBookingDTO4 = {
+  /**
+   * New booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime?: string;
+  /**
+   * New booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime?: string;
+  info?: {
+    /**
+     * Updated booking title
+     */
+    title?: string;
+    /**
+     * Updated booking description
+     */
+    description?: string;
+  };
+};
+
+/**
+ * @example {"info":{"firstName":"John","lastName":"Smith"}}
+ */
+export type UpdateClientDTO5 = {
+  info?: {
+    /**
+     * Updated first name
+     */
+    firstName?: string;
+    /**
+     * Updated last name
+     */
+    lastName?: string;
+  };
+};
+
+/**
+ * @example {"id":"host_123","forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"],"info":{"firstName":"Dr. John","lastName":"Smith"}}
+ */
+export type HostDTO6 = {
+  /**
+   * ID
+   */
+  id: string;
+  /**
+   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+   *
+   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+   * @example P1W
+   */
+  forwardBooking: string;
+  /**
+   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
+   */
+  workHours: {
+    /**
+     * Start time in HH:MM format (24-hour)
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 09:00
+     */
+    from: string;
+    /**
+     * End time in HH:MM format (24-hour). Must be later than 'from' time.
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 18:00
+     */
+    to: string;
+  }[];
+  /**
+   * Business days for the host
+   */
+  workDays: (
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY"
+    | "SATURDAY"
+    | "SUNDAY"
+  )[];
+  /**
+   * Additional information that can be attached to the host
+   */
+  info?: {
+    /**
+     * Host's first name
+     */
+    firstName: string;
+    /**
+     * Host's last name
+     */
+    lastName: string;
+  };
+};
+
+/**
+ * @example {"id":"booking_123","clientId":"client_456","hostId":"host_789","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Consultation","description":"Medical consultation"}}
+ */
+export type BookingDTO7 = {
+  /**
+   * Booking ID
+   */
+  id: string;
+  /**
+   * Client ID
+   */
+  clientId: string;
+  /**
+   * Host ID
+   */
+  hostId: string;
+  /**
+   * Booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime: string;
+  /**
+   * Booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime: string;
+  info: {
+    /**
+     * Booking title
+     */
+    title: string;
+    /**
+     * Booking description
+     */
+    description: string;
+  };
 };
 
 /**
@@ -434,7 +552,7 @@ export type BookingDeletedDTO2 = {
  *
  * @example {"clientId":"client_123","hostId":"ignored_value","fromDateTime":"2025-06-25T10:00:00Z","toDateTime":"2025-06-25T11:00:00Z","info":{"title":"Medical Consultation","description":"General health checkup and consultation"}}
  */
-export type CreateBookingDTO3 = {
+export type CreateBookingDTO8 = {
   /**
    * ID of the client for whom the booking is being created.
    * This client must exist in the system.
@@ -488,31 +606,166 @@ export type CreateBookingDTO3 = {
   };
 };
 
-export type BookingCreatedDTO4 = {
+/**
+ * @example {"hostId":"host_123","fromDateTime":"2025-06-25T14:00:00Z","toDateTime":"2025-06-25T15:00:00Z","info":{"title":"Updated Consultation","description":"Updated description"}}
+ */
+export type UpdateBookingDTO9 = {
+  /**
+   * ID of the host (only hosts can change this)
+   */
+  hostId?: string;
+  /**
+   * New booking start time (ISO8601)
+   *
+   * @format date-time
+   */
+  fromDateTime?: string;
+  /**
+   * New booking end time (ISO8601)
+   *
+   * @format date-time
+   */
+  toDateTime?: string;
+  info?: {
+    /**
+     * Updated booking title
+     */
+    title?: string;
+    /**
+     * Updated booking description
+     */
+    description?: string;
+  };
+};
+
+/**
+ * @example {"forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"]}
+ */
+export type UpdateHostDTO10 = {
+  /**
+   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+   *
+   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+   * @example P1W
+   */
+  forwardBooking?: string;
+  /**
+   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
+   */
+  workHours?: {
+    /**
+     * Start time in HH:MM format (24-hour)
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 09:00
+     */
+    from: string;
+    /**
+     * End time in HH:MM format (24-hour). Must be later than 'from' time.
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 17:00
+     */
+    to: string;
+  }[];
+  workDays?: (
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY"
+    | "SATURDAY"
+    | "SUNDAY"
+  )[];
+};
+
+export type BookingCreatedDTO = {
   /**
    * ID
    */
   id: string;
 };
 
-export type UpdateBookingDTO5 = {
-  clientId: string;
-  date?: string;
-  timeFrom?: string;
-  /**
-   * It can be optional, then the standard recording duration will be 30 min.
-   */
-  timeTo?: string;
-};
-
-export type BookingUpdatedDTO6 = {
+export type BookingUpdatedDTO = {
   /**
    * ID
    */
   id: string;
 };
 
-export type BookingDTO7 = {
+export type BookingDeletedDTO = {
+  /**
+   * ID
+   */
+  id: string;
+};
+
+export type UserCreatedDTO = {
+  /**
+   * ID
+   */
+  id: string;
+};
+
+export type UserUpdatedDTO = {
+  /**
+   * ID
+   */
+  id: string;
+};
+
+export type UsedDeletedDTO = {
+  /**
+   * ID
+   */
+  id: string;
+};
+
+/**
+ * @example {"login":"user123","password":"StrongPassword123!"}
+ */
+export type AuthUserDTO = {
+  /**
+   * User login
+   */
+  login: string;
+  /**
+   * User password
+   */
+  password: string;
+};
+
+/**
+ * @example {"login":"newuser123","password":"StrongPassword123!","role":"CLIENT"}
+ */
+export type CreateUserDTO = {
+  /**
+   * User login (max 36 characters)
+   *
+   * @maxLength 36
+   */
+  login: string;
+  /**
+   * Strong password
+   */
+  password: string;
+  /**
+   * User role
+   */
+  role: "CLIENT" | "HOST";
+};
+
+/**
+ * @example {"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
+ */
+export type UserLoggedInDTO = {
+  /**
+   * JWT access token
+   */
+  accessToken: string;
+};
+
+export type BookingDTO711 = {
   /**
    * ID
    */
@@ -535,6 +788,67 @@ export type BookingDTO7 = {
      * HH:mm
      */
     to: string;
+  };
+};
+
+/**
+ * @example {"id":"host_123","forwardBooking":"P3W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"],"info":{"firstName":"Dr. John","lastName":"Smith"}}
+ */
+export type HostDTO12 = {
+  /**
+   * ID
+   */
+  id: string;
+  /**
+   * How far forward recording is allowed. ISO 8601 duration format (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+   *
+   * @pattern ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+   * @example P1W
+   */
+  forwardBooking: string;
+  /**
+   * Array of working time intervals. Each interval must have valid time format (HH:MM), chronological order (from < to), and no overlapping periods.
+   */
+  workHours: {
+    /**
+     * Start time in HH:MM format (24-hour)
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 09:00
+     */
+    from: string;
+    /**
+     * End time in HH:MM format (24-hour). Must be later than 'from' time.
+     *
+     * @pattern ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+     * @example 18:00
+     */
+    to: string;
+  }[];
+  /**
+   * Business days for the host
+   */
+  workDays: (
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY"
+    | "SATURDAY"
+    | "SUNDAY"
+  )[];
+  /**
+   * Additional information that can be attached to the host
+   */
+  info?: {
+    /**
+     * Host's first name
+     */
+    firstName: string;
+    /**
+     * Host's last name
+     */
+    lastName: string;
   };
 };
 

@@ -9,7 +9,7 @@ import type * as Schemas from "./bookingSchemas";
 
 export type PublicGetHostsError = Fetcher.ErrorWrapper<undefined>;
 
-export type PublicGetHostsResponse = Schemas.HostDTO[];
+export type PublicGetHostsResponse = Schemas.HostDTO12[];
 
 /**
  * Get list of all available hosts
@@ -42,7 +42,7 @@ export const publicGetHostById = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.HostDTO,
+    Schemas.HostDTO12,
     PublicGetHostByIdError,
     undefined,
     {},
@@ -68,7 +68,7 @@ export type PublicGetHostBookingsQueryParams = {
 
 export type PublicGetHostBookingsError = Fetcher.ErrorWrapper<undefined>;
 
-export type PublicGetHostBookingsResponse = Schemas.BookingDTO7[];
+export type PublicGetHostBookingsResponse = Schemas.BookingDTO711[];
 
 export type PublicGetHostBookingsVariables = {
   pathParams: PublicGetHostBookingsPathParams;
@@ -105,7 +105,7 @@ export const authRegister = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.UserCreatedDTO,
+    Schemas.UserLoggedInDTO,
     AuthRegisterError,
     Schemas.CreateUserDTO,
     {},
@@ -140,47 +140,52 @@ export const authLogin = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.UserAuthorizedDTO,
+    Schemas.UserLoggedInDTO,
     AuthLoginError,
     Schemas.AuthUserDTO,
     {},
     {},
     {}
-  >({ url: "/api/auth/login", method: "post", ...variables, signal });
+  >({ url: "/auth/login", method: "post", ...variables, signal });
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
-    status: 401;
-    payload: {
-      /**
-       * @example Unauthorized
-       */
-      error?: string;
-    };
-  }
+      status: 401;
+      payload: {
+        /**
+         * @example Unauthorized
+         */
+        error?: string;
+      };
+    }
   | {
-    status: 403;
-    payload: {
-      /**
-       * @example Access denied
-       */
-      error?: string;
-    };
-  }
+      status: 403;
+      payload: {
+        /**
+         * @example Access denied
+         */
+        error?: string;
+      };
+    }
 >;
 
 /**
  * Get current client information
  */
 export const clientsGetClient = (signal?: AbortSignal) =>
-  bookingFetch<Schemas.ClientDTO, ClientsGetClientError, undefined, {}, {}, {}>(
-    { url: "/clients/me", method: "get", signal },
-  );
+  bookingFetch<
+    Schemas.ClientDTO2,
+    ClientsGetClientError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/clients/me", method: "get", signal });
 
 export type ClientsUpdateClientError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsUpdateClientVariables = {
-  body?: Schemas.UpdateClientDTO;
+  body?: Schemas.UpdateClientDTO5;
 };
 
 /**
@@ -191,9 +196,9 @@ export const clientsUpdateClient = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.ClientUpdatedDTO,
+    Schemas.UserUpdatedDTO,
     ClientsUpdateClientError,
-    Schemas.UpdateClientDTO,
+    Schemas.UpdateClientDTO5,
     {},
     {},
     {}
@@ -206,7 +211,7 @@ export type ClientsDeleteClientError = Fetcher.ErrorWrapper<undefined>;
  */
 export const clientsDeleteClient = (signal?: AbortSignal) =>
   bookingFetch<
-    Schemas.ClientDeletedDTO,
+    Schemas.UsedDeletedDTO,
     ClientsDeleteClientError,
     undefined,
     {},
@@ -243,7 +248,7 @@ export type ClientsGetBookingsQueryParams = {
 
 export type ClientsGetBookingsError = Fetcher.ErrorWrapper<undefined>;
 
-export type ClientsGetBookingsResponse = Schemas.BookingDTO[];
+export type ClientsGetBookingsResponse = Schemas.BookingDTO1[];
 
 export type ClientsGetBookingsVariables = {
   queryParams?: ClientsGetBookingsQueryParams;
@@ -263,12 +268,12 @@ export const clientsGetBookings = (
     {},
     ClientsGetBookingsQueryParams,
     {}
-  >({ url: "/api/clients/me/bookings", method: "get", ...variables, signal });
+  >({ url: "/clients/me/bookings", method: "get", ...variables, signal });
 
 export type ClientsCreateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsCreateBookingVariables = {
-  body: Schemas.CreateClientBookingDTO;
+  body: Schemas.CreateBookingDTO3;
 };
 
 /**
@@ -281,7 +286,7 @@ export const clientsCreateBooking = (
   bookingFetch<
     Schemas.BookingCreatedDTO,
     ClientsCreateBookingError,
-    Schemas.CreateClientBookingDTO,
+    Schemas.CreateBookingDTO3,
     {},
     {},
     {}
@@ -308,7 +313,7 @@ export const clientsGetBookingById = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingDTO,
+    Schemas.BookingDTO1,
     ClientsGetBookingByIdError,
     undefined,
     {},
@@ -331,7 +336,7 @@ export type ClientsUpdateBookingPathParams = {
 export type ClientsUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsUpdateBookingVariables = {
-  body?: Schemas.UpdateClientBookingDTO;
+  body?: Schemas.UpdateBookingDTO4;
   pathParams: ClientsUpdateBookingPathParams;
 };
 
@@ -345,7 +350,7 @@ export const clientsUpdateBooking = (
   bookingFetch<
     Schemas.BookingUpdatedDTO,
     ClientsUpdateBookingError,
-    Schemas.UpdateClientBookingDTO,
+    Schemas.UpdateBookingDTO4,
     {},
     {},
     ClientsUpdateBookingPathParams
@@ -377,7 +382,7 @@ export const clientsCancelBooking = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingDeletedDTO,
+    Schemas.BookingUpdatedDTO,
     ClientsCancelBookingError,
     undefined,
     {},
@@ -396,7 +401,7 @@ export type HostsGetMeError = Fetcher.ErrorWrapper<undefined>;
  * Get information about the current host
  */
 export const hostsGetMe = (signal?: AbortSignal) =>
-  bookingFetch<Schemas.HostDTO, HostsGetMeError, undefined, {}, {}, {}>({
+  bookingFetch<Schemas.HostDTO6, HostsGetMeError, undefined, {}, {}, {}>({
     url: "/hosts/me",
     method: "get",
     signal,
@@ -409,7 +414,7 @@ export type HostsDeleteMeError = Fetcher.ErrorWrapper<undefined>;
  */
 export const hostsDeleteMe = (signal?: AbortSignal) =>
   bookingFetch<
-    Schemas.HostDeletedDTO,
+    Schemas.UsedDeletedDTO,
     HostsDeleteMeError,
     undefined,
     {},
@@ -420,7 +425,7 @@ export const hostsDeleteMe = (signal?: AbortSignal) =>
 export type HostsUpdateMeError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsUpdateMeVariables = {
-  body?: Schemas.UpdateHostDTO;
+  body?: Schemas.UpdateHostDTO10;
 };
 
 /**
@@ -431,9 +436,9 @@ export const hostsUpdateMe = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.HostUpdatedDTO,
+    Schemas.UserUpdatedDTO,
     HostsUpdateMeError,
-    Schemas.UpdateHostDTO,
+    Schemas.UpdateHostDTO10,
     {},
     {},
     {}
@@ -442,7 +447,7 @@ export const hostsUpdateMe = (
 export type HostsCreateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsCreateBookingVariables = {
-  body: Schemas.CreateBookingDTO3;
+  body: Schemas.CreateBookingDTO8;
 };
 
 /**
@@ -465,9 +470,9 @@ export const hostsCreateBooking = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingCreatedDTO4,
+    Schemas.BookingCreatedDTO,
     HostsCreateBookingError,
-    Schemas.CreateBookingDTO3,
+    Schemas.CreateBookingDTO8,
     {},
     {},
     {}
@@ -506,7 +511,7 @@ export type HostsGetMyBookingsQueryParams = {
 
 export type HostsGetMyBookingsError = Fetcher.ErrorWrapper<undefined>;
 
-export type HostsGetMyBookingsResponse = Schemas.BookingDTO1[];
+export type HostsGetMyBookingsResponse = Schemas.BookingDTO7[];
 
 export type HostsGetMyBookingsVariables = {
   queryParams?: HostsGetMyBookingsQueryParams;
@@ -549,7 +554,7 @@ export const hostsGetBookingById = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingDTO1,
+    Schemas.BookingDTO7,
     HostsGetBookingByIdError,
     undefined,
     {},
@@ -583,7 +588,7 @@ export const hostsDeleteBooking = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingDeletedDTO2,
+    Schemas.BookingDeletedDTO,
     HostsDeleteBookingError,
     undefined,
     {},
@@ -606,7 +611,7 @@ export type HostsUpdateBookingPathParams = {
 export type HostsUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsUpdateBookingVariables = {
-  body?: Schemas.UpdateBookingDTO;
+  body?: Schemas.UpdateBookingDTO9;
   pathParams: HostsUpdateBookingPathParams;
 };
 
@@ -618,9 +623,9 @@ export const hostsUpdateBooking = (
   signal?: AbortSignal,
 ) =>
   bookingFetch<
-    Schemas.BookingUpdatedDTO3,
+    Schemas.BookingDeletedDTO,
     HostsUpdateBookingError,
-    Schemas.UpdateBookingDTO,
+    Schemas.UpdateBookingDTO9,
     {},
     {},
     HostsUpdateBookingPathParams
@@ -669,6 +674,385 @@ export const hostsUpdateSettings = (
     {}
   >({ url: "/hosts/me/settings", method: "patch", ...variables, signal });
 
+export type AdminGetClientsError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminGetClientsResponse = Schemas.ClientDTO[];
+
+/**
+ * Allows you to get all the clients created in the system
+ */
+export const adminGetClients = (signal?: AbortSignal) =>
+  bookingFetch<
+    AdminGetClientsResponse,
+    AdminGetClientsError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/admin/clients", method: "get", signal });
+
+export type AdminCreateNewClientError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminCreateNewClientVariables = {
+  body: Schemas.CreateClientDTO;
+};
+
+/**
+ * Allows you to create a new client
+ */
+export const adminCreateNewClient = (
+  variables: AdminCreateNewClientVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.UserCreatedDTO,
+    AdminCreateNewClientError,
+    Schemas.CreateClientDTO,
+    {},
+    {},
+    {}
+  >({ url: "/admin/clients", method: "post", ...variables, signal });
+
+export type AdminGetClientByIdPathParams = {
+  clientId: string;
+};
+
+export type AdminGetClientByIdError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminGetClientByIdVariables = {
+  pathParams: AdminGetClientByIdPathParams;
+};
+
+/**
+ * Allows you to get a specific client by his id
+ */
+export const adminGetClientById = (
+  variables: AdminGetClientByIdVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.ClientDTO,
+    AdminGetClientByIdError,
+    undefined,
+    {},
+    {},
+    AdminGetClientByIdPathParams
+  >({ url: "/admin/client/{clientId}", method: "get", ...variables, signal });
+
+export type AdminUpdateClietnPathParams = {
+  clientId: string;
+};
+
+export type AdminUpdateClietnError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminUpdateClietnVariables = {
+  body?: Schemas.UpdateClientDTO5;
+  pathParams: AdminUpdateClietnPathParams;
+};
+
+/**
+ * Allows you to update the client
+ */
+export const adminUpdateClietn = (
+  variables: AdminUpdateClietnVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.UserUpdatedDTO,
+    AdminUpdateClietnError,
+    Schemas.UpdateClientDTO5,
+    {},
+    {},
+    AdminUpdateClietnPathParams
+  >({
+    url: "/admin/clients/{clientId}",
+    method: "patch",
+    ...variables,
+    signal,
+  });
+
+export type AdminDeleteClientPathParams = {
+  clientId: string;
+};
+
+export type AdminDeleteClientError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminDeleteClientVariables = {
+  pathParams: AdminDeleteClientPathParams;
+};
+
+/**
+ * Allows you to delete a client
+ */
+export const adminDeleteClient = (
+  variables: AdminDeleteClientVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.UsedDeletedDTO,
+    AdminDeleteClientError,
+    {},
+    {},
+    {},
+    AdminDeleteClientPathParams
+  >({
+    url: "/admin/clients/{clientId}",
+    method: "delete",
+    ...variables,
+    signal,
+  });
+
+export type AdminGetHostsError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminGetHostsResponse = Schemas.HostDTO[];
+
+/**
+ * Allows you to get all the hosts
+ */
+export const adminGetHosts = (signal?: AbortSignal) =>
+  bookingFetch<
+    AdminGetHostsResponse,
+    AdminGetHostsError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/admin/hosts", method: "get", signal });
+
+export type AdminCreateNewHostError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminCreateNewHostVariables = {
+  body: Schemas.CreateHostDTO;
+};
+
+/**
+ * Allows you to create a new host
+ */
+export const adminCreateNewHost = (
+  variables: AdminCreateNewHostVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.UserCreatedDTO,
+    AdminCreateNewHostError,
+    Schemas.CreateHostDTO,
+    {},
+    {},
+    {}
+  >({ url: "/admin/hosts", method: "post", ...variables, signal });
+
+export type AdminGetHostPathParams = {
+  hostId: string;
+};
+
+export type AdminGetHostError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminGetHostVariables = {
+  pathParams: AdminGetHostPathParams;
+};
+
+/**
+ * Allows you to get a host by its Id
+ */
+export const adminGetHost = (
+  variables: AdminGetHostVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.HostDTO,
+    AdminGetHostError,
+    undefined,
+    {},
+    {},
+    AdminGetHostPathParams
+  >({ url: "/admin/hosts/{hostId}", method: "get", ...variables, signal });
+
+export type AdminUpdateHostPathParams = {
+  hostId: string;
+};
+
+export type AdminUpdateHostError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminUpdateHostVariables = {
+  body?: Schemas.UpdateHostDTO10;
+  pathParams: AdminUpdateHostPathParams;
+};
+
+/**
+ * Allows you to update the host
+ */
+export const adminUpdateHost = (
+  variables: AdminUpdateHostVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.UserUpdatedDTO,
+    AdminUpdateHostError,
+    Schemas.UpdateHostDTO10,
+    {},
+    {},
+    AdminUpdateHostPathParams
+  >({ url: "/admin/hosts/{hostId}", method: "patch", ...variables, signal });
+
+export type AdminDeleteHostPathParams = {
+  hostId: string;
+};
+
+export type AdminDeleteHostError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminDeleteHostVariables = {
+  pathParams: AdminDeleteHostPathParams;
+};
+
+/**
+ * Allows you to delete a host
+ */
+export const adminDeleteHost = (
+  variables: AdminDeleteHostVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.UsedDeletedDTO,
+    AdminDeleteHostError,
+    undefined,
+    {},
+    {},
+    AdminDeleteHostPathParams
+  >({ url: "/admin/hosts/{hostId}", method: "delete", ...variables, signal });
+
+export type AdminGetBookingsError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminGetBookingsResponse = Schemas.BookingDTO[];
+
+/**
+ * Allows you to get all the booklets created in the system
+ */
+export const adminGetBookings = (signal?: AbortSignal) =>
+  bookingFetch<
+    AdminGetBookingsResponse,
+    AdminGetBookingsError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/admin/bookings", method: "get", signal });
+
+export type AdminCreateNewBookingError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminCreateNewBookingVariables = {
+  body: Schemas.CreateBookingDTO;
+};
+
+/**
+ * Create a new booking
+ */
+export const adminCreateNewBooking = (
+  variables: AdminCreateNewBookingVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.BookingCreatedDTO,
+    AdminCreateNewBookingError,
+    Schemas.CreateBookingDTO,
+    {},
+    {},
+    {}
+  >({ url: "/admin/bookings", method: "post", ...variables, signal });
+
+export type AdminGetBookingPathParams = {
+  bookingId: string;
+};
+
+export type AdminGetBookingError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminGetBookingVariables = {
+  pathParams: AdminGetBookingPathParams;
+};
+
+/**
+ * Get a booking by his Id
+ */
+export const adminGetBooking = (
+  variables: AdminGetBookingVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.BookingDTO,
+    AdminGetBookingError,
+    undefined,
+    {},
+    {},
+    AdminGetBookingPathParams
+  >({
+    url: "/admin/bookings/{bookingId}",
+    method: "get",
+    ...variables,
+    signal,
+  });
+
+export type AdminDeleteBookingPathParams = {
+  bookingId: string;
+};
+
+export type AdminDeleteBookingError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminDeleteBookingVariables = {
+  pathParams: AdminDeleteBookingPathParams;
+};
+
+/**
+ * Allows you to delete a booking by its Id
+ */
+export const adminDeleteBooking = (
+  variables: AdminDeleteBookingVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.BookingDeletedDTO,
+    AdminDeleteBookingError,
+    undefined,
+    {},
+    {},
+    AdminDeleteBookingPathParams
+  >({
+    url: "/admin/bookings/{bookingId}",
+    method: "delete",
+    ...variables,
+    signal,
+  });
+
+export type AdminUpdateBookingPathParams = {
+  bookingId: string;
+};
+
+export type AdminUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminUpdateBookingVariables = {
+  body?: Schemas.UpdateBookingDTO;
+  pathParams: AdminUpdateBookingPathParams;
+};
+
+/**
+ * Allows you to update the booking
+ */
+export const adminUpdateBooking = (
+  variables: AdminUpdateBookingVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.BookingUpdatedDTO,
+    AdminUpdateBookingError,
+    Schemas.UpdateBookingDTO,
+    {},
+    {},
+    AdminUpdateBookingPathParams
+  >({
+    url: "/admin/bookins/{bookingId}",
+    method: "patch",
+    ...variables,
+    signal,
+  });
+
 export const operationsByTag = {
   public: { publicGetHosts, publicGetHostById, publicGetHostBookings },
   auth: { authRegister, authLogin },
@@ -693,5 +1077,22 @@ export const operationsByTag = {
     hostsUpdateBooking,
     hostsGetHostSettings,
     hostsUpdateSettings,
+  },
+  admin: {
+    adminGetClients,
+    adminCreateNewClient,
+    adminGetClientById,
+    adminUpdateClietn,
+    adminDeleteClient,
+    adminGetHosts,
+    adminCreateNewHost,
+    adminGetHost,
+    adminUpdateHost,
+    adminDeleteHost,
+    adminGetBookings,
+    adminCreateNewBooking,
+    adminGetBooking,
+    adminDeleteBooking,
+    adminUpdateBooking,
   },
 };

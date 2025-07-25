@@ -27,7 +27,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/HostDTO'
+                  $ref: '#/components/schemas/HostDTO12'
               examples:
                 '1':
                   summary: Success
@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDTO'
+                $ref: '#/components/schemas/HostDTO12'
               example:
                 id: QfgtBGhO
                 forwardBooking: P3W
@@ -135,7 +135,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO7'
+                  $ref: '#/components/schemas/BookingDTO711'
               examples:
                 '1':
                   summary: Success
@@ -182,7 +182,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Auth_UserCreatedDTO'
+                $ref: '#/components/schemas/UserLoggedInDTO'
           headers: {}
       security: []
   /auth/login:
@@ -219,11 +219,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserAuthorizedDTO'
+                $ref: '#/components/schemas/UserLoggedInDTO'
               example:
                 access_token: >-
                   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaWVudF90ZXN0Iiwicm9sZSI6IkNMSUVOVCIsImlhdCI6MTY0MDk5NTIwMH0.signature
-                message: Login successful
           headers: {}
         '401':
           description: Invalid credentials
@@ -253,7 +252,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDTO'
+                $ref: '#/components/schemas/ClientDTO2'
               example:
                 id: client_123
                 info:
@@ -298,7 +297,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClientDTO'
+              $ref: '#/components/schemas/UpdateClientDTO5'
             example:
               info:
                 firstName: John
@@ -309,7 +308,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientUpdatedDTO'
+                $ref: '#/components/schemas/UserUpdatedDTO'
               example:
                 id: client_123
           headers: {}
@@ -338,7 +337,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDeletedDTO'
+                $ref: '#/components/schemas/UsedDeletedDTO'
               example:
                 id: client_123
           headers: {}
@@ -402,7 +401,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO'
+                  $ref: '#/components/schemas/BookingDTO1'
               example:
                 id: booking_789
                 clientId: client_123
@@ -433,7 +432,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateClientBookingDTO'
+              $ref: '#/components/schemas/CreateBookingDTO3'
             example:
               hostId: host_456
               fromDateTime: '2025-06-25T10:00:00Z'
@@ -487,7 +486,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDTO'
+                $ref: '#/components/schemas/BookingDTO1'
               example:
                 id: booking_789
                 clientId: client_123
@@ -528,7 +527,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClientBookingDTO'
+              $ref: '#/components/schemas/UpdateBookingDTO4'
             example:
               fromDateTime: '2025-06-25T14:00:00Z'
               toDateTime: '2025-06-25T15:00:00Z'
@@ -583,7 +582,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDeletedDTO'
+                $ref: '#/components/schemas/BookingUpdatedDTO'
               example:
                 id: booking_789
           headers: {}
@@ -613,7 +612,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDTO'
+                $ref: '#/components/schemas/HostDTO6'
               example:
                 id: qMzpUi3C
                 forwardBooking: P3W
@@ -646,7 +645,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDeletedDTO'
+                $ref: '#/components/schemas/UsedDeletedDTO'
           headers: {}
         '401':
           description: Unauthorized
@@ -668,7 +667,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateHostDTO'
+              $ref: '#/components/schemas/UpdateHostDTO10'
             example:
               forwardBooking: P3W
               workHours:
@@ -688,7 +687,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostUpdatedDTO'
+                $ref: '#/components/schemas/UserUpdatedDTO'
           headers: {}
         '400':
           description: >-
@@ -743,7 +742,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBookingDTO3'
+              $ref: '#/components/schemas/CreateBookingDTO8'
             example:
               clientId: client_123
               hostId: ignored_will_be_overridden
@@ -758,7 +757,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingCreatedDTO4'
+                $ref: '#/components/schemas/BookingCreatedDTO'
               example:
                 id: booking_456
           headers: {}
@@ -841,7 +840,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO1'
+                  $ref: '#/components/schemas/BookingDTO7'
           headers: {}
         '401':
           description: Unauthorized
@@ -873,7 +872,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDTO1'
+                $ref: '#/components/schemas/BookingDTO7'
               example:
                 id: booking_123
                 clientId: client_456
@@ -916,7 +915,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDeletedDTO2'
+                $ref: '#/components/schemas/BookingDeletedDTO'
               example:
                 id: booking_123
           headers: {}
@@ -950,7 +949,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBookingDTO'
+              $ref: '#/components/schemas/UpdateBookingDTO9'
             example:
               hostId: host_123
               fromDateTime: '2025-06-25T14:00:00Z'
@@ -964,8 +963,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties: {}
+                $ref: '#/components/schemas/BookingDeletedDTO'
               example:
                 id: booking_123
           headers: {}
@@ -1046,7 +1044,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/ClientDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     post:
       summary: CreateClient
       deprecated: false
@@ -1059,7 +1058,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Clients_CreateClientDTO'
+              $ref: '#/components/schemas/CreateClientDTO'
             examples: {}
       responses:
         '200':
@@ -1067,9 +1066,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Auth_UserCreatedDTO'
+                $ref: '#/components/schemas/UserCreatedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/client/{clientId}:
     get:
       summary: GetClientById
@@ -1093,7 +1093,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClientDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/clients/{clientId}:
     patch:
       summary: UpdateClient
@@ -1113,7 +1114,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClientDTO'
+              $ref: '#/components/schemas/UpdateClientDTO5'
             examples: {}
       responses:
         '200':
@@ -1121,9 +1122,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientUpdatedDTO'
+                $ref: '#/components/schemas/UserUpdatedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     delete:
       summary: DeleteClient
       deprecated: false
@@ -1138,15 +1140,23 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+            examples: {}
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDeletedDTO'
+                $ref: '#/components/schemas/UsedDeletedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/hosts:
     get:
       summary: GetHosts
@@ -1166,7 +1176,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/HostDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     post:
       summary: CreateHost
       deprecated: false
@@ -1179,7 +1190,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Hosts_CreateHostDTO'
+              $ref: '#/components/schemas/CreateHostDTO'
             examples: {}
       responses:
         '201':
@@ -1187,9 +1198,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Auth_UserCreatedDTO'
+                $ref: '#/components/schemas/UserCreatedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/hosts/{hostId}:
     get:
       summary: GetHostById
@@ -1213,7 +1225,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/HostDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     patch:
       summary: UpdateHost
       deprecated: false
@@ -1232,7 +1245,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateHostDTO'
+              $ref: '#/components/schemas/UpdateHostDTO10'
             examples: {}
       responses:
         '200':
@@ -1240,9 +1253,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostUpdatedDTO'
+                $ref: '#/components/schemas/UserUpdatedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     delete:
       summary: DeleteHost
       deprecated: false
@@ -1263,9 +1277,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDeletedDTO'
+                $ref: '#/components/schemas/UsedDeletedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/bookings:
     get:
       summary: GetBookings
@@ -1283,9 +1298,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Bookings_BookingDTO'
+                  $ref: '#/components/schemas/BookingDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     post:
       summary: CreateBooking
       deprecated: false
@@ -1298,7 +1314,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Bookings_CreateBookingDTO'
+              $ref: '#/components/schemas/CreateBookingDTO'
             examples: {}
       responses:
         '200':
@@ -1306,9 +1322,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bookings_BookingCreatedDTO'
+                $ref: '#/components/schemas/BookingCreatedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/bookings/{bookingId}:
     get:
       summary: GetBookingById
@@ -1330,9 +1347,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bookings_BookingDTO'
+                $ref: '#/components/schemas/BookingDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
     delete:
       summary: DeleteBooking
       deprecated: false
@@ -1353,9 +1371,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bookings_BookingDeletedDTO'
+                $ref: '#/components/schemas/BookingDeletedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
   /admin/bookins/{bookingId}:
     patch:
       summary: UpdateBooking
@@ -1375,7 +1394,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Bookings_UpdateBookingDTO'
+              $ref: '#/components/schemas/UpdateBookingDTO'
             examples: {}
       responses:
         '200':
@@ -1383,25 +1402,89 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bookings_BookingUpdatedDTO'
+                $ref: '#/components/schemas/BookingUpdatedDTO'
           headers: {}
-      security: []
+      security:
+        - bearerAuth: []
 webhooks: {}
 components:
   schemas:
-    Clients_CreateClientDTO:
+    CreateBookingDTO:
+      type: object
+      properties:
+        clientId:
+          type: string
+        hostId:
+          type: string
+          description: ID of the host to book
+        fromDateTime:
+          type: string
+          format: date-time
+          description: Booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: Booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Booking title
+            description:
+              type: string
+              description: Booking description
+          required:
+            - title
+            - description
+      required:
+        - hostId
+        - fromDateTime
+        - toDateTime
+        - clientId
+      title: Admin_CreateBookingDTO
+      examples:
+        - hostId: host_456
+          fromDateTime: '2025-06-25T10:00:00Z'
+          toDateTime: '2025-06-25T11:00:00Z'
+          info:
+            title: Consultation
+            description: Regular checkup
+    CreateClientDTO:
       type: object
       properties:
         login:
           type: string
+          description: User login (max 36 characters)
         password:
           type: string
+          description: Strong password
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Host's first name
+            lastName:
+              type: string
+              description: Host's last name
+          required:
+            - firstName
+            - lastName
+          description: Additional information that can be attached to the client
       required:
         - login
         - password
-    Hosts_CreateHostDTO:
+      title: Admin_CreateClientDTO
+    CreateHostDTO:
       type: object
       properties:
+        login:
+          type: string
+          description: User login (max 36 characters)
+        password:
+          type: string
+          description: Strong password
         forwardBooking:
           type: string
         workHours:
@@ -1420,247 +1503,35 @@ components:
           type: array
           items:
             type: string
-      required:
-        - forwardBooking
-        - workHours
-        - workDays
-    Bookings_CreateBookingDTO:
-      type: object
-      properties:
-        clientId:
-          type: string
-        hostId:
-          type: string
-          description: ID of the host to book
-        fromDateTime:
-          type: string
-          format: date-time
-          description: Booking start time (ISO8601)
-        toDateTime:
-          type: string
-          format: date-time
-          description: Booking end time (ISO8601)
-        info:
-          type: object
-          properties:
-            title:
-              type: string
-              description: Booking title
-            description:
-              type: string
-              description: Booking description
-          required:
-            - title
-            - description
-      required:
-        - hostId
-        - fromDateTime
-        - toDateTime
-        - clientId
-      title: Bookings_CreateBookingDTO
-      examples:
-        - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
-          info:
-            title: Consultation
-            description: Regular checkup
-    Bookings_BookingDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        clientId:
-          type: string
-        hostId:
-          type: string
-          description: ID of the host to book
-        fromDateTime:
-          type: string
-          format: date-time
-          description: Booking start time (ISO8601)
-        toDateTime:
-          type: string
-          format: date-time
-          description: Booking end time (ISO8601)
-        info:
-          type: object
-          properties:
-            title:
-              type: string
-              description: Booking title
-            description:
-              type: string
-              description: Booking description
-          required:
-            - title
-            - description
-      required:
-        - hostId
-        - fromDateTime
-        - toDateTime
-        - clientId
-        - id
-      title: Bookings_BookingDTO
-      examples:
-        - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
-          info:
-            title: Consultation
-            description: Regular checkup
-    Bookings_UpdateBookingDTO:
-      type: object
-      properties:
-        clientId:
-          type: string
-        hostId:
-          type: string
-          description: ID of the host to book
-        fromDateTime:
-          type: string
-          format: date-time
-          description: Booking start time (ISO8601)
-        toDateTime:
-          type: string
-          format: date-time
-          description: Booking end time (ISO8601)
-        info:
-          type: object
-          properties:
-            title:
-              type: string
-              description: Booking title
-            description:
-              type: string
-              description: Booking description
-          required:
-            - title
-            - description
-      title: Bookings_UpdateBookingDTO
-      examples:
-        - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
-          info:
-            title: Consultation
-            description: Regular checkup
-    Bookings_BookingUpdatedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      required:
-        - id
-      title: Bookings_BookingUpdatedDTO
-    Bookings_BookingCreatedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      required:
-        - id
-      title: Bookings_BookingCreatedDTO
-    Bookings_BookingDeletedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      required:
-        - id
-      title: Bookings_BookingDeletedDTO
-    AuthUserDTO:
-      type: object
-      properties:
-        login:
-          type: string
-          description: User login
-        password:
-          type: string
-          description: User password
-      required:
-        - login
-        - password
-      title: Auth_LogInUserDTO
-      examples:
-        - login: user123
-          password: StrongPassword123!
-    CreateUserDTO:
-      type: object
-      properties:
-        login:
-          type: string
-          description: User login (max 36 characters)
-          maxLength: 36
-        password:
-          type: string
-          description: Strong password
-        role:
-          type: string
-          enum:
-            - CLIENT
-            - HOST
-          description: User role
-      required:
-        - login
-        - password
-        - role
-      title: Auth_CreateUserDTO
-      examples:
-        - login: newuser123
-          password: StrongPassword123!
-          role: CLIENT
-    Auth_UserCreatedDTO: &ref_0
-      type: object
-      properties:
-        accessToken:
-          type: string
-          description: JWT access token
-      required:
-        - accessToken
-      title: Auth_UserLoggedInDTO
-      examples:
-        - accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-    UserAuthorizedDTO: *ref_0
-    ClientDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Client ID
         info:
           type: object
           properties:
             firstName:
               type: string
-              description: Client's first name
+              description: Host's first name
             lastName:
               type: string
-              description: Client's last name
+              description: Host's last name
+          required:
+            - firstName
+            - lastName
+          description: Additional information that can be attached to the host
       required:
-        - id
-      title: Clients_ClientDTO
-      examples:
-        - id: client_123
-          info:
-            firstName: John
-            lastName: Doe
-    BookingDTO:
+        - forwardBooking
+        - workHours
+        - workDays
+        - login
+        - password
+      title: Admin_CreateHostDTO
+    UpdateBookingDTO:
       type: object
       properties:
-        id:
-          type: string
-          description: Booking ID
         clientId:
           type: string
-          description: Client ID who made the booking
+          description: Id of the client
         hostId:
           type: string
-          description: Host ID providing the service
+          description: Id of the host
         fromDateTime:
           type: string
           format: date-time
@@ -1681,55 +1552,7 @@ components:
           required:
             - title
             - description
-      required:
-        - id
-        - clientId
-        - hostId
-        - fromDateTime
-        - toDateTime
-        - info
-      title: Clients_BookingDTO
-      examples:
-        - id: booking_789
-          clientId: client_123
-          hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
-          info:
-            title: Consultation
-            description: Regular checkup
-    CreateClientBookingDTO:
-      type: object
-      properties:
-        hostId:
-          type: string
-          description: ID of the host to book
-        fromDateTime:
-          type: string
-          format: date-time
-          description: Booking start time (ISO8601)
-        toDateTime:
-          type: string
-          format: date-time
-          description: Booking end time (ISO8601)
-        info:
-          type: object
-          properties:
-            title:
-              type: string
-              description: Booking title
-            description:
-              type: string
-              description: Booking description
-          required:
-            - title
-            - description
-      required:
-        - hostId
-        - fromDateTime
-        - toDateTime
-        - info
-      title: Clients_CreateClientBookingDTO
+      title: Admin_UpdateBookingDTO
       examples:
         - hostId: host_456
           fromDateTime: '2025-06-25T10:00:00Z'
@@ -1737,36 +1560,6 @@ components:
           info:
             title: Consultation
             description: Regular checkup
-    BookingCreatedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-      required:
-        - id
-      title: Clients_BookingCreatedDTO
-    ClientDeletedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID of deleted client
-      required:
-        - id
-      title: Clients_ClientDeletedDTO
-      examples:
-        - id: client_123
-    ClientUpdatedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID of updated client
-      required:
-        - id
-      title: Clients_ClientUpdatedDTO
-      examples:
-        - id: client_123
     UpdateClientDTO:
       type: object
       properties:
@@ -1779,87 +1572,123 @@ components:
             lastName:
               type: string
               description: Updated last name
-      title: Clients_UpdateClientDTO
+          required:
+            - firstName
+            - lastName
+      title: Admin_UpdateClientDTO
       examples:
         - info:
             firstName: John
             lastName: Smith
-    BookingDeletedDTO:
+    UpdateHostDTO:
+      type: object
+      properties:
+        forwardBooking:
+          type: string
+          description: >-
+            How far forward recording is allowed. ISO 8601 duration format
+            (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+          pattern: >-
+            ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+          examples:
+            - P1W
+        workHours:
+          type: array
+          description: >-
+            Array of working time intervals. Each interval must have valid time
+            format (HH:MM), chronological order (from < to), and no overlapping
+            periods.
+          items:
+            type: object
+            properties:
+              from:
+                type: string
+                description: Start time in HH:MM format (24-hour)
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '09:00'
+              to:
+                type: string
+                description: >-
+                  End time in HH:MM format (24-hour). Must be later than 'from'
+                  time.
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '17:00'
+            required:
+              - from
+              - to
+        workDays:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+      title: Admin_UpdateHostDTO
+      examples:
+        - forwardBooking: P3W
+          workHours:
+            - from: '09:00'
+              to: '13:00'
+            - from: '14:00'
+              to: '18:00'
+          workDays:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+    BookingDTO:
       type: object
       properties:
         id:
           type: string
           description: ID
-      required:
-        - id
-      title: Clients_BookingDeletedDTO
-    UpdateClientBookingDTO:
-      type: object
-      properties:
-        fromDateTime:
+        clientId:
           type: string
-          format: date-time
-          description: New booking start time (ISO8601)
-        toDateTime:
-          type: string
-          format: date-time
-          description: New booking end time (ISO8601)
-        info:
-          type: object
-          properties:
-            title:
-              type: string
-              description: Updated booking title
-            description:
-              type: string
-              description: Updated booking description
-      title: Clients_UpdateClientBookingDTO
-      examples:
-        - fromDateTime: '2025-06-25T14:00:00Z'
-          toDateTime: '2025-06-25T15:00:00Z'
-          info:
-            title: Updated Consultation
-            description: Updated description
-    UpdateBookingDTO:
-      type: object
-      properties:
         hostId:
           type: string
-          description: ID of the host (only hosts can change this)
+          description: ID of the host to book
         fromDateTime:
           type: string
           format: date-time
-          description: New booking start time (ISO8601)
+          description: Booking start time (ISO8601)
         toDateTime:
           type: string
           format: date-time
-          description: New booking end time (ISO8601)
+          description: Booking end time (ISO8601)
         info:
           type: object
           properties:
             title:
               type: string
-              description: Updated booking title
+              description: Booking title
             description:
               type: string
-              description: Updated booking description
-      title: Hosts_UpdateBookingDTO
-      examples:
-        - hostId: host_123
-          fromDateTime: '2025-06-25T14:00:00Z'
-          toDateTime: '2025-06-25T15:00:00Z'
-          info:
-            title: Updated Consultation
-            description: Updated description
-    BookingUpdatedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      title: Clients_BookingUpdatedDTO
+              description: Booking description
+          required:
+            - title
+            - description
       required:
+        - hostId
+        - fromDateTime
+        - toDateTime
+        - clientId
         - id
+      title: Admin_BookingDTO
+      examples:
+        - hostId: host_456
+          fromDateTime: '2025-06-25T10:00:00Z'
+          toDateTime: '2025-06-25T11:00:00Z'
+          info:
+            title: Consultation
+            description: Regular checkup
     HostDTO:
       type: object
       properties:
@@ -1913,6 +1742,7 @@ components:
               - FRIDAY
               - SATURDAY
               - SUNDAY
+          description: Business days for the host
         info:
           type: object
           properties:
@@ -1922,6 +1752,278 @@ components:
             lastName:
               type: string
               description: Host's last name
+          required:
+            - firstName
+            - lastName
+          description: Additional information that can be attached to the host
+      required:
+        - id
+        - forwardBooking
+        - workHours
+        - workDays
+      title: Admin_HostDTO
+      examples:
+        - id: host_123
+          forwardBooking: P3W
+          workHours:
+            - from: '09:00'
+              to: '13:00'
+            - from: '14:00'
+              to: '18:00'
+          workDays:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+          info:
+            firstName: Dr. John
+            lastName: Smith
+    ClientDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Client ID
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Client's first name
+            lastName:
+              type: string
+              description: Client's last name
+      required:
+        - id
+      title: Admin_ClientDTO
+      examples:
+        - id: client_123
+          info:
+            firstName: John
+            lastName: Doe
+    BookingDTO1:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Booking ID
+        clientId:
+          type: string
+          description: Client ID who made the booking
+        hostId:
+          type: string
+          description: Host ID providing the service
+        fromDateTime:
+          type: string
+          format: date-time
+          description: Booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: Booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Booking title
+            description:
+              type: string
+              description: Booking description
+          required:
+            - title
+            - description
+      required:
+        - id
+        - clientId
+        - hostId
+        - fromDateTime
+        - toDateTime
+        - info
+      title: Clients_BookingDTO
+      examples:
+        - id: booking_789
+          clientId: client_123
+          hostId: host_456
+          fromDateTime: '2025-06-25T10:00:00Z'
+          toDateTime: '2025-06-25T11:00:00Z'
+          info:
+            title: Consultation
+            description: Regular checkup
+    ClientDTO2:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Client ID
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Client's first name
+            lastName:
+              type: string
+              description: Client's last name
+      required:
+        - id
+      title: Clients_ClientDTO
+      examples:
+        - id: client_123
+          info:
+            firstName: John
+            lastName: Doe
+    CreateBookingDTO3:
+      type: object
+      properties:
+        hostId:
+          type: string
+          description: ID of the host to book
+        fromDateTime:
+          type: string
+          format: date-time
+          description: Booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: Booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Booking title
+            description:
+              type: string
+              description: Booking description
+          required:
+            - title
+            - description
+      required:
+        - hostId
+        - fromDateTime
+        - toDateTime
+        - info
+      title: Clients_CreateBookingDTO
+      examples:
+        - hostId: host_456
+          fromDateTime: '2025-06-25T10:00:00Z'
+          toDateTime: '2025-06-25T11:00:00Z'
+          info:
+            title: Consultation
+            description: Regular checkup
+    UpdateBookingDTO4:
+      type: object
+      properties:
+        fromDateTime:
+          type: string
+          format: date-time
+          description: New booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: New booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Updated booking title
+            description:
+              type: string
+              description: Updated booking description
+      title: Clients_UpdateBookingDTO
+      examples:
+        - fromDateTime: '2025-06-25T14:00:00Z'
+          toDateTime: '2025-06-25T15:00:00Z'
+          info:
+            title: Updated Consultation
+            description: Updated description
+    UpdateClientDTO5:
+      type: object
+      properties:
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Updated first name
+            lastName:
+              type: string
+              description: Updated last name
+      title: Clients_UpdateClientDTO
+      examples:
+        - info:
+            firstName: John
+            lastName: Smith
+    HostDTO6:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        forwardBooking:
+          type: string
+          description: >-
+            How far forward recording is allowed. ISO 8601 duration format
+            (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+          pattern: >-
+            ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+          examples:
+            - P1W
+        workHours:
+          type: array
+          description: >-
+            Array of working time intervals. Each interval must have valid time
+            format (HH:MM), chronological order (from < to), and no overlapping
+            periods.
+          items:
+            type: object
+            properties:
+              from:
+                type: string
+                description: Start time in HH:MM format (24-hour)
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '09:00'
+              to:
+                type: string
+                description: >-
+                  End time in HH:MM format (24-hour). Must be later than 'from'
+                  time.
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '18:00'
+            required:
+              - from
+              - to
+        workDays:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+          description: Business days for the host
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Host's first name
+            lastName:
+              type: string
+              description: Host's last name
+          required:
+            - firstName
+            - lastName
+          description: Additional information that can be attached to the host
       required:
         - id
         - forwardBooking
@@ -1945,7 +2047,7 @@ components:
           info:
             firstName: Dr. John
             lastName: Smith
-    BookingDTO1:
+    BookingDTO7:
       type: object
       properties:
         id:
@@ -1994,98 +2096,7 @@ components:
           info:
             title: Consultation
             description: Medical consultation
-    HostDeletedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      required:
-        - id
-      title: Hosts_HostDeletedDTO
-    UpdateHostDTO:
-      type: object
-      properties:
-        forwardBooking:
-          type: string
-          description: >-
-            How far forward recording is allowed. ISO 8601 duration format
-            (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
-          pattern: >-
-            ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
-          examples:
-            - P1W
-        workHours:
-          type: array
-          description: >-
-            Array of working time intervals. Each interval must have valid time
-            format (HH:MM), chronological order (from < to), and no overlapping
-            periods.
-          items:
-            type: object
-            properties:
-              from:
-                type: string
-                description: Start time in HH:MM format (24-hour)
-                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
-                examples:
-                  - '09:00'
-              to:
-                type: string
-                description: >-
-                  End time in HH:MM format (24-hour). Must be later than 'from'
-                  time.
-                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
-                examples:
-                  - '17:00'
-            required:
-              - from
-              - to
-        workDays:
-          type: array
-          items:
-            type: string
-            enum:
-              - MONDAY
-              - TUESDAY
-              - WEDNESDAY
-              - THURSDAY
-              - FRIDAY
-              - SATURDAY
-              - SUNDAY
-      title: Hosts_UpdateHostDTO
-      examples:
-        - forwardBooking: P3W
-          workHours:
-            - from: '09:00'
-              to: '13:00'
-            - from: '14:00'
-              to: '18:00'
-          workDays:
-            - MONDAY
-            - TUESDAY
-            - WEDNESDAY
-            - THURSDAY
-            - FRIDAY
-    HostUpdatedDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      required:
-        - id
-      title: Hosts_HostUpdatedDTO
-    BookingDeletedDTO2:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-      required:
-        - id
-      title: Hosts_BookingDeletedDTO
-    CreateBookingDTO3:
+    CreateBookingDTO8:
       type: object
       properties:
         clientId:
@@ -2180,42 +2191,208 @@ components:
           info:
             title: Medical Consultation
             description: General health checkup and consultation
-    BookingCreatedDTO4:
+    UpdateBookingDTO9:
       type: object
       properties:
-        id:
+        hostId:
           type: string
-          description: ID
-      required:
-        - id
-      title: Hosts_BookingCreatedDTO
-    UpdateBookingDTO5:
+          description: ID of the host (only hosts can change this)
+        fromDateTime:
+          type: string
+          format: date-time
+          description: New booking start time (ISO8601)
+        toDateTime:
+          type: string
+          format: date-time
+          description: New booking end time (ISO8601)
+        info:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Updated booking title
+            description:
+              type: string
+              description: Updated booking description
+      title: Hosts_UpdateBookingDTO
+      examples:
+        - hostId: host_123
+          fromDateTime: '2025-06-25T14:00:00Z'
+          toDateTime: '2025-06-25T15:00:00Z'
+          info:
+            title: Updated Consultation
+            description: Updated description
+    UpdateHostDTO10:
       type: object
       properties:
-        clientId:
-          type: string
-        date:
-          type: string
-        timeFrom:
-          type: string
-        timeTo:
+        forwardBooking:
           type: string
           description: >-
-            It can be optional, then the standard recording duration will be 30
-            min.
-      title: Hosts_UpdateBookingDTO
-      required:
-        - clientId
-    BookingUpdatedDTO6:
+            How far forward recording is allowed. ISO 8601 duration format
+            (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+          pattern: >-
+            ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+          examples:
+            - P1W
+        workHours:
+          type: array
+          description: >-
+            Array of working time intervals. Each interval must have valid time
+            format (HH:MM), chronological order (from < to), and no overlapping
+            periods.
+          items:
+            type: object
+            properties:
+              from:
+                type: string
+                description: Start time in HH:MM format (24-hour)
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '09:00'
+              to:
+                type: string
+                description: >-
+                  End time in HH:MM format (24-hour). Must be later than 'from'
+                  time.
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '17:00'
+            required:
+              - from
+              - to
+        workDays:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+      title: Hosts_UpdateHostDTO
+      examples:
+        - forwardBooking: P3W
+          workHours:
+            - from: '09:00'
+              to: '13:00'
+            - from: '14:00'
+              to: '18:00'
+          workDays:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+    BookingCreatedDTO:
       type: object
       properties:
         id:
           type: string
           description: ID
-      title: Hosts_BookingUpdatedDTO
+      title: Shared_BookingCreatedDTO
       required:
         - id
-    BookingDTO7:
+    BookingUpdatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Shared_BookingUpdatedDTO
+      required:
+        - id
+    BookingDeletedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Shared_BookingDeletedDTO
+      required:
+        - id
+    UserCreatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Shared_UserCreatedDTO
+      required:
+        - id
+    UserUpdatedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Shared_UserUpdatedDTO
+      required:
+        - id
+    UsedDeletedDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+      title: Shared_UserDeletedDTO
+      required:
+        - id
+    AuthUserDTO:
+      type: object
+      properties:
+        login:
+          type: string
+          description: User login
+        password:
+          type: string
+          description: User password
+      required:
+        - login
+        - password
+      title: Auth_LogInUserDTO
+      examples:
+        - login: user123
+          password: StrongPassword123!
+    CreateUserDTO:
+      type: object
+      properties:
+        login:
+          type: string
+          description: User login (max 36 characters)
+          maxLength: 36
+        password:
+          type: string
+          description: Strong password
+        role:
+          type: string
+          enum:
+            - CLIENT
+            - HOST
+          description: User role
+      required:
+        - login
+        - password
+        - role
+      title: Auth_CreateUserDTO
+      examples:
+        - login: newuser123
+          password: StrongPassword123!
+          role: CLIENT
+    UserLoggedInDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token
+      required:
+        - accessToken
+      title: Auth_UserLoggedInDTO
+      examples:
+        - accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    BookingDTO711:
       type: object
       properties:
         id:
@@ -2249,6 +2426,96 @@ components:
         - date
         - time
       title: Public_BookingDTO
+    HostDTO12:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        forwardBooking:
+          type: string
+          description: >-
+            How far forward recording is allowed. ISO 8601 duration format
+            (e.g., P1D, P1W, P1M, P1Y, PT1H). Must be a valid ISO 8601 duration.
+          pattern: >-
+            ^P(?:[0-9]+Y)?(?:[0-9]+M)?(?:[0-9]+D)?(?:T(?:[0-9]+H)?(?:[0-9]+M)?(?:[0-9]+(?:\.[0-9]+)?S)?)?$
+          examples:
+            - P1W
+        workHours:
+          type: array
+          description: >-
+            Array of working time intervals. Each interval must have valid time
+            format (HH:MM), chronological order (from < to), and no overlapping
+            periods.
+          items:
+            type: object
+            properties:
+              from:
+                type: string
+                description: Start time in HH:MM format (24-hour)
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '09:00'
+              to:
+                type: string
+                description: >-
+                  End time in HH:MM format (24-hour). Must be later than 'from'
+                  time.
+                pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+                examples:
+                  - '18:00'
+            required:
+              - from
+              - to
+        workDays:
+          type: array
+          items:
+            type: string
+            enum:
+              - MONDAY
+              - TUESDAY
+              - WEDNESDAY
+              - THURSDAY
+              - FRIDAY
+              - SATURDAY
+              - SUNDAY
+          description: Business days for the host
+        info:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: Host's first name
+            lastName:
+              type: string
+              description: Host's last name
+          required:
+            - firstName
+            - lastName
+          description: Additional information that can be attached to the host
+      required:
+        - id
+        - forwardBooking
+        - workHours
+        - workDays
+      title: Public_HostDTO
+      examples:
+        - id: host_123
+          forwardBooking: P3W
+          workHours:
+            - from: '09:00'
+              to: '13:00'
+            - from: '14:00'
+              to: '18:00'
+          workDays:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+          info:
+            firstName: Dr. John
+            lastName: Smith
     HostSettingsDTO:
       type: object
       properties:
