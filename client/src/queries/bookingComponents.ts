@@ -150,23 +150,23 @@ export const authLogin = (
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
-    status: 401;
-    payload: {
-      /**
-       * @example Unauthorized
-       */
-      error?: string;
-    };
-  }
+      status: 401;
+      payload: {
+        /**
+         * @example Unauthorized
+         */
+        error?: string;
+      };
+    }
   | {
-    status: 403;
-    payload: {
-      /**
-       * @example Access denied
-       */
-      error?: string;
-    };
-  }
+      status: 403;
+      payload: {
+        /**
+         * @example Access denied
+         */
+        error?: string;
+      };
+    }
 >;
 
 /**
@@ -737,7 +737,7 @@ export const adminGetClientById = (
     {},
     {},
     AdminGetClientByIdPathParams
-  >({ url: "/admin/client/{clientId}", method: "get", ...variables, signal });
+  >({ url: "/admin/clients/{clientId}", method: "get", ...variables, signal });
 
 export type AdminUpdateClietnPathParams = {
   clientId: string;
@@ -990,37 +990,6 @@ export const adminGetBooking = (
     signal,
   });
 
-export type AdminDeleteBookingPathParams = {
-  bookingId: string;
-};
-
-export type AdminDeleteBookingError = Fetcher.ErrorWrapper<undefined>;
-
-export type AdminDeleteBookingVariables = {
-  pathParams: AdminDeleteBookingPathParams;
-};
-
-/**
- * Allows you to delete a booking by its Id
- */
-export const adminDeleteBooking = (
-  variables: AdminDeleteBookingVariables,
-  signal?: AbortSignal,
-) =>
-  bookingFetch<
-    Schemas.BookingDeletedDTO,
-    AdminDeleteBookingError,
-    undefined,
-    {},
-    {},
-    AdminDeleteBookingPathParams
-  >({
-    url: "/admin/bookings/{bookingId}",
-    method: "delete",
-    ...variables,
-    signal,
-  });
-
 export type AdminUpdateBookingPathParams = {
   bookingId: string;
 };
@@ -1049,6 +1018,37 @@ export const adminUpdateBooking = (
   >({
     url: "/admin/bookings/{bookingId}",
     method: "patch",
+    ...variables,
+    signal,
+  });
+
+export type AdminDeleteBookingPathParams = {
+  bookingId: string;
+};
+
+export type AdminDeleteBookingError = Fetcher.ErrorWrapper<undefined>;
+
+export type AdminDeleteBookingVariables = {
+  pathParams: AdminDeleteBookingPathParams;
+};
+
+/**
+ * Allows you to delete a booking by its Id
+ */
+export const adminDeleteBooking = (
+  variables: AdminDeleteBookingVariables,
+  signal?: AbortSignal,
+) =>
+  bookingFetch<
+    Schemas.BookingDeletedDTO,
+    AdminDeleteBookingError,
+    undefined,
+    {},
+    {},
+    AdminDeleteBookingPathParams
+  >({
+    url: "/admin/bookings/{bookingId}",
+    method: "delete",
     ...variables,
     signal,
   });
@@ -1092,7 +1092,7 @@ export const operationsByTag = {
     adminGetBookings,
     adminCreateNewBooking,
     adminGetBooking,
-    adminDeleteBooking,
     adminUpdateBooking,
+    adminDeleteBooking,
   },
 };
