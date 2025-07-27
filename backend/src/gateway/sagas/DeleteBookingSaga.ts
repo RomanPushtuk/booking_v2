@@ -1,9 +1,8 @@
-import { Saga } from "../application";
+import { Saga, Step } from "../application";
 import { BookingDeletedDTO } from "../dtos";
-import { DeleteClientBookingInBookingServiceStep } from "../steps";
 
 export class DeleteBookingSaga extends Saga<string, BookingDeletedDTO> {
-  constructor(step1: DeleteClientBookingInBookingServiceStep) {
+  constructor(step1: Step<unknown, BookingDeletedDTO>) {
     super();
     this.steps = [step1];
   }

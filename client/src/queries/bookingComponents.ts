@@ -150,23 +150,23 @@ export const authLogin = (
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
-      status: 401;
-      payload: {
-        /**
-         * @example Unauthorized
-         */
-        error?: string;
-      };
-    }
+    status: 401;
+    payload: {
+      /**
+       * @example Unauthorized
+       */
+      error?: string;
+    };
+  }
   | {
-      status: 403;
-      payload: {
-        /**
-         * @example Access denied
-         */
-        error?: string;
-      };
-    }
+    status: 403;
+    payload: {
+      /**
+       * @example Access denied
+       */
+      error?: string;
+    };
+  }
 >;
 
 /**
@@ -1047,7 +1047,7 @@ export const adminUpdateBooking = (
     {},
     AdminUpdateBookingPathParams
   >({
-    url: "/admin/bookins/{bookingId}",
+    url: "/admin/bookings/{bookingId}",
     method: "patch",
     ...variables,
     signal,

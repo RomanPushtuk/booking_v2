@@ -3,6 +3,7 @@ import {
   Body,
   Delete,
   Get,
+  HttpCode,
   JsonController,
   Param,
   Patch,
@@ -28,6 +29,8 @@ import {
   BookingDeletedDTO,
   UpdateBookingDTO,
   BookingUpdatedDTO,
+  ClientCreatedDTO,
+  HostCreatedDTO,
 } from "../dtos";
 import {
   CreateBookingSaga,
@@ -57,7 +60,7 @@ import { UpdateHostSaga } from "../sagas/UpdateHostSaga";
 
 @Service()
 @JsonController("/admin")
-export class AuthController {
+export class AdminController {
   // --- Client ---
 
   @Authorized([shared.enums.Permissions.ADMIN_READ_CLIENT])
@@ -78,8 +81,10 @@ export class AuthController {
   }
 
   @Authorized([shared.enums.Permissions.ADMIN_CREATE_CLIENT])
+  @HttpCode(201)
   @Post("/clients")
   async createClient(@Body() createClientDTO: CreateClientDTO) {
+    console.log(createClientDTO);
     const clientDTO: CreateClientDTO & { id: string } = {
       id: shared.utils.generateId(),
       ...createClientDTO,
@@ -92,6 +97,8 @@ export class AuthController {
     );
 
     await createUserSaga.execute(clientDTO);
+
+    return new ClientCreatedDTO({ id: clientDTO.id });
   }
 
   @Authorized([shared.enums.Permissions.ADMIN_UPDATE_CLIENT])
@@ -112,7 +119,7 @@ export class AuthController {
     return new ClientUpdatedDTO({ id: clientId });
   }
 
-  @Authorized([shared.enums.Permissions.CLIENT_DELETE_PROFILE])
+  @Authorized([shared.enums.Permissions.ADMIN_DELETE_CLIENT])
   @Delete("/clients/:clientId")
   async deleteClient(
     @Param("clientId") clientId: string,
@@ -146,6 +153,7 @@ export class AuthController {
   }
 
   @Authorized([shared.enums.Permissions.ADMIN_CREATE_HOST])
+  @HttpCode(201)
   @Post("/hosts")
   async createHost(@Body() createHostDTO: CreateHostDTO) {
     const hostDTO: CreateHostDTO & { id: string } = {
@@ -160,6 +168,8 @@ export class AuthController {
     );
 
     await createUserSaga.execute(hostDTO);
+
+    return new HostCreatedDTO({ id: hostDTO.id });
   }
 
   @Authorized([shared.enums.Permissions.ADMIN_UPDATE_HOST])

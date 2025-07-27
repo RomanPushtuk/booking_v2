@@ -1,8 +1,10 @@
+import { Type } from "class-transformer";
 import {
   MaxLength,
   IsDateString,
   IsString,
   ValidateNested,
+  IsOptional,
 } from "class-validator";
 
 class _Info {
@@ -26,6 +28,8 @@ export class CreateBookingDTO {
   @IsDateString()
   toDateTime: string;
 
+  @IsOptional()
   @ValidateNested()
+  @Type(() => _Info)
   info: _Info;
 }

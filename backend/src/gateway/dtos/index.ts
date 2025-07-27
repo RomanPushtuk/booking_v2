@@ -29,3 +29,5 @@ export { CreateHostDTO } from "./CreateHostDTO";
 export { CreateClientDTO } from "./CreateClientDTO";
 export { BookingRestoredDTO } from "./BookingRestoredDTO";
 export { BookingRevertedDTO } from "./BookingRevertedDTO";
+export { ClientCreatedDTO } from "./ClientCreatedDTO";
+export { HostCreatedDTO } from "./HostCreatedDTO";

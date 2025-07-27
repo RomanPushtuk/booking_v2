@@ -1,5 +1,22 @@
-import { IsString, MaxLength, IsIn, validateSync } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsIn,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
 import { shared } from "../imports";
+
+class _Info {
+  @IsOptional()
+  @IsString()
+  firstName: string;
+
+  @IsOptional()
+  @IsString()
+  lastName: string;
+}
 
 export class CreateClientDTO {
   @MaxLength(36)
@@ -9,15 +26,10 @@ export class CreateClientDTO {
   password: string;
 
   @IsIn(Object.values(shared.enums.Roles))
-  role: shared.enums.Roles;
+  role: shared.enums.Roles = shared.enums.Roles.CLIENT;
 
-  constructor(data: shared.types.GetInterface<CreateClientDTO>) {
-    this.login = data.login;
-    this.password = data.password;
-    this.role = data.role;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(CreateClientDTO.name, errors);
-  }
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => _Info)
+  info: _Info;
 }

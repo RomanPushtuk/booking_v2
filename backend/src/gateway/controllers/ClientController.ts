@@ -46,7 +46,7 @@ import {
 @Service()
 @JsonController("/clients")
 export class ClientController {
-  constructor() { }
+  constructor() {}
 
   @Authorized([shared.enums.Permissions.CLIENT_READ_PROFILE])
   @Get("/me")

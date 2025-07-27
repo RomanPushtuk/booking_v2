@@ -1,24 +1,24 @@
-{"level":30,"time":1753084081101,"module":"booking","traceId":"c2f33cdc66ee","msg":"ClientRepository getById","_id":"00jkFXcRqUUiPSwL"}
-{"level":30,"time":1753087210086,"module":"booking","msg":"New UnitOfWork instance was created","_id":"1oPI24paT6Dy0blC"}
-{"level":30,"time":1753084081021,"module":"gateway","host":"localhost","userIp":"::1","method":"POST","url":"/auth/login","params":{},"query":{},"protocol":"http","traceId":"90e18c717376","msg":"Received a new request","_id":"7Dyg6lnvZvyZhfL5"}
-{"level":30,"time":1753087229515,"module":"booking","msg":"New UnitOfWork instance was created","_id":"Ci7xOq43yMiiAhMk"}
-{"level":30,"time":1753084057698,"module":"booking","msg":"New UnitOfWork instance was created","_id":"FiQXLi6Kk4fGbY4h"}
-{"level":30,"time":1753382161296,"module":"booking","msg":"New UnitOfWork instance was created","_id":"JbYMDmNck9PIju2N"}
-{"level":30,"time":1753087191198,"module":"booking","msg":"New UnitOfWork instance was created","_id":"ZCiSoWGsrMG0eB51"}
-{"level":30,"time":1753382161546,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"ZGFtJjpFKYMrXOI6"}
-{"level":30,"time":1753087229729,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"bF5xOLa5WrHU4lqt"}
-{"level":30,"time":1753087191399,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"cVOqEcdKIFBmKtHK"}
-{"level":30,"time":1753084081087,"module":"gateway","host":"localhost","userIp":"::1","method":"GET","url":"/clients/me/bookings","params":{},"query":{},"protocol":"http","traceId":"c2f33cdc66ee","msg":"Received a new request","_id":"ctxUc4pcK2brRMzt"}
-{"level":30,"time":1753084081101,"module":"booking","traceId":"c2f33cdc66ee","msg":"UserRepository getById","_id":"egLMzn4mpYl8VgYv"}
-{"level":30,"time":1753084081093,"module":"auth","userId":"cd195da7cf32","traceId":"c2f33cdc66ee","userIp":"::1","msg":"AuthService getUserById","_id":"hvfxlrCnHmpvb9HW"}
-{"level":30,"time":1753084081095,"module":"auth","userId":"cd195da7cf32","traceId":"c2f33cdc66ee","userIp":"::1","msg":"AuthService getUserById","_id":"iE9oV7vNAkBkEFP2"}
-{"level":30,"time":1753087210313,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"mg8HnQ2U2w0tqOvE"}
-{"level":30,"time":1753107227658,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"mqC0xJU4ljHdLmQE"}
-{"level":30,"time":1753084081102,"module":"booking","traceId":"c2f33cdc66ee","msg":"BookingRepository getAll","_id":"nRrciHAyubyWJOmu"}
-{"level":30,"time":1753084081104,"module":"gateway","traceId":"c2f33cdc66ee","msg":"Request has been processed","_id":"rXgDZobZvMSBve30"}
-{"level":30,"time":1753084057921,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"tlAYVEHPM8B8Hg3l"}
-{"level":30,"time":1753084081035,"module":"auth","loginUserDTO":{"login":"NewClient123","password":"StrongPassword123!"},"traceId":"90e18c717376","userIp":"::1","msg":"AuthService login","_id":"uMiawaiiXYmCMOc0"}
-{"level":30,"time":1753107227435,"module":"booking","msg":"New UnitOfWork instance was created","_id":"wWel5GISkvjdJs8S"}
-{"level":30,"time":1753084081048,"module":"gateway","traceId":"90e18c717376","msg":"Request has been processed","_id":"y5iWNoGaBRe0bi6Z"}
-{"level":30,"time":1753382170805,"module":"booking","msg":"New UnitOfWork instance was created","_id":"0Ju2lFe5eaT7Rch1"}
-{"level":30,"time":1753382171030,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"quZOQehu56LJ8sTE"}
+{"level":30,"time":1753618820470,"module":"booking","msg":"New UnitOfWork instance was created","_id":"LqVV25bN2WoeO6TR"}
+{"level":30,"time":1753618820730,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"tXYk2zJ8o2WKwbWZ"}
+{"level":30,"time":1753618852840,"module":"booking","msg":"New UnitOfWork instance was created","_id":"qSpR7zAsznXuDhYD"}
+{"level":30,"time":1753618853081,"module":"gateway","msg":"BackEnd started on 3000 port","_id":"25Y59khhLLzSEXrs"}
+{"level":30,"time":1753618869344,"module":"gateway","host":"localhost","userIp":"::1","method":"PATCH","url":"/admin/bookings/293c53cf778a","params":{},"query":{},"protocol":"http","traceId":"aaa0b0a10d99","msg":"Received a new request","_id":"R4taj0sj69cyeipu"}
+{"level":30,"time":1753618869360,"module":"auth","userId":"cdd018046101","traceId":"aaa0b0a10d99","userIp":"::1","msg":"AuthService getUserById","_id":"5NZi9Zd41Z3TQiXG"}
+{"level":30,"time":1753618869363,"module":"gateway","traceId":"aaa0b0a10d99","msg":"Start execute saga - UpdateBookingSaga","_id":"aqCpZzlFKlZE35UQ"}
+{"level":30,"time":1753618869363,"module":"gateway","traceId":"aaa0b0a10d99","msg":"UpdateBookingInBookingServiceStep invoke","_id":"S63QPv564hRO8Csg"}
+{"level":30,"time":1753618869363,"module":"booking","traceId":"aaa0b0a10d99","userIp":"::1","msg":"Begin Transaction","_id":"ssUogVtbNJ57NjPV"}
+{"level":30,"time":1753618869363,"module":"booking","traceId":"aaa0b0a10d99","msg":"BookingRepository getById","_id":"axJnMMJOycIHyljF"}
+{"level":30,"time":1753618869364,"module":"booking","traceId":"aaa0b0a10d99","msg":"BookingRepository save","_id":"fisILqjYZ30EdyYX"}
+{"level":30,"time":1753618869365,"module":"booking","traceId":"aaa0b0a10d99","_id":"2nKJbJfYg7p7GGkk"}
+{"level":30,"time":1753618869366,"module":"booking","traceId":"aaa0b0a10d99","userIp":"::1","msg":"Commit Transaction","_id":"DAxby9UzbZdFMCqn"}
+{"level":30,"time":1753618869367,"module":"gateway","traceId":"aaa0b0a10d99","msg":"Saga execution finished - UpdateBookingSaga","_id":"ZRMKK1naSP8o4PCV"}
+{"level":30,"time":1753618869370,"module":"gateway","traceId":"aaa0b0a10d99","msg":"Request has been processed","_id":"RFctCnNPF02HZq3b"}
+{"level":30,"time":1753618988737,"module":"gateway","host":"localhost","userIp":"::1","method":"DELETE","url":"/admin/bookings/9b10381fc227","params":{},"query":{},"protocol":"http","traceId":"f28f084dc909","msg":"Received a new request","_id":"uQmGwlxSCehSwzWG"}
+{"level":30,"time":1753618988739,"module":"auth","userId":"cdd018046101","traceId":"f28f084dc909","userIp":"::1","msg":"AuthService getUserById","_id":"9bjo6aMr9BDvhPpj"}
+{"level":30,"time":1753618988740,"module":"gateway","traceId":"f28f084dc909","msg":"Start execute saga - DeleteBookingSaga","_id":"d9m3t3tAH33CGq5P"}
+{"level":30,"time":1753618988740,"module":"gateway","traceId":"f28f084dc909","msg":"DeleteBookingInBookingServiceStep invoke","_id":"YAyAQDKfPFhgJZPv"}
+{"level":30,"time":1753618988740,"module":"booking","traceId":"f28f084dc909","msg":"BookingRepository getById","_id":"HqOwddzIeyJJaHmK"}
+{"level":30,"time":1753618988740,"module":"booking","traceId":"f28f084dc909","msg":"BookingRepository save","_id":"xuVpPpONX55jPL3y"}
+{"level":30,"time":1753618988741,"module":"booking","traceId":"f28f084dc909","_id":"d4DtRBMJGQsMpn6j"}
+{"level":30,"time":1753618988741,"module":"gateway","traceId":"f28f084dc909","msg":"Saga execution finished - DeleteBookingSaga","_id":"1eBYSB3AK1WKSrLj"}
+{"level":30,"time":1753618988742,"module":"gateway","traceId":"f28f084dc909","msg":"Request has been processed","_id":"gXtmZZd66zBClBcm"}

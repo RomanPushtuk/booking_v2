@@ -1070,7 +1070,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/client/{clientId}:
+  /admin/clients/{clientId}:
     get:
       summary: GetClientById
       deprecated: false
@@ -1095,7 +1095,6 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/clients/{clientId}:
     patch:
       summary: UpdateClient
       deprecated: false
@@ -1351,31 +1350,6 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-    delete:
-      summary: DeleteBooking
-      deprecated: false
-      description: Allows you to delete a booking by its Id
-      operationId: ADMIN_DELETE_BOOKING
-      tags:
-        - admin
-      parameters:
-        - name: bookingId
-          in: path
-          description: ''
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BookingDeletedDTO'
-          headers: {}
-      security:
-        - bearerAuth: []
-  /admin/bookins/{bookingId}:
     patch:
       summary: UpdateBooking
       deprecated: false
@@ -1403,6 +1377,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingUpdatedDTO'
+          headers: {}
+      security:
+        - bearerAuth: []
+    delete:
+      summary: DeleteBooking
+      deprecated: false
+      description: Allows you to delete a booking by its Id
+      operationId: ADMIN_DELETE_BOOKING
+      tags:
+        - admin
+      parameters:
+        - name: bookingId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDeletedDTO'
           headers: {}
       security:
         - bearerAuth: []

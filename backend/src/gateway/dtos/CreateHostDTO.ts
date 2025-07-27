@@ -41,7 +41,7 @@ export class CreateHostDTO {
   password: string;
 
   @IsIn(Object.values(shared.enums.Roles))
-  role: shared.enums.Roles;
+  role: shared.enums.Roles = shared.enums.Roles.HOST;
 
   @IsDurationFormat()
   forwardBooking: string;
@@ -54,6 +54,7 @@ export class CreateHostDTO {
   @IsIn(Object.values(shared.enums.Days), { each: true })
   workDays: string[];
 
+  @IsOptional()
   @ValidateNested()
   @Type(() => _Info)
   info: _Info;

@@ -15,6 +15,7 @@ export * as enums from "./enums";
 useContainer(diContainer);
 
 import {
+  AdminController,
   AuthController,
   ClientController,
   HostController,
@@ -42,7 +43,12 @@ const start = () => {
     validation: true,
     defaultErrorHandler: false,
     routePrefix: "/api",
-    controllers: [AuthController, ClientController, HostController],
+    controllers: [
+      AuthController,
+      ClientController,
+      HostController,
+      AdminController,
+    ],
     middlewares: [
       TrackBeforeMiddleware,
       TrackAfterMiddleware,

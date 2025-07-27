@@ -49,40 +49,55 @@ export class BookingService {
   async createBooking(
     bookingDto: gateway.dtos.BookingDTO,
   ): Promise<gateway.dtos.BookingCreatedDTO> {
-    const booking = new Booking({
-      ...bookingDto,
-      deleted: false,
-    });
+    try {
+      this._uow.begin();
+      const booking = new Booking({
+        ...bookingDto,
+        deleted: false,
+      });
 
-    this._uow.bookingRepository.save(booking);
+      this._uow.bookingRepository.save(booking);
 
-    this._uow.commit();
-    return new gateway.dtos.BookingCreatedDTO({ id: booking.getId() });
+      this._uow.commit();
+      return new gateway.dtos.BookingCreatedDTO({ id: booking.getId() });
+    } catch (error) {
+      this._uow.rollback();
+      throw error;
+    }
   }
 
   async updateBooking(
     updateBookingDTO: gateway.dtos.UpdateBookingDTO & { id: string },
     versionId: string,
   ) {
+    console.log('1')
     try {
       this._uow.begin();
+      console.log('2')
 
       const booking = this._uow.bookingRepository.getById(updateBookingDTO.id);
+      console.log('3', booking)
       if (!booking) throw new Error("Booking not found");
+      console.log('4')
 
       Booking.update(booking, updateBookingDTO);
+      console.log('5', booking)
       this._uow.bookingRepository.save(booking);
+      console.log('6')
 
       await this._vs.insertAsync({
         id: updateBookingDTO.id,
         versionId,
         data: updateBookingDTO,
       });
+      console.log('7')
 
       this._uow.commit();
+      console.log('8')
 
       return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
     } catch (error) {
+      console.log('9')
       this._uow.rollback();
       throw error;
     }
