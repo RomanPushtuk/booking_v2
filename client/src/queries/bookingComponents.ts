@@ -3,18 +3,34 @@
  *
  * @version 1.0.0
  */
+import * as reactQuery from "@tanstack/react-query";
+import {
+  useBookingContext,
+  type BookingContext,
+  queryKeyFn,
+} from "./bookingContext";
+import { deepMerge } from "./bookingUtils";
 import type * as Fetcher from "./bookingFetcher";
 import { bookingFetch } from "./bookingFetcher";
 import type * as Schemas from "./bookingSchemas";
+
+type QueryFnOptions = {
+  signal?: AbortController["signal"];
+};
 
 export type PublicGetHostsError = Fetcher.ErrorWrapper<undefined>;
 
 export type PublicGetHostsResponse = Schemas.HostDTO12[];
 
+export type PublicGetHostsVariables = BookingContext["fetcherOptions"];
+
 /**
  * Get list of all available hosts
  */
-export const publicGetHosts = (signal?: AbortSignal) =>
+export const fetchPublicGetHosts = (
+  variables: PublicGetHostsVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     PublicGetHostsResponse,
     PublicGetHostsError,
@@ -22,7 +38,97 @@ export const publicGetHosts = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/hosts", method: "get", signal });
+  >({ url: "/api//hosts", method: "get", ...variables, signal });
+
+/**
+ * Get list of all available hosts
+ */
+export function publicGetHostsQuery(variables: PublicGetHostsVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<PublicGetHostsResponse>;
+};
+
+export function publicGetHostsQuery(
+  variables: PublicGetHostsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<PublicGetHostsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function publicGetHostsQuery(
+  variables: PublicGetHostsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api//hosts",
+      operationId: "publicGetHosts",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchPublicGetHosts(variables, signal),
+  };
+}
+
+/**
+ * Get list of all available hosts
+ */
+export const useSuspensePublicGetHosts = <TData = PublicGetHostsResponse>(
+  variables: PublicGetHostsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      PublicGetHostsResponse,
+      PublicGetHostsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    PublicGetHostsResponse,
+    PublicGetHostsError,
+    TData
+  >({
+    ...publicGetHostsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get list of all available hosts
+ */
+export const usePublicGetHosts = <TData = PublicGetHostsResponse>(
+  variables: PublicGetHostsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      PublicGetHostsResponse,
+      PublicGetHostsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    PublicGetHostsResponse,
+    PublicGetHostsError,
+    TData
+  >({
+    ...publicGetHostsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type PublicGetHostByIdPathParams = {
   id: string;
@@ -32,12 +138,12 @@ export type PublicGetHostByIdError = Fetcher.ErrorWrapper<undefined>;
 
 export type PublicGetHostByIdVariables = {
   pathParams: PublicGetHostByIdPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Each user of the system can get information about the host
  */
-export const publicGetHostById = (
+export const fetchPublicGetHostById = (
   variables: PublicGetHostByIdVariables,
   signal?: AbortSignal,
 ) =>
@@ -48,7 +154,93 @@ export const publicGetHostById = (
     {},
     {},
     PublicGetHostByIdPathParams
-  >({ url: "/hosts/{id}", method: "get", ...variables, signal });
+  >({ url: "/api/hosts/{id}", method: "get", ...variables, signal });
+
+/**
+ * Each user of the system can get information about the host
+ */
+export function publicGetHostByIdQuery(variables: PublicGetHostByIdVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.HostDTO12>;
+};
+
+export function publicGetHostByIdQuery(
+  variables: PublicGetHostByIdVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.HostDTO12>)
+    | reactQuery.SkipToken;
+};
+
+export function publicGetHostByIdQuery(
+  variables: PublicGetHostByIdVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/hosts/{id}",
+      operationId: "publicGetHostById",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchPublicGetHostById(variables, signal),
+  };
+}
+
+/**
+ * Each user of the system can get information about the host
+ */
+export const useSuspensePublicGetHostById = <TData = Schemas.HostDTO12>(
+  variables: PublicGetHostByIdVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.HostDTO12,
+      PublicGetHostByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.HostDTO12,
+    PublicGetHostByIdError,
+    TData
+  >({
+    ...publicGetHostByIdQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Each user of the system can get information about the host
+ */
+export const usePublicGetHostById = <TData = Schemas.HostDTO12>(
+  variables: PublicGetHostByIdVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.HostDTO12,
+      PublicGetHostByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<Schemas.HostDTO12, PublicGetHostByIdError, TData>({
+    ...publicGetHostByIdQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type PublicGetHostBookingsPathParams = {
   /**
@@ -73,12 +265,12 @@ export type PublicGetHostBookingsResponse = Schemas.BookingDTO711[];
 export type PublicGetHostBookingsVariables = {
   pathParams: PublicGetHostBookingsPathParams;
   queryParams?: PublicGetHostBookingsQueryParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Get host's bookings from now until the host's forward booking period. Shows occupied time slots for planning appointments.
  */
-export const publicGetHostBookings = (
+export const fetchPublicGetHostBookings = (
   variables: PublicGetHostBookingsVariables,
   signal?: AbortSignal,
 ) =>
@@ -89,18 +281,112 @@ export const publicGetHostBookings = (
     {},
     PublicGetHostBookingsQueryParams,
     PublicGetHostBookingsPathParams
-  >({ url: "/hosts/{id}/bookings", method: "get", ...variables, signal });
+  >({ url: "/api/hosts/{id}/bookings", method: "get", ...variables, signal });
+
+/**
+ * Get host's bookings from now until the host's forward booking period. Shows occupied time slots for planning appointments.
+ */
+export function publicGetHostBookingsQuery(
+  variables: PublicGetHostBookingsVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<PublicGetHostBookingsResponse>;
+};
+
+export function publicGetHostBookingsQuery(
+  variables: PublicGetHostBookingsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<PublicGetHostBookingsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function publicGetHostBookingsQuery(
+  variables: PublicGetHostBookingsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/hosts/{id}/bookings",
+      operationId: "publicGetHostBookings",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchPublicGetHostBookings(variables, signal),
+  };
+}
+
+/**
+ * Get host's bookings from now until the host's forward booking period. Shows occupied time slots for planning appointments.
+ */
+export const useSuspensePublicGetHostBookings = <
+  TData = PublicGetHostBookingsResponse,
+>(
+  variables: PublicGetHostBookingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      PublicGetHostBookingsResponse,
+      PublicGetHostBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    PublicGetHostBookingsResponse,
+    PublicGetHostBookingsError,
+    TData
+  >({
+    ...publicGetHostBookingsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get host's bookings from now until the host's forward booking period. Shows occupied time slots for planning appointments.
+ */
+export const usePublicGetHostBookings = <TData = PublicGetHostBookingsResponse>(
+  variables: PublicGetHostBookingsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      PublicGetHostBookingsResponse,
+      PublicGetHostBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    PublicGetHostBookingsResponse,
+    PublicGetHostBookingsError,
+    TData
+  >({
+    ...publicGetHostBookingsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type AuthRegisterError = Fetcher.ErrorWrapper<undefined>;
 
 export type AuthRegisterVariables = {
   body: Schemas.CreateUserDTO;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Registering a new user in the system
  */
-export const authRegister = (
+export const fetchAuthRegister = (
   variables: AuthRegisterVariables,
   signal?: AbortSignal,
 ) =>
@@ -111,7 +397,32 @@ export const authRegister = (
     {},
     {},
     {}
-  >({ url: "/auth/register", method: "post", ...variables, signal });
+  >({ url: "/api/auth/register", method: "post", ...variables, signal });
+
+/**
+ * Registering a new user in the system
+ */
+export const useAuthRegister = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserLoggedInDTO,
+      AuthRegisterError,
+      AuthRegisterVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserLoggedInDTO,
+    AuthRegisterError,
+    AuthRegisterVariables
+  >({
+    mutationFn: (variables: AuthRegisterVariables) =>
+      fetchAuthRegister(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AuthLoginError = Fetcher.ErrorWrapper<{
   status: 401;
@@ -125,7 +436,7 @@ export type AuthLoginError = Fetcher.ErrorWrapper<{
 
 export type AuthLoginVariables = {
   body: Schemas.AuthUserDTO;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Authenticate user and receive JWT token.
@@ -135,7 +446,7 @@ export type AuthLoginVariables = {
  * - Use it directly in the Authorization field (do not add 'Bearer ' prefix)
  * - Example: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
  */
-export const authLogin = (
+export const fetchAuthLogin = (
   variables: AuthLoginVariables,
   signal?: AbortSignal,
 ) =>
@@ -146,7 +457,37 @@ export const authLogin = (
     {},
     {},
     {}
-  >({ url: "/auth/login", method: "post", ...variables, signal });
+  >({ url: "/api/auth/login", method: "post", ...variables, signal });
+
+/**
+ * Authenticate user and receive JWT token.
+ *
+ * **Important**: When using the returned token in other endpoints:
+ * - Copy the `access_token` from the response
+ * - Use it directly in the Authorization field (do not add 'Bearer ' prefix)
+ * - Example: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+ */
+export const useAuthLogin = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserLoggedInDTO,
+      AuthLoginError,
+      AuthLoginVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserLoggedInDTO,
+    AuthLoginError,
+    AuthLoginVariables
+  >({
+    mutationFn: (variables: AuthLoginVariables) =>
+      fetchAuthLogin(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type ClientsGetClientError = Fetcher.ErrorWrapper<
   | {
@@ -169,10 +510,15 @@ export type ClientsGetClientError = Fetcher.ErrorWrapper<
     }
 >;
 
+export type ClientsGetClientVariables = BookingContext["fetcherOptions"];
+
 /**
  * Get current client information
  */
-export const clientsGetClient = (signal?: AbortSignal) =>
+export const fetchClientsGetClient = (
+  variables: ClientsGetClientVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     Schemas.ClientDTO2,
     ClientsGetClientError,
@@ -180,18 +526,104 @@ export const clientsGetClient = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/clients/me", method: "get", signal });
+  >({ url: "/api/clients/me", method: "get", ...variables, signal });
+
+/**
+ * Get current client information
+ */
+export function clientsGetClientQuery(variables: ClientsGetClientVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.ClientDTO2>;
+};
+
+export function clientsGetClientQuery(
+  variables: ClientsGetClientVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.ClientDTO2>)
+    | reactQuery.SkipToken;
+};
+
+export function clientsGetClientQuery(
+  variables: ClientsGetClientVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/clients/me",
+      operationId: "clientsGetClient",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchClientsGetClient(variables, signal),
+  };
+}
+
+/**
+ * Get current client information
+ */
+export const useSuspenseClientsGetClient = <TData = Schemas.ClientDTO2>(
+  variables: ClientsGetClientVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.ClientDTO2,
+      ClientsGetClientError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.ClientDTO2,
+    ClientsGetClientError,
+    TData
+  >({
+    ...clientsGetClientQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get current client information
+ */
+export const useClientsGetClient = <TData = Schemas.ClientDTO2>(
+  variables: ClientsGetClientVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.ClientDTO2,
+      ClientsGetClientError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<Schemas.ClientDTO2, ClientsGetClientError, TData>({
+    ...clientsGetClientQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type ClientsUpdateClientError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsUpdateClientVariables = {
   body?: Schemas.UpdateClientDTO5;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Update current client information
  */
-export const clientsUpdateClient = (
+export const fetchClientsUpdateClient = (
   variables: ClientsUpdateClientVariables,
   signal?: AbortSignal,
 ) =>
@@ -202,14 +634,44 @@ export const clientsUpdateClient = (
     {},
     {},
     {}
-  >({ url: "/clients/me", method: "patch", ...variables, signal });
+  >({ url: "/api/clients/me", method: "patch", ...variables, signal });
+
+/**
+ * Update current client information
+ */
+export const useClientsUpdateClient = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserUpdatedDTO,
+      ClientsUpdateClientError,
+      ClientsUpdateClientVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserUpdatedDTO,
+    ClientsUpdateClientError,
+    ClientsUpdateClientVariables
+  >({
+    mutationFn: (variables: ClientsUpdateClientVariables) =>
+      fetchClientsUpdateClient(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type ClientsDeleteClientError = Fetcher.ErrorWrapper<undefined>;
+
+export type ClientsDeleteClientVariables = BookingContext["fetcherOptions"];
 
 /**
  * Mark current client as deleted from the system
  */
-export const clientsDeleteClient = (signal?: AbortSignal) =>
+export const fetchClientsDeleteClient = (
+  variables: ClientsDeleteClientVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     Schemas.UsedDeletedDTO,
     ClientsDeleteClientError,
@@ -217,7 +679,32 @@ export const clientsDeleteClient = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/clients/me", method: "delete", signal });
+  >({ url: "/api/clients/me", method: "delete", ...variables, signal });
+
+/**
+ * Mark current client as deleted from the system
+ */
+export const useClientsDeleteClient = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UsedDeletedDTO,
+      ClientsDeleteClientError,
+      ClientsDeleteClientVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UsedDeletedDTO,
+    ClientsDeleteClientError,
+    ClientsDeleteClientVariables
+  >({
+    mutationFn: (variables: ClientsDeleteClientVariables) =>
+      fetchClientsDeleteClient(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type ClientsGetBookingsQueryParams = {
   /**
@@ -252,12 +739,12 @@ export type ClientsGetBookingsResponse = Schemas.BookingDTO1[];
 
 export type ClientsGetBookingsVariables = {
   queryParams?: ClientsGetBookingsQueryParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Get current client's bookings with filtering and sorting
  */
-export const clientsGetBookings = (
+export const fetchClientsGetBookings = (
   variables: ClientsGetBookingsVariables,
   signal?: AbortSignal,
 ) =>
@@ -268,18 +755,112 @@ export const clientsGetBookings = (
     {},
     ClientsGetBookingsQueryParams,
     {}
-  >({ url: "/clients/me/bookings", method: "get", ...variables, signal });
+  >({ url: "/api/clients/me/bookings", method: "get", ...variables, signal });
+
+/**
+ * Get current client's bookings with filtering and sorting
+ */
+export function clientsGetBookingsQuery(
+  variables: ClientsGetBookingsVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<ClientsGetBookingsResponse>;
+};
+
+export function clientsGetBookingsQuery(
+  variables: ClientsGetBookingsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<ClientsGetBookingsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function clientsGetBookingsQuery(
+  variables: ClientsGetBookingsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/clients/me/bookings",
+      operationId: "clientsGetBookings",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchClientsGetBookings(variables, signal),
+  };
+}
+
+/**
+ * Get current client's bookings with filtering and sorting
+ */
+export const useSuspenseClientsGetBookings = <
+  TData = ClientsGetBookingsResponse,
+>(
+  variables: ClientsGetBookingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ClientsGetBookingsResponse,
+      ClientsGetBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    ClientsGetBookingsResponse,
+    ClientsGetBookingsError,
+    TData
+  >({
+    ...clientsGetBookingsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get current client's bookings with filtering and sorting
+ */
+export const useClientsGetBookings = <TData = ClientsGetBookingsResponse>(
+  variables: ClientsGetBookingsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ClientsGetBookingsResponse,
+      ClientsGetBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    ClientsGetBookingsResponse,
+    ClientsGetBookingsError,
+    TData
+  >({
+    ...clientsGetBookingsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type ClientsCreateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsCreateBookingVariables = {
   body: Schemas.CreateBookingDTO3;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Create a new booking for current client
  */
-export const clientsCreateBooking = (
+export const fetchClientsCreateBooking = (
   variables: ClientsCreateBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -290,7 +871,32 @@ export const clientsCreateBooking = (
     {},
     {},
     {}
-  >({ url: "/clients/me/bookings", method: "post", ...variables, signal });
+  >({ url: "/api/clients/me/bookings", method: "post", ...variables, signal });
+
+/**
+ * Create a new booking for current client
+ */
+export const useClientsCreateBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingCreatedDTO,
+      ClientsCreateBookingError,
+      ClientsCreateBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingCreatedDTO,
+    ClientsCreateBookingError,
+    ClientsCreateBookingVariables
+  >({
+    mutationFn: (variables: ClientsCreateBookingVariables) =>
+      fetchClientsCreateBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type ClientsGetBookingByIdPathParams = {
   /**
@@ -303,12 +909,12 @@ export type ClientsGetBookingByIdError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsGetBookingByIdVariables = {
   pathParams: ClientsGetBookingByIdPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Get specific booking by ID for current client
  */
-export const clientsGetBookingById = (
+export const fetchClientsGetBookingById = (
   variables: ClientsGetBookingByIdVariables,
   signal?: AbortSignal,
 ) =>
@@ -320,11 +926,103 @@ export const clientsGetBookingById = (
     {},
     ClientsGetBookingByIdPathParams
   >({
-    url: "/clients/me/bookings/{bookingId}",
+    url: "/api/clients/me/bookings/{bookingId}",
     method: "get",
     ...variables,
     signal,
   });
+
+/**
+ * Get specific booking by ID for current client
+ */
+export function clientsGetBookingByIdQuery(
+  variables: ClientsGetBookingByIdVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.BookingDTO1>;
+};
+
+export function clientsGetBookingByIdQuery(
+  variables: ClientsGetBookingByIdVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.BookingDTO1>)
+    | reactQuery.SkipToken;
+};
+
+export function clientsGetBookingByIdQuery(
+  variables: ClientsGetBookingByIdVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/clients/me/bookings/{bookingId}",
+      operationId: "clientsGetBookingById",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchClientsGetBookingById(variables, signal),
+  };
+}
+
+/**
+ * Get specific booking by ID for current client
+ */
+export const useSuspenseClientsGetBookingById = <TData = Schemas.BookingDTO1>(
+  variables: ClientsGetBookingByIdVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.BookingDTO1,
+      ClientsGetBookingByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.BookingDTO1,
+    ClientsGetBookingByIdError,
+    TData
+  >({
+    ...clientsGetBookingByIdQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get specific booking by ID for current client
+ */
+export const useClientsGetBookingById = <TData = Schemas.BookingDTO1>(
+  variables: ClientsGetBookingByIdVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.BookingDTO1,
+      ClientsGetBookingByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    Schemas.BookingDTO1,
+    ClientsGetBookingByIdError,
+    TData
+  >({
+    ...clientsGetBookingByIdQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type ClientsUpdateBookingPathParams = {
   /**
@@ -338,12 +1036,12 @@ export type ClientsUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
 export type ClientsUpdateBookingVariables = {
   body?: Schemas.UpdateBookingDTO4;
   pathParams: ClientsUpdateBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Update specific booking for current client
  */
-export const clientsUpdateBooking = (
+export const fetchClientsUpdateBooking = (
   variables: ClientsUpdateBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -355,11 +1053,36 @@ export const clientsUpdateBooking = (
     {},
     ClientsUpdateBookingPathParams
   >({
-    url: "/clients/me/bookings/{bookingId}",
+    url: "/api/clients/me/bookings/{bookingId}",
     method: "patch",
     ...variables,
     signal,
   });
+
+/**
+ * Update specific booking for current client
+ */
+export const useClientsUpdateBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingUpdatedDTO,
+      ClientsUpdateBookingError,
+      ClientsUpdateBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingUpdatedDTO,
+    ClientsUpdateBookingError,
+    ClientsUpdateBookingVariables
+  >({
+    mutationFn: (variables: ClientsUpdateBookingVariables) =>
+      fetchClientsUpdateBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type ClientsCancelBookingPathParams = {
   /**
@@ -372,12 +1095,12 @@ export type ClientsCancelBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type ClientsCancelBookingVariables = {
   pathParams: ClientsCancelBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Cancel (soft delete) specific booking for current client
  */
-export const clientsCancelBooking = (
+export const fetchClientsCancelBooking = (
   variables: ClientsCancelBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -389,30 +1112,139 @@ export const clientsCancelBooking = (
     {},
     ClientsCancelBookingPathParams
   >({
-    url: "/clients/me/bookings/{bookingId}",
+    url: "/api/clients/me/bookings/{bookingId}",
     method: "delete",
     ...variables,
     signal,
   });
 
+/**
+ * Cancel (soft delete) specific booking for current client
+ */
+export const useClientsCancelBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingUpdatedDTO,
+      ClientsCancelBookingError,
+      ClientsCancelBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingUpdatedDTO,
+    ClientsCancelBookingError,
+    ClientsCancelBookingVariables
+  >({
+    mutationFn: (variables: ClientsCancelBookingVariables) =>
+      fetchClientsCancelBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
+
 export type HostsGetMeError = Fetcher.ErrorWrapper<undefined>;
+
+export type HostsGetMeVariables = BookingContext["fetcherOptions"];
 
 /**
  * Get information about the current host
  */
-export const hostsGetMe = (signal?: AbortSignal) =>
+export const fetchHostsGetMe = (
+  variables: HostsGetMeVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<Schemas.HostDTO6, HostsGetMeError, undefined, {}, {}, {}>({
-    url: "/hosts/me",
+    url: "/api/hosts/me",
     method: "get",
+    ...variables,
     signal,
   });
 
+/**
+ * Get information about the current host
+ */
+export function hostsGetMeQuery(variables: HostsGetMeVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.HostDTO6>;
+};
+
+export function hostsGetMeQuery(
+  variables: HostsGetMeVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.HostDTO6>)
+    | reactQuery.SkipToken;
+};
+
+export function hostsGetMeQuery(
+  variables: HostsGetMeVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/hosts/me",
+      operationId: "hostsGetMe",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) => fetchHostsGetMe(variables, signal),
+  };
+}
+
+/**
+ * Get information about the current host
+ */
+export const useSuspenseHostsGetMe = <TData = Schemas.HostDTO6>(
+  variables: HostsGetMeVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.HostDTO6, HostsGetMeError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<Schemas.HostDTO6, HostsGetMeError, TData>({
+    ...hostsGetMeQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get information about the current host
+ */
+export const useHostsGetMe = <TData = Schemas.HostDTO6>(
+  variables: HostsGetMeVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.HostDTO6, HostsGetMeError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<Schemas.HostDTO6, HostsGetMeError, TData>({
+    ...hostsGetMeQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
+
 export type HostsDeleteMeError = Fetcher.ErrorWrapper<undefined>;
+
+export type HostsDeleteMeVariables = BookingContext["fetcherOptions"];
 
 /**
  * Mark host as deleted
  */
-export const hostsDeleteMe = (signal?: AbortSignal) =>
+export const fetchHostsDeleteMe = (
+  variables: HostsDeleteMeVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     Schemas.UsedDeletedDTO,
     HostsDeleteMeError,
@@ -420,18 +1252,43 @@ export const hostsDeleteMe = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/hosts/me", method: "delete", signal });
+  >({ url: "/api/hosts/me", method: "delete", ...variables, signal });
+
+/**
+ * Mark host as deleted
+ */
+export const useHostsDeleteMe = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UsedDeletedDTO,
+      HostsDeleteMeError,
+      HostsDeleteMeVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UsedDeletedDTO,
+    HostsDeleteMeError,
+    HostsDeleteMeVariables
+  >({
+    mutationFn: (variables: HostsDeleteMeVariables) =>
+      fetchHostsDeleteMe(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type HostsUpdateMeError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsUpdateMeVariables = {
   body?: Schemas.UpdateHostDTO10;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Update host params
  */
-export const hostsUpdateMe = (
+export const fetchHostsUpdateMe = (
   variables: HostsUpdateMeVariables,
   signal?: AbortSignal,
 ) =>
@@ -442,13 +1299,38 @@ export const hostsUpdateMe = (
     {},
     {},
     {}
-  >({ url: "/hosts/me", method: "patch", ...variables, signal });
+  >({ url: "/api/hosts/me", method: "patch", ...variables, signal });
+
+/**
+ * Update host params
+ */
+export const useHostsUpdateMe = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserUpdatedDTO,
+      HostsUpdateMeError,
+      HostsUpdateMeVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserUpdatedDTO,
+    HostsUpdateMeError,
+    HostsUpdateMeVariables
+  >({
+    mutationFn: (variables: HostsUpdateMeVariables) =>
+      fetchHostsUpdateMe(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type HostsCreateBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsCreateBookingVariables = {
   body: Schemas.CreateBookingDTO8;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Create a new booking as a host (administrative function).
@@ -465,7 +1347,7 @@ export type HostsCreateBookingVariables = {
  * **Note:** The hostId field is required in the request body for DTO validation,
  * but its value is overridden by the current user's ID in the implementation.
  */
-export const hostsCreateBooking = (
+export const fetchHostsCreateBooking = (
   variables: HostsCreateBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -476,7 +1358,44 @@ export const hostsCreateBooking = (
     {},
     {},
     {}
-  >({ url: "/hosts/me/bookings", method: "post", ...variables, signal });
+  >({ url: "/api/hosts/me/bookings", method: "post", ...variables, signal });
+
+/**
+ * Create a new booking as a host (administrative function).
+ *
+ * **Important:** The hostId in the request body will be IGNORED and automatically
+ * set to the current authenticated user's ID. This is an administrative endpoint
+ * where hosts create bookings for their clients.
+ *
+ * **Use cases:**
+ * - Medical receptionist booking patient appointments
+ * - Service provider scheduling client meetings
+ * - Host creating appointments for existing clients
+ *
+ * **Note:** The hostId field is required in the request body for DTO validation,
+ * but its value is overridden by the current user's ID in the implementation.
+ */
+export const useHostsCreateBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingCreatedDTO,
+      HostsCreateBookingError,
+      HostsCreateBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingCreatedDTO,
+    HostsCreateBookingError,
+    HostsCreateBookingVariables
+  >({
+    mutationFn: (variables: HostsCreateBookingVariables) =>
+      fetchHostsCreateBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type HostsGetMyBookingsQueryParams = {
   /**
@@ -515,12 +1434,12 @@ export type HostsGetMyBookingsResponse = Schemas.BookingDTO7[];
 
 export type HostsGetMyBookingsVariables = {
   queryParams?: HostsGetMyBookingsQueryParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Get all bookings for the current host with optional filtering and sorting
  */
-export const hostsGetMyBookings = (
+export const fetchHostsGetMyBookings = (
   variables: HostsGetMyBookingsVariables,
   signal?: AbortSignal,
 ) =>
@@ -531,7 +1450,101 @@ export const hostsGetMyBookings = (
     {},
     HostsGetMyBookingsQueryParams,
     {}
-  >({ url: "/hosts/me/bookings", method: "get", ...variables, signal });
+  >({ url: "/api/hosts/me/bookings", method: "get", ...variables, signal });
+
+/**
+ * Get all bookings for the current host with optional filtering and sorting
+ */
+export function hostsGetMyBookingsQuery(
+  variables: HostsGetMyBookingsVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<HostsGetMyBookingsResponse>;
+};
+
+export function hostsGetMyBookingsQuery(
+  variables: HostsGetMyBookingsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<HostsGetMyBookingsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function hostsGetMyBookingsQuery(
+  variables: HostsGetMyBookingsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/hosts/me/bookings",
+      operationId: "hostsGetMyBookings",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchHostsGetMyBookings(variables, signal),
+  };
+}
+
+/**
+ * Get all bookings for the current host with optional filtering and sorting
+ */
+export const useSuspenseHostsGetMyBookings = <
+  TData = HostsGetMyBookingsResponse,
+>(
+  variables: HostsGetMyBookingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      HostsGetMyBookingsResponse,
+      HostsGetMyBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    HostsGetMyBookingsResponse,
+    HostsGetMyBookingsError,
+    TData
+  >({
+    ...hostsGetMyBookingsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get all bookings for the current host with optional filtering and sorting
+ */
+export const useHostsGetMyBookings = <TData = HostsGetMyBookingsResponse>(
+  variables: HostsGetMyBookingsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      HostsGetMyBookingsResponse,
+      HostsGetMyBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    HostsGetMyBookingsResponse,
+    HostsGetMyBookingsError,
+    TData
+  >({
+    ...hostsGetMyBookingsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type HostsGetBookingByIdPathParams = {
   /**
@@ -544,12 +1557,12 @@ export type HostsGetBookingByIdError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsGetBookingByIdVariables = {
   pathParams: HostsGetBookingByIdPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Get specific booking by ID for current host
  */
-export const hostsGetBookingById = (
+export const fetchHostsGetBookingById = (
   variables: HostsGetBookingByIdVariables,
   signal?: AbortSignal,
 ) =>
@@ -561,11 +1574,103 @@ export const hostsGetBookingById = (
     {},
     HostsGetBookingByIdPathParams
   >({
-    url: "/hosts/me/bookings/{bookingId}",
+    url: "/api/hosts/me/bookings/{bookingId}",
     method: "get",
     ...variables,
     signal,
   });
+
+/**
+ * Get specific booking by ID for current host
+ */
+export function hostsGetBookingByIdQuery(
+  variables: HostsGetBookingByIdVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.BookingDTO7>;
+};
+
+export function hostsGetBookingByIdQuery(
+  variables: HostsGetBookingByIdVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.BookingDTO7>)
+    | reactQuery.SkipToken;
+};
+
+export function hostsGetBookingByIdQuery(
+  variables: HostsGetBookingByIdVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/hosts/me/bookings/{bookingId}",
+      operationId: "hostsGetBookingById",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchHostsGetBookingById(variables, signal),
+  };
+}
+
+/**
+ * Get specific booking by ID for current host
+ */
+export const useSuspenseHostsGetBookingById = <TData = Schemas.BookingDTO7>(
+  variables: HostsGetBookingByIdVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.BookingDTO7,
+      HostsGetBookingByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.BookingDTO7,
+    HostsGetBookingByIdError,
+    TData
+  >({
+    ...hostsGetBookingByIdQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get specific booking by ID for current host
+ */
+export const useHostsGetBookingById = <TData = Schemas.BookingDTO7>(
+  variables: HostsGetBookingByIdVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.BookingDTO7,
+      HostsGetBookingByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    Schemas.BookingDTO7,
+    HostsGetBookingByIdError,
+    TData
+  >({
+    ...hostsGetBookingByIdQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type HostsDeleteBookingPathParams = {
   /**
@@ -578,12 +1683,12 @@ export type HostsDeleteBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type HostsDeleteBookingVariables = {
   pathParams: HostsDeleteBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Delete(cancel) booking
  */
-export const hostsDeleteBooking = (
+export const fetchHostsDeleteBooking = (
   variables: HostsDeleteBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -595,11 +1700,36 @@ export const hostsDeleteBooking = (
     {},
     HostsDeleteBookingPathParams
   >({
-    url: "/hosts/me/bookings/{bookingId}",
+    url: "/api/hosts/me/bookings/{bookingId}",
     method: "delete",
     ...variables,
     signal,
   });
+
+/**
+ * Delete(cancel) booking
+ */
+export const useHostsDeleteBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingDeletedDTO,
+      HostsDeleteBookingError,
+      HostsDeleteBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingDeletedDTO,
+    HostsDeleteBookingError,
+    HostsDeleteBookingVariables
+  >({
+    mutationFn: (variables: HostsDeleteBookingVariables) =>
+      fetchHostsDeleteBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type HostsUpdateBookingPathParams = {
   /**
@@ -613,12 +1743,12 @@ export type HostsUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
 export type HostsUpdateBookingVariables = {
   body?: Schemas.UpdateBookingDTO9;
   pathParams: HostsUpdateBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Update booking
  */
-export const hostsUpdateBooking = (
+export const fetchHostsUpdateBooking = (
   variables: HostsUpdateBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -630,15 +1760,45 @@ export const hostsUpdateBooking = (
     {},
     HostsUpdateBookingPathParams
   >({
-    url: "/hosts/me/bookings/{bookingId}",
+    url: "/api/hosts/me/bookings/{bookingId}",
     method: "patch",
     ...variables,
     signal,
   });
 
+/**
+ * Update booking
+ */
+export const useHostsUpdateBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingDeletedDTO,
+      HostsUpdateBookingError,
+      HostsUpdateBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingDeletedDTO,
+    HostsUpdateBookingError,
+    HostsUpdateBookingVariables
+  >({
+    mutationFn: (variables: HostsUpdateBookingVariables) =>
+      fetchHostsUpdateBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
+
 export type HostsGetHostSettingsError = Fetcher.ErrorWrapper<undefined>;
 
-export const hostsGetHostSettings = (signal?: AbortSignal) =>
+export type HostsGetHostSettingsVariables = BookingContext["fetcherOptions"];
+
+export const fetchHostsGetHostSettings = (
+  variables: HostsGetHostSettingsVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     Schemas.HostSettingsDTO,
     HostsGetHostSettingsError,
@@ -646,7 +1806,92 @@ export const hostsGetHostSettings = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/hosts/me/settings", method: "get", signal });
+  >({ url: "/api/hosts/me/settings", method: "get", ...variables, signal });
+
+export function hostsGetHostSettingsQuery(
+  variables: HostsGetHostSettingsVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.HostSettingsDTO>;
+};
+
+export function hostsGetHostSettingsQuery(
+  variables: HostsGetHostSettingsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.HostSettingsDTO>)
+    | reactQuery.SkipToken;
+};
+
+export function hostsGetHostSettingsQuery(
+  variables: HostsGetHostSettingsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/hosts/me/settings",
+      operationId: "hostsGetHostSettings",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchHostsGetHostSettings(variables, signal),
+  };
+}
+
+export const useSuspenseHostsGetHostSettings = <
+  TData = Schemas.HostSettingsDTO,
+>(
+  variables: HostsGetHostSettingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.HostSettingsDTO,
+      HostsGetHostSettingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.HostSettingsDTO,
+    HostsGetHostSettingsError,
+    TData
+  >({
+    ...hostsGetHostSettingsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+export const useHostsGetHostSettings = <TData = Schemas.HostSettingsDTO>(
+  variables: HostsGetHostSettingsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.HostSettingsDTO,
+      HostsGetHostSettingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    Schemas.HostSettingsDTO,
+    HostsGetHostSettingsError,
+    TData
+  >({
+    ...hostsGetHostSettingsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type HostsUpdateSettingsError = Fetcher.ErrorWrapper<undefined>;
 
@@ -659,9 +1904,9 @@ export type HostsUpdateSettingsResponse = {
 
 export type HostsUpdateSettingsVariables = {
   body?: Schemas.UpdateHostSettingsDTO;
-};
+} & BookingContext["fetcherOptions"];
 
-export const hostsUpdateSettings = (
+export const fetchHostsUpdateSettings = (
   variables: HostsUpdateSettingsVariables,
   signal?: AbortSignal,
 ) =>
@@ -672,16 +1917,43 @@ export const hostsUpdateSettings = (
     {},
     {},
     {}
-  >({ url: "/hosts/me/settings", method: "patch", ...variables, signal });
+  >({ url: "/api/hosts/me/settings", method: "patch", ...variables, signal });
+
+export const useHostsUpdateSettings = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      HostsUpdateSettingsResponse,
+      HostsUpdateSettingsError,
+      HostsUpdateSettingsVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    HostsUpdateSettingsResponse,
+    HostsUpdateSettingsError,
+    HostsUpdateSettingsVariables
+  >({
+    mutationFn: (variables: HostsUpdateSettingsVariables) =>
+      fetchHostsUpdateSettings(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminGetClientsError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminGetClientsResponse = Schemas.ClientDTO[];
 
+export type AdminGetClientsVariables = BookingContext["fetcherOptions"];
+
 /**
  * Allows you to get all the clients created in the system
  */
-export const adminGetClients = (signal?: AbortSignal) =>
+export const fetchAdminGetClients = (
+  variables: AdminGetClientsVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     AdminGetClientsResponse,
     AdminGetClientsError,
@@ -689,18 +1961,108 @@ export const adminGetClients = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/admin/clients", method: "get", signal });
+  >({ url: "/api/admin/clients", method: "get", ...variables, signal });
+
+/**
+ * Allows you to get all the clients created in the system
+ */
+export function adminGetClientsQuery(variables: AdminGetClientsVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<AdminGetClientsResponse>;
+};
+
+export function adminGetClientsQuery(
+  variables: AdminGetClientsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<AdminGetClientsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function adminGetClientsQuery(
+  variables: AdminGetClientsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/admin/clients",
+      operationId: "adminGetClients",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchAdminGetClients(variables, signal),
+  };
+}
+
+/**
+ * Allows you to get all the clients created in the system
+ */
+export const useSuspenseAdminGetClients = <TData = AdminGetClientsResponse>(
+  variables: AdminGetClientsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AdminGetClientsResponse,
+      AdminGetClientsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    AdminGetClientsResponse,
+    AdminGetClientsError,
+    TData
+  >({
+    ...adminGetClientsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Allows you to get all the clients created in the system
+ */
+export const useAdminGetClients = <TData = AdminGetClientsResponse>(
+  variables: AdminGetClientsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AdminGetClientsResponse,
+      AdminGetClientsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    AdminGetClientsResponse,
+    AdminGetClientsError,
+    TData
+  >({
+    ...adminGetClientsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type AdminCreateNewClientError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminCreateNewClientVariables = {
   body: Schemas.CreateClientDTO;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to create a new client
  */
-export const adminCreateNewClient = (
+export const fetchAdminCreateNewClient = (
   variables: AdminCreateNewClientVariables,
   signal?: AbortSignal,
 ) =>
@@ -711,7 +2073,32 @@ export const adminCreateNewClient = (
     {},
     {},
     {}
-  >({ url: "/admin/clients", method: "post", ...variables, signal });
+  >({ url: "/api/admin/clients", method: "post", ...variables, signal });
+
+/**
+ * Allows you to create a new client
+ */
+export const useAdminCreateNewClient = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserCreatedDTO,
+      AdminCreateNewClientError,
+      AdminCreateNewClientVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserCreatedDTO,
+    AdminCreateNewClientError,
+    AdminCreateNewClientVariables
+  >({
+    mutationFn: (variables: AdminCreateNewClientVariables) =>
+      fetchAdminCreateNewClient(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminGetClientByIdPathParams = {
   clientId: string;
@@ -721,12 +2108,12 @@ export type AdminGetClientByIdError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminGetClientByIdVariables = {
   pathParams: AdminGetClientByIdPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to get a specific client by his id
  */
-export const adminGetClientById = (
+export const fetchAdminGetClientById = (
   variables: AdminGetClientByIdVariables,
   signal?: AbortSignal,
 ) =>
@@ -737,7 +2124,102 @@ export const adminGetClientById = (
     {},
     {},
     AdminGetClientByIdPathParams
-  >({ url: "/admin/clients/{clientId}", method: "get", ...variables, signal });
+  >({
+    url: "/api/admin/clients/{clientId}",
+    method: "get",
+    ...variables,
+    signal,
+  });
+
+/**
+ * Allows you to get a specific client by his id
+ */
+export function adminGetClientByIdQuery(
+  variables: AdminGetClientByIdVariables,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.ClientDTO>;
+};
+
+export function adminGetClientByIdQuery(
+  variables: AdminGetClientByIdVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.ClientDTO>)
+    | reactQuery.SkipToken;
+};
+
+export function adminGetClientByIdQuery(
+  variables: AdminGetClientByIdVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/admin/clients/{clientId}",
+      operationId: "adminGetClientById",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchAdminGetClientById(variables, signal),
+  };
+}
+
+/**
+ * Allows you to get a specific client by his id
+ */
+export const useSuspenseAdminGetClientById = <TData = Schemas.ClientDTO>(
+  variables: AdminGetClientByIdVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.ClientDTO,
+      AdminGetClientByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.ClientDTO,
+    AdminGetClientByIdError,
+    TData
+  >({
+    ...adminGetClientByIdQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Allows you to get a specific client by his id
+ */
+export const useAdminGetClientById = <TData = Schemas.ClientDTO>(
+  variables: AdminGetClientByIdVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      Schemas.ClientDTO,
+      AdminGetClientByIdError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<Schemas.ClientDTO, AdminGetClientByIdError, TData>(
+    {
+      ...adminGetClientByIdQuery(
+        variables === reactQuery.skipToken
+          ? variables
+          : deepMerge(fetcherOptions, variables),
+      ),
+      ...options,
+      ...queryOptions,
+    },
+  );
+};
 
 export type AdminUpdateClietnPathParams = {
   clientId: string;
@@ -748,12 +2230,12 @@ export type AdminUpdateClietnError = Fetcher.ErrorWrapper<undefined>;
 export type AdminUpdateClietnVariables = {
   body?: Schemas.UpdateClientDTO5;
   pathParams: AdminUpdateClietnPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to update the client
  */
-export const adminUpdateClietn = (
+export const fetchAdminUpdateClietn = (
   variables: AdminUpdateClietnVariables,
   signal?: AbortSignal,
 ) =>
@@ -765,11 +2247,36 @@ export const adminUpdateClietn = (
     {},
     AdminUpdateClietnPathParams
   >({
-    url: "/admin/clients/{clientId}",
+    url: "/api/admin/clients/{clientId}",
     method: "patch",
     ...variables,
     signal,
   });
+
+/**
+ * Allows you to update the client
+ */
+export const useAdminUpdateClietn = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserUpdatedDTO,
+      AdminUpdateClietnError,
+      AdminUpdateClietnVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserUpdatedDTO,
+    AdminUpdateClietnError,
+    AdminUpdateClietnVariables
+  >({
+    mutationFn: (variables: AdminUpdateClietnVariables) =>
+      fetchAdminUpdateClietn(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminDeleteClientPathParams = {
   clientId: string;
@@ -779,12 +2286,12 @@ export type AdminDeleteClientError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminDeleteClientVariables = {
   pathParams: AdminDeleteClientPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to delete a client
  */
-export const adminDeleteClient = (
+export const fetchAdminDeleteClient = (
   variables: AdminDeleteClientVariables,
   signal?: AbortSignal,
 ) =>
@@ -796,20 +2303,50 @@ export const adminDeleteClient = (
     {},
     AdminDeleteClientPathParams
   >({
-    url: "/admin/clients/{clientId}",
+    url: "/api/admin/clients/{clientId}",
     method: "delete",
     ...variables,
     signal,
   });
 
+/**
+ * Allows you to delete a client
+ */
+export const useAdminDeleteClient = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UsedDeletedDTO,
+      AdminDeleteClientError,
+      AdminDeleteClientVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UsedDeletedDTO,
+    AdminDeleteClientError,
+    AdminDeleteClientVariables
+  >({
+    mutationFn: (variables: AdminDeleteClientVariables) =>
+      fetchAdminDeleteClient(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
+
 export type AdminGetHostsError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminGetHostsResponse = Schemas.HostDTO[];
 
+export type AdminGetHostsVariables = BookingContext["fetcherOptions"];
+
 /**
  * Allows you to get all the hosts
  */
-export const adminGetHosts = (signal?: AbortSignal) =>
+export const fetchAdminGetHosts = (
+  variables: AdminGetHostsVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     AdminGetHostsResponse,
     AdminGetHostsError,
@@ -817,18 +2354,103 @@ export const adminGetHosts = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/admin/hosts", method: "get", signal });
+  >({ url: "/api/admin/hosts", method: "get", ...variables, signal });
+
+/**
+ * Allows you to get all the hosts
+ */
+export function adminGetHostsQuery(variables: AdminGetHostsVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<AdminGetHostsResponse>;
+};
+
+export function adminGetHostsQuery(
+  variables: AdminGetHostsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<AdminGetHostsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function adminGetHostsQuery(
+  variables: AdminGetHostsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/admin/hosts",
+      operationId: "adminGetHosts",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) => fetchAdminGetHosts(variables, signal),
+  };
+}
+
+/**
+ * Allows you to get all the hosts
+ */
+export const useSuspenseAdminGetHosts = <TData = AdminGetHostsResponse>(
+  variables: AdminGetHostsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AdminGetHostsResponse,
+      AdminGetHostsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    AdminGetHostsResponse,
+    AdminGetHostsError,
+    TData
+  >({
+    ...adminGetHostsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Allows you to get all the hosts
+ */
+export const useAdminGetHosts = <TData = AdminGetHostsResponse>(
+  variables: AdminGetHostsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AdminGetHostsResponse,
+      AdminGetHostsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<AdminGetHostsResponse, AdminGetHostsError, TData>({
+    ...adminGetHostsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type AdminCreateNewHostError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminCreateNewHostVariables = {
   body: Schemas.CreateHostDTO;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to create a new host
  */
-export const adminCreateNewHost = (
+export const fetchAdminCreateNewHost = (
   variables: AdminCreateNewHostVariables,
   signal?: AbortSignal,
 ) =>
@@ -839,7 +2461,32 @@ export const adminCreateNewHost = (
     {},
     {},
     {}
-  >({ url: "/admin/hosts", method: "post", ...variables, signal });
+  >({ url: "/api/admin/hosts", method: "post", ...variables, signal });
+
+/**
+ * Allows you to create a new host
+ */
+export const useAdminCreateNewHost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserCreatedDTO,
+      AdminCreateNewHostError,
+      AdminCreateNewHostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserCreatedDTO,
+    AdminCreateNewHostError,
+    AdminCreateNewHostVariables
+  >({
+    mutationFn: (variables: AdminCreateNewHostVariables) =>
+      fetchAdminCreateNewHost(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminGetHostPathParams = {
   hostId: string;
@@ -849,12 +2496,12 @@ export type AdminGetHostError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminGetHostVariables = {
   pathParams: AdminGetHostPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to get a host by its Id
  */
-export const adminGetHost = (
+export const fetchAdminGetHost = (
   variables: AdminGetHostVariables,
   signal?: AbortSignal,
 ) =>
@@ -865,7 +2512,82 @@ export const adminGetHost = (
     {},
     {},
     AdminGetHostPathParams
-  >({ url: "/admin/hosts/{hostId}", method: "get", ...variables, signal });
+  >({ url: "/api/admin/hosts/{hostId}", method: "get", ...variables, signal });
+
+/**
+ * Allows you to get a host by its Id
+ */
+export function adminGetHostQuery(variables: AdminGetHostVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.HostDTO>;
+};
+
+export function adminGetHostQuery(
+  variables: AdminGetHostVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.HostDTO>)
+    | reactQuery.SkipToken;
+};
+
+export function adminGetHostQuery(
+  variables: AdminGetHostVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/admin/hosts/{hostId}",
+      operationId: "adminGetHost",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) => fetchAdminGetHost(variables, signal),
+  };
+}
+
+/**
+ * Allows you to get a host by its Id
+ */
+export const useSuspenseAdminGetHost = <TData = Schemas.HostDTO>(
+  variables: AdminGetHostVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.HostDTO, AdminGetHostError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<Schemas.HostDTO, AdminGetHostError, TData>(
+    {
+      ...adminGetHostQuery(deepMerge(fetcherOptions, variables)),
+      ...options,
+      ...queryOptions,
+    },
+  );
+};
+
+/**
+ * Allows you to get a host by its Id
+ */
+export const useAdminGetHost = <TData = Schemas.HostDTO>(
+  variables: AdminGetHostVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.HostDTO, AdminGetHostError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<Schemas.HostDTO, AdminGetHostError, TData>({
+    ...adminGetHostQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type AdminUpdateHostPathParams = {
   hostId: string;
@@ -876,12 +2598,12 @@ export type AdminUpdateHostError = Fetcher.ErrorWrapper<undefined>;
 export type AdminUpdateHostVariables = {
   body?: Schemas.UpdateHostDTO10;
   pathParams: AdminUpdateHostPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to update the host
  */
-export const adminUpdateHost = (
+export const fetchAdminUpdateHost = (
   variables: AdminUpdateHostVariables,
   signal?: AbortSignal,
 ) =>
@@ -892,7 +2614,37 @@ export const adminUpdateHost = (
     {},
     {},
     AdminUpdateHostPathParams
-  >({ url: "/admin/hosts/{hostId}", method: "patch", ...variables, signal });
+  >({
+    url: "/api/admin/hosts/{hostId}",
+    method: "patch",
+    ...variables,
+    signal,
+  });
+
+/**
+ * Allows you to update the host
+ */
+export const useAdminUpdateHost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UserUpdatedDTO,
+      AdminUpdateHostError,
+      AdminUpdateHostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UserUpdatedDTO,
+    AdminUpdateHostError,
+    AdminUpdateHostVariables
+  >({
+    mutationFn: (variables: AdminUpdateHostVariables) =>
+      fetchAdminUpdateHost(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminDeleteHostPathParams = {
   hostId: string;
@@ -902,12 +2654,12 @@ export type AdminDeleteHostError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminDeleteHostVariables = {
   pathParams: AdminDeleteHostPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to delete a host
  */
-export const adminDeleteHost = (
+export const fetchAdminDeleteHost = (
   variables: AdminDeleteHostVariables,
   signal?: AbortSignal,
 ) =>
@@ -918,16 +2670,51 @@ export const adminDeleteHost = (
     {},
     {},
     AdminDeleteHostPathParams
-  >({ url: "/admin/hosts/{hostId}", method: "delete", ...variables, signal });
+  >({
+    url: "/api/admin/hosts/{hostId}",
+    method: "delete",
+    ...variables,
+    signal,
+  });
+
+/**
+ * Allows you to delete a host
+ */
+export const useAdminDeleteHost = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.UsedDeletedDTO,
+      AdminDeleteHostError,
+      AdminDeleteHostVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.UsedDeletedDTO,
+    AdminDeleteHostError,
+    AdminDeleteHostVariables
+  >({
+    mutationFn: (variables: AdminDeleteHostVariables) =>
+      fetchAdminDeleteHost(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminGetBookingsError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminGetBookingsResponse = Schemas.BookingDTO[];
 
+export type AdminGetBookingsVariables = BookingContext["fetcherOptions"];
+
 /**
  * Allows you to get all the booklets created in the system
  */
-export const adminGetBookings = (signal?: AbortSignal) =>
+export const fetchAdminGetBookings = (
+  variables: AdminGetBookingsVariables,
+  signal?: AbortSignal,
+) =>
   bookingFetch<
     AdminGetBookingsResponse,
     AdminGetBookingsError,
@@ -935,18 +2722,108 @@ export const adminGetBookings = (signal?: AbortSignal) =>
     {},
     {},
     {}
-  >({ url: "/admin/bookings", method: "get", signal });
+  >({ url: "/api/admin/bookings", method: "get", ...variables, signal });
+
+/**
+ * Allows you to get all the booklets created in the system
+ */
+export function adminGetBookingsQuery(variables: AdminGetBookingsVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<AdminGetBookingsResponse>;
+};
+
+export function adminGetBookingsQuery(
+  variables: AdminGetBookingsVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<AdminGetBookingsResponse>)
+    | reactQuery.SkipToken;
+};
+
+export function adminGetBookingsQuery(
+  variables: AdminGetBookingsVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/admin/bookings",
+      operationId: "adminGetBookings",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchAdminGetBookings(variables, signal),
+  };
+}
+
+/**
+ * Allows you to get all the booklets created in the system
+ */
+export const useSuspenseAdminGetBookings = <TData = AdminGetBookingsResponse>(
+  variables: AdminGetBookingsVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AdminGetBookingsResponse,
+      AdminGetBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    AdminGetBookingsResponse,
+    AdminGetBookingsError,
+    TData
+  >({
+    ...adminGetBookingsQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Allows you to get all the booklets created in the system
+ */
+export const useAdminGetBookings = <TData = AdminGetBookingsResponse>(
+  variables: AdminGetBookingsVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      AdminGetBookingsResponse,
+      AdminGetBookingsError,
+      TData
+    >,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<
+    AdminGetBookingsResponse,
+    AdminGetBookingsError,
+    TData
+  >({
+    ...adminGetBookingsQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type AdminCreateNewBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminCreateNewBookingVariables = {
   body: Schemas.CreateBookingDTO;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
- * Create a new booking
+ * Allow create a new booking
  */
-export const adminCreateNewBooking = (
+export const fetchAdminCreateNewBooking = (
   variables: AdminCreateNewBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -957,7 +2834,32 @@ export const adminCreateNewBooking = (
     {},
     {},
     {}
-  >({ url: "/admin/bookings", method: "post", ...variables, signal });
+  >({ url: "/api/admin/bookings", method: "post", ...variables, signal });
+
+/**
+ * Allow create a new booking
+ */
+export const useAdminCreateNewBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingCreatedDTO,
+      AdminCreateNewBookingError,
+      AdminCreateNewBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingCreatedDTO,
+    AdminCreateNewBookingError,
+    AdminCreateNewBookingVariables
+  >({
+    mutationFn: (variables: AdminCreateNewBookingVariables) =>
+      fetchAdminCreateNewBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminGetBookingPathParams = {
   bookingId: string;
@@ -967,12 +2869,12 @@ export type AdminGetBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminGetBookingVariables = {
   pathParams: AdminGetBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Get a booking by his Id
  */
-export const adminGetBooking = (
+export const fetchAdminGetBooking = (
   variables: AdminGetBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -984,11 +2886,89 @@ export const adminGetBooking = (
     {},
     AdminGetBookingPathParams
   >({
-    url: "/admin/bookings/{bookingId}",
+    url: "/api/admin/bookings/{bookingId}",
     method: "get",
     ...variables,
     signal,
   });
+
+/**
+ * Get a booking by his Id
+ */
+export function adminGetBookingQuery(variables: AdminGetBookingVariables): {
+  queryKey: reactQuery.QueryKey;
+  queryFn: (options: QueryFnOptions) => Promise<Schemas.BookingDTO>;
+};
+
+export function adminGetBookingQuery(
+  variables: AdminGetBookingVariables | reactQuery.SkipToken,
+): {
+  queryKey: reactQuery.QueryKey;
+  queryFn:
+    | ((options: QueryFnOptions) => Promise<Schemas.BookingDTO>)
+    | reactQuery.SkipToken;
+};
+
+export function adminGetBookingQuery(
+  variables: AdminGetBookingVariables | reactQuery.SkipToken,
+) {
+  return {
+    queryKey: queryKeyFn({
+      path: "/api/admin/bookings/{bookingId}",
+      operationId: "adminGetBooking",
+      variables,
+    }),
+    queryFn:
+      variables === reactQuery.skipToken
+        ? reactQuery.skipToken
+        : ({ signal }: QueryFnOptions) =>
+            fetchAdminGetBooking(variables, signal),
+  };
+}
+
+/**
+ * Get a booking by his Id
+ */
+export const useSuspenseAdminGetBooking = <TData = Schemas.BookingDTO>(
+  variables: AdminGetBookingVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.BookingDTO, AdminGetBookingError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useSuspenseQuery<
+    Schemas.BookingDTO,
+    AdminGetBookingError,
+    TData
+  >({
+    ...adminGetBookingQuery(deepMerge(fetcherOptions, variables)),
+    ...options,
+    ...queryOptions,
+  });
+};
+
+/**
+ * Get a booking by his Id
+ */
+export const useAdminGetBooking = <TData = Schemas.BookingDTO>(
+  variables: AdminGetBookingVariables | reactQuery.SkipToken,
+  options?: Omit<
+    reactQuery.UseQueryOptions<Schemas.BookingDTO, AdminGetBookingError, TData>,
+    "queryKey" | "queryFn" | "initialData"
+  >,
+) => {
+  const { queryOptions, fetcherOptions } = useBookingContext(options);
+  return reactQuery.useQuery<Schemas.BookingDTO, AdminGetBookingError, TData>({
+    ...adminGetBookingQuery(
+      variables === reactQuery.skipToken
+        ? variables
+        : deepMerge(fetcherOptions, variables),
+    ),
+    ...options,
+    ...queryOptions,
+  });
+};
 
 export type AdminUpdateBookingPathParams = {
   bookingId: string;
@@ -999,12 +2979,12 @@ export type AdminUpdateBookingError = Fetcher.ErrorWrapper<undefined>;
 export type AdminUpdateBookingVariables = {
   body?: Schemas.UpdateBookingDTO;
   pathParams: AdminUpdateBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
- * Allows you to update the booking
+ * Allows you to update the booking by its id
  */
-export const adminUpdateBooking = (
+export const fetchAdminUpdateBooking = (
   variables: AdminUpdateBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -1016,11 +2996,36 @@ export const adminUpdateBooking = (
     {},
     AdminUpdateBookingPathParams
   >({
-    url: "/admin/bookings/{bookingId}",
+    url: "/api/admin/bookings/{bookingId}",
     method: "patch",
     ...variables,
     signal,
   });
+
+/**
+ * Allows you to update the booking by its id
+ */
+export const useAdminUpdateBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingUpdatedDTO,
+      AdminUpdateBookingError,
+      AdminUpdateBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingUpdatedDTO,
+    AdminUpdateBookingError,
+    AdminUpdateBookingVariables
+  >({
+    mutationFn: (variables: AdminUpdateBookingVariables) =>
+      fetchAdminUpdateBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
+};
 
 export type AdminDeleteBookingPathParams = {
   bookingId: string;
@@ -1030,12 +3035,12 @@ export type AdminDeleteBookingError = Fetcher.ErrorWrapper<undefined>;
 
 export type AdminDeleteBookingVariables = {
   pathParams: AdminDeleteBookingPathParams;
-};
+} & BookingContext["fetcherOptions"];
 
 /**
  * Allows you to delete a booking by its Id
  */
-export const adminDeleteBooking = (
+export const fetchAdminDeleteBooking = (
   variables: AdminDeleteBookingVariables,
   signal?: AbortSignal,
 ) =>
@@ -1047,52 +3052,115 @@ export const adminDeleteBooking = (
     {},
     AdminDeleteBookingPathParams
   >({
-    url: "/admin/bookings/{bookingId}",
+    url: "/api/admin/bookings/{bookingId}",
     method: "delete",
     ...variables,
     signal,
   });
 
-export const operationsByTag = {
-  public: { publicGetHosts, publicGetHostById, publicGetHostBookings },
-  auth: { authRegister, authLogin },
-  clients: {
-    clientsGetClient,
-    clientsUpdateClient,
-    clientsDeleteClient,
-    clientsGetBookings,
-    clientsCreateBooking,
-    clientsGetBookingById,
-    clientsUpdateBooking,
-    clientsCancelBooking,
-  },
-  hosts: {
-    hostsGetMe,
-    hostsDeleteMe,
-    hostsUpdateMe,
-    hostsCreateBooking,
-    hostsGetMyBookings,
-    hostsGetBookingById,
-    hostsDeleteBooking,
-    hostsUpdateBooking,
-    hostsGetHostSettings,
-    hostsUpdateSettings,
-  },
-  admin: {
-    adminGetClients,
-    adminCreateNewClient,
-    adminGetClientById,
-    adminUpdateClietn,
-    adminDeleteClient,
-    adminGetHosts,
-    adminCreateNewHost,
-    adminGetHost,
-    adminUpdateHost,
-    adminDeleteHost,
-    adminGetBookings,
-    adminCreateNewBooking,
-    adminGetBooking,
-    adminUpdateBooking,
-    adminDeleteBooking,
-  },
+/**
+ * Allows you to delete a booking by its Id
+ */
+export const useAdminDeleteBooking = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      Schemas.BookingDeletedDTO,
+      AdminDeleteBookingError,
+      AdminDeleteBookingVariables
+    >,
+    "mutationFn"
+  >,
+) => {
+  const { fetcherOptions } = useBookingContext();
+  return reactQuery.useMutation<
+    Schemas.BookingDeletedDTO,
+    AdminDeleteBookingError,
+    AdminDeleteBookingVariables
+  >({
+    mutationFn: (variables: AdminDeleteBookingVariables) =>
+      fetchAdminDeleteBooking(deepMerge(fetcherOptions, variables)),
+    ...options,
+  });
 };
+
+export type QueryOperation =
+  | {
+      path: "/api//hosts";
+      operationId: "publicGetHosts";
+      variables: PublicGetHostsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/hosts/{id}";
+      operationId: "publicGetHostById";
+      variables: PublicGetHostByIdVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/hosts/{id}/bookings";
+      operationId: "publicGetHostBookings";
+      variables: PublicGetHostBookingsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/clients/me";
+      operationId: "clientsGetClient";
+      variables: ClientsGetClientVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/clients/me/bookings";
+      operationId: "clientsGetBookings";
+      variables: ClientsGetBookingsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/clients/me/bookings/{bookingId}";
+      operationId: "clientsGetBookingById";
+      variables: ClientsGetBookingByIdVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/hosts/me";
+      operationId: "hostsGetMe";
+      variables: HostsGetMeVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/hosts/me/bookings";
+      operationId: "hostsGetMyBookings";
+      variables: HostsGetMyBookingsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/hosts/me/bookings/{bookingId}";
+      operationId: "hostsGetBookingById";
+      variables: HostsGetBookingByIdVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/hosts/me/settings";
+      operationId: "hostsGetHostSettings";
+      variables: HostsGetHostSettingsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/admin/clients";
+      operationId: "adminGetClients";
+      variables: AdminGetClientsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/admin/clients/{clientId}";
+      operationId: "adminGetClientById";
+      variables: AdminGetClientByIdVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/admin/hosts";
+      operationId: "adminGetHosts";
+      variables: AdminGetHostsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/admin/hosts/{hostId}";
+      operationId: "adminGetHost";
+      variables: AdminGetHostVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/admin/bookings";
+      operationId: "adminGetBookings";
+      variables: AdminGetBookingsVariables | reactQuery.SkipToken;
+    }
+  | {
+      path: "/api/admin/bookings/{bookingId}";
+      operationId: "adminGetBooking";
+      variables: AdminGetBookingVariables | reactQuery.SkipToken;
+    };

@@ -10,7 +10,7 @@ tags:
   - name: hosts
   - name: admin
 paths:
-  /hosts:
+  /api//hosts:
     get:
       summary: GetHosts
       deprecated: false
@@ -59,7 +59,7 @@ paths:
                       - FRIDAY
           headers: {}
       security: []
-  /hosts/{id}:
+  /api/hosts/{id}:
     get:
       summary: GetHostById
       deprecated: false
@@ -98,7 +98,7 @@ paths:
                   - FRIDAY
           headers: {}
       security: []
-  /hosts/{id}/bookings:
+  /api/hosts/{id}/bookings:
     get:
       summary: GetHostBookings
       deprecated: false
@@ -158,7 +158,7 @@ paths:
                       to: '15:00'
           headers: {}
       security: []
-  /auth/register:
+  /api/auth/register:
     post:
       summary: Register
       deprecated: false
@@ -185,7 +185,7 @@ paths:
                 $ref: '#/components/schemas/UserLoggedInDTO'
           headers: {}
       security: []
-  /auth/login:
+  /api/auth/login:
     post:
       summary: Login
       deprecated: false
@@ -237,7 +237,7 @@ paths:
                       - Invalid login or password
           headers: {}
       security: []
-  /clients/me:
+  /api/clients/me:
     get:
       summary: GetMe
       deprecated: false
@@ -349,7 +349,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /clients/me/bookings:
+  /api/clients/me/bookings:
     get:
       summary: GetMyBookings
       deprecated: false
@@ -464,7 +464,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /clients/me/bookings/{bookingId}:
+  /api/clients/me/bookings/{bookingId}:
     get:
       summary: GetBookingById
       deprecated: false
@@ -597,7 +597,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /hosts/me:
+  /api/hosts/me:
     get:
       summary: GetMe
       deprecated: false
@@ -703,7 +703,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /hosts/me/bookings:
+  /api/hosts/me/bookings:
     post:
       summary: CreateBooking
       deprecated: false
@@ -850,7 +850,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /hosts/me/bookings/{bookingId}:
+  /api/hosts/me/bookings/{bookingId}:
     get:
       summary: GetBookingById
       deprecated: false
@@ -981,7 +981,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /hosts/me/settings:
+  /api/hosts/me/settings:
     get:
       summary: GetMySettings
       deprecated: false
@@ -1012,6 +1012,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateHostSettingsDTO'
+            examples: {}
       responses:
         '200':
           description: ''
@@ -1025,7 +1026,7 @@ paths:
                     description: status
           headers: {}
       security: []
-  /admin/clients:
+  /api/admin/clients:
     get:
       summary: GetClients
       deprecated: false
@@ -1070,7 +1071,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/clients/{clientId}:
+  /api/admin/clients/{clientId}:
     get:
       summary: GetClientById
       deprecated: false
@@ -1156,7 +1157,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/hosts:
+  /api/admin/hosts:
     get:
       summary: GetHosts
       deprecated: false
@@ -1201,7 +1202,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/hosts/{hostId}:
+  /api/admin/hosts/{hostId}:
     get:
       summary: GetHostById
       deprecated: false
@@ -1280,7 +1281,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/bookings:
+  /api/admin/bookings:
     get:
       summary: GetBookings
       deprecated: false
@@ -1304,7 +1305,7 @@ paths:
     post:
       summary: CreateBooking
       deprecated: false
-      description: Create a new booking
+      description: Allow create a new booking
       operationId: ADMIN_CREATE_NEW_BOOKING
       tags:
         - admin
@@ -1325,7 +1326,7 @@ paths:
           headers: {}
       security:
         - bearerAuth: []
-  /admin/bookings/{bookingId}:
+  /api/admin/bookings/{bookingId}:
     get:
       summary: GetBookingById
       deprecated: false
@@ -1353,7 +1354,7 @@ paths:
     patch:
       summary: UpdateBooking
       deprecated: false
-      description: Allows you to update the booking
+      description: Allows you to update the booking by its id
       operationId: ADMIN_UPDATE_BOOKING
       tags:
         - admin
@@ -2574,8 +2575,8 @@ components:
         JWT token authentication. Use the token returned from /auth/login
         endpoint. Do not include 'Bearer ' prefix.
 servers:
-  - url: http://localhost:3000/api
+  - url: http://localhost:3000
     description: Development server
-  - url: https://api.booking.example.com/api
+  - url: https://api.booking.example.com
     description: Production server
 security: []

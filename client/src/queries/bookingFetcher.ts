@@ -1,11 +1,4 @@
-export type BookingFetcherExtraProps = {
-  /**
-   * You can add some extra props to your generated fetchers.
-   *
-   * Note: You need to re-gen after adding the first property to
-   * have the `BookingFetcherExtraProps` injected in `BookingComponents.ts`
-   **/
-};
+import { type BookingContext } from "./bookingContext";
 
 const baseUrl = "http://localhost:3000";
 
@@ -22,7 +15,7 @@ export type BookingFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> =
     queryParams?: TQueryParams;
     pathParams?: TPathParams;
     signal?: AbortSignal;
-  } & BookingFetcherExtraProps;
+  } & BookingContext["fetcherOptions"];
 
 export async function bookingFetch<
   TData,

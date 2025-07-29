@@ -1,16 +1,33 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
-import { Button, Center, Container, Flex, Stack, Title } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { EntityItem, Footer } from "../../widgets";
 import { truncate } from "../../utils";
+import { useAdminGetClients } from "../../queries/bookingComponents";
+import { useAuth } from "../../contexts";
 
 const ListClientsAdminPage = () => {
   const navigate = useNavigate();
+  const { accessToken } = useAuth() as { accessToken: string };
+
+  const clients = useAdminGetClients({
+    headers: {
+      authorization: accessToken,
+    },
+  });
 
   const onEditClick = useCallback(() => {
     navigate("/admin/clients/edit");
   }, [navigate]);
-  const onDeleteClick = () => {};
+  const onDeleteClick = () => { };
   const handleBack = useCallback(() => {
     navigate("/admin");
   }, [navigate]);
@@ -20,13 +37,22 @@ const ListClientsAdminPage = () => {
       <Center h="100vh">
         <Container maw={640} w="100%" mb="64px">
           <Title mb="md">Clients</Title>
-          <Stack>
-            <EntityItem
-              title={<Title order={4}>{truncate("SomeClientNickname")}</Title>}
-              onDeleteClick={onDeleteClick}
-              onDetailsClick={onEditClick}
-            />
-          </Stack>
+          {clients.isFetching && <Text>...fetching</Text>}
+          {clients.isError && <Text c={"red.7"}>Error</Text>}
+          {clients.isSuccess && (
+            <Stack>
+              {clients.data.map((item) => {
+                return (
+                  <EntityItem
+                    key={item.id}
+                    title={<Title order={4}>{truncate(item.id)}</Title>}
+                    onDeleteClick={onDeleteClick}
+                    onDetailsClick={onEditClick}
+                  />
+                );
+              })}
+            </Stack>
+          )}
         </Container>
       </Center>
 

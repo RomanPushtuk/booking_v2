@@ -16,21 +16,24 @@ import {
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
-import { hostFormShema } from "./hostFormShema";
+import { updateShema, createShema, type UpdateHostShemaType, type CreateHostShemaType } from "./hostFormShema";
 import { IconTrash } from "@tabler/icons-react";
 
-interface IHostFormProps {
+export interface IHostFormProps {
   item?: {
     avatar?: string;
     name?: string;
     description?: string;
+    forwardBooking?: string;
     workingDays?: string[];
     workingHours?: { start: string; end: string }[];
   };
+  onEdit?: (payload: UpdateHostShemaType) => void
+  onCreate?: (payload: CreateHostShemaType) => void
 }
 
 const HostForm = (props: IHostFormProps) => {
-  const { item } = props;
+  const { item, onEdit, onCreate } = props;
 
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -41,6 +44,7 @@ const HostForm = (props: IHostFormProps) => {
       avatar: item?.avatar ?? (null as File | null),
       name: item?.name ?? "",
       description: item?.description ?? "",
+      forwardBooking: item?.forwardBooking ?? "",
       workingDays: item?.workingDays ?? [
         "Monday",
         "Tuesday",
@@ -55,16 +59,24 @@ const HostForm = (props: IHostFormProps) => {
       ...(isEditing
         ? {}
         : {
-            login: "",
-            password: "",
-          }),
+          login: "",
+          password: "",
+        }),
     },
-
-    validate: zod4Resolver(hostFormShema),
+    validate: zod4Resolver(isEditing ? updateShema : createShema),
   });
 
   const handleSubmit = (values: typeof form.values) => {
-    console.log("Form submitted:", values);
+    if (isEditing) {
+      if (onEdit) {
+        onEdit(values as UpdateHostShemaType)
+      }
+
+    } else {
+      if (onCreate) {
+        onCreate(values as CreateHostShemaType)
+      }
+    }
   };
 
   const handleAvatarChange = (file: File | null) => {
@@ -92,13 +104,14 @@ const HostForm = (props: IHostFormProps) => {
               label="Avatar"
               placeholder="Upload avatar"
               accept="image/*"
+              disabled
               onChange={handleAvatarChange}
             />
 
             <TextInput
               label="Name"
               placeholder="John Doe"
-              withAsterisk
+              disabled
               {...form.getInputProps("name")}
             />
 
@@ -107,20 +120,28 @@ const HostForm = (props: IHostFormProps) => {
               placeholder="Brief description..."
               autosize
               minRows={2}
+              disabled
               {...form.getInputProps("description")}
+            />
+
+            <TextInput
+              label="Forward booking period"
+              placeholder="P1W"
+              withAsterisk
+              {...form.getInputProps("forwardBooking")}
             />
 
             <MultiSelect
               label="Working Days"
               placeholder="Select working days"
               data={[
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY",
+                "SATURDAY",
+                "SUNDAY",
               ]}
               searchable
               clearable

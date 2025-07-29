@@ -1,7 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { PropsWithChildren } from "react";
-import { operationsByTag } from "../../queries/bookingComponents";
-import { useMutation } from "@tanstack/react-query";
+import { useAuthLogin } from "../../queries/bookingComponents";
 import { useNavigate } from "react-router";
 
 interface AuthContextType {
@@ -12,12 +11,18 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  const loginMutation = useMutation({
-    mutationFn: operationsByTag.auth.authLogin,
-  });
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      setAccessToken(accessToken);
+      navigate("/admin");
+    }
+  }, []);
+
+  const loginMutation = useAuthLogin();
 
   const login = async (login: string, password: string) => {
     await loginMutation.mutateAsync(
@@ -25,8 +30,9 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       {
         onSuccess: (data) => {
           setAccessToken(data.accessToken);
-          navigate('/');
-        }
+          localStorage.setItem("accessToken", data.accessToken);
+          navigate("/admin");
+        },
       },
     );
   };

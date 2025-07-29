@@ -1,2 +1,6 @@
-{"id":"8ea5954dab6e","versionId":"50312e341d89","data":{"workHours":[{"from":"09:00","to":"13:00"}],"workDays":["MONDAY","TUESDAY"]},"_id":"rPMSWyNP0tRFKiOx"}
+{"id":"6a62fb5aaf58","versionId":"5e37325b1ae4","data":{"forwardBooking":"P1W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY"]},"_id":"4UrA4v9dIYoBMcxX"}
 {"id":"293c53cf778a","versionId":"68d7d181ad41","data":{"id":"293c53cf778a","fromDateTime":"2025-06-25T10:00:00Z"},"_id":"NaI3Ehdv5MFFVOiN"}
+{"id":"c52d82e726b0","versionId":"315188262078","data":{"forwardBooking":"P1W","workHours":[{"from":"09:00","to":"13:00"},{"from":"14:00","to":"18:00"}],"workDays":["MONDAY","TUESDAY","WEDNESDAY","THURSDAY"]},"_id":"aekkXQwSA9znQw69"}
+{"id":"8ea5954dab6e","versionId":"50312e341d89","data":{"workHours":[{"from":"09:00","to":"13:00"}],"workDays":["MONDAY","TUESDAY"]},"_id":"rPMSWyNP0tRFKiOx"}
+{"id":"293c53cf778a","versionId":"269b5d5fcaae","data":{"id":"293c53cf778a","clientId":"24f49d16b64b","hostId":"7a6352831f5c","fromDateTime":"2025-07-29","toDateTime":"2025-07-29"},"_id":"QhdhoxBm07fQPb1I"}
+{"id":"293c53cf778a","versionId":"49bf6235818e","data":{"id":"293c53cf778a","clientId":"24f49d16b64b","hostId":"7a6352831f5c","fromDateTime":"2025-07-29T11:00:00.000+02:00","toDateTime":"2025-07-29T13:00:00.000+02:00"},"_id":"0Q8Mn2IB7gduqH0S"}

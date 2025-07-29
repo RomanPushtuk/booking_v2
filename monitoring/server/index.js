@@ -26,12 +26,11 @@ const MAX_LOG_FOLDER_SIZE_BYTES = 0.03 * 1024 * 1024; // 10 MB
 let bufferMode = false;
 let buffer = [];
 
-
 const DB_FILE_PATH = path.resolve(__dirname, "./monitoring.db");
 createFileIfNotExists(DB_FILE_PATH);
 const LOG_ARCHIVES_FOLDER = path.resolve(__dirname, "./logs");
 createFolderIfNotExists(LOG_ARCHIVES_FOLDER);
-const HTML_PAGE_PATH = path.resolve(__dirname, "./index.html");
+const HTML_PAGE_PATH = path.resolve(__dirname, "./dist/index.html");
 const MONITORING_SERVER_PORT = 3001;
 
 let db = new Datastore({ filename: DB_FILE_PATH, autoload: true });
@@ -110,7 +109,7 @@ const useMonitoring = (app) => {
 
   server.listen(MONITORING_SERVER_PORT, () => {
     console.log(
-      `Monitoring server running at http://localhost:${MONITORING_SERVER_PORT}`,
+      `Monitoring server running at http://localhost:${MONITORING_SERVER_PORT}`
     );
   });
 };

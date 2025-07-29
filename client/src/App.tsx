@@ -41,7 +41,7 @@ const App = () => (
                 path="/admin/hosts/create"
                 element={<CreateHostAdminPage />}
               />
-              <Route path="/admin/hosts/edit" element={<EditHostAdminPage />} />
+              <Route path="/admin/hosts/:hostId" element={<EditHostAdminPage />} />
               <Route path="/admin/clients" element={<ListClientsAdminPage />} />
               <Route
                 path="/admin/clients/create"
@@ -60,7 +60,7 @@ const App = () => (
                 element={<CreateBookingAdminPage />}
               />
               <Route
-                path="/admin/bookings/edit"
+                path="/admin/bookings/:bookingId"
                 element={<EditBookingAdminPage />}
               />
               <Route path="/admin" element={<AdminDashboard />} />

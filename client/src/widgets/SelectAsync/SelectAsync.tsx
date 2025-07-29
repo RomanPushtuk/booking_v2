@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { Combobox, Input, InputBase, Loader, useCombobox } from "@mantine/core";
-import { type ComboboxItem } from "@mantine/core";
+import type { UseQueryResult } from "@tanstack/react-query";
 
 interface ISelectAsyncProps {
   label?: string;
@@ -8,33 +7,35 @@ interface ISelectAsyncProps {
   withAsterisk?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-  fetchFn: () => Promise<ComboboxItem[]>;
+  query: UseQueryResult<unknown, unknown>,
 }
 
 const SelectAsync = (props: ISelectAsyncProps) => {
-  const { label, placeholder, withAsterisk, value, fetchFn, onChange } = props;
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<ComboboxItem[]>([]);
+  const { label, placeholder, withAsterisk, value, onChange, query } = props;
+  // const [loading, setLoading] = useState(false);
+  // const [data, setData] = useState<ComboboxItem[]>([]);
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  useEffect(() => {
-    setLoading(true);
-    fetchFn().then((response) => {
-      setData(response);
-      setLoading(false);
-    });
-  }, [fetchFn]);
+  const data = (query.isSuccess ? query.data : []) as { id: string }[]
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   fetchFn().then((response) => {
+  //     setData(response);
+  //     setLoading(false);
+  //   });
+  // }, [fetchFn]);
 
   const options = data.map((item) => (
-    <Combobox.Option value={item.value} key={item.value}>
-      {item.label}
+    <Combobox.Option value={item.id} key={item.id}>
+      {item.id}
     </Combobox.Option>
   ));
 
-  const initValue = data.find((item) => item.value === value)?.label;
+  const initValue = data.find((item) => item.id === value)?.id;
 
   return (
     <Combobox
@@ -51,7 +52,7 @@ const SelectAsync = (props: ISelectAsyncProps) => {
           component="button"
           type="button"
           pointer
-          rightSection={loading ? <Loader size={18} /> : <Combobox.Chevron />}
+          rightSection={query.isFetching ? <Loader size={18} /> : <Combobox.Chevron />}
           onClick={() => combobox.toggleDropdown()}
           rightSectionPointerEvents="none"
           withAsterisk={withAsterisk}
@@ -62,7 +63,7 @@ const SelectAsync = (props: ISelectAsyncProps) => {
 
       <Combobox.Dropdown>
         <Combobox.Options>
-          {loading ? <Combobox.Empty>Loading....</Combobox.Empty> : options}
+          {query.isFetching ? <Combobox.Empty>Loading....</Combobox.Empty> : options}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>
