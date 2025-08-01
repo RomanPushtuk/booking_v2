@@ -7,7 +7,7 @@ interface ISelectAsyncProps {
   withAsterisk?: boolean;
   value?: string;
   onChange?: (value: string) => void;
-  query: UseQueryResult<unknown, unknown>,
+  query: UseQueryResult<unknown, unknown>;
 }
 
 const SelectAsync = (props: ISelectAsyncProps) => {
@@ -19,7 +19,7 @@ const SelectAsync = (props: ISelectAsyncProps) => {
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const data = (query.isSuccess ? query.data : []) as { id: string }[]
+  const data = (query.isSuccess ? query.data : []) as { id: string }[];
 
   // useEffect(() => {
   //   setLoading(true);
@@ -52,7 +52,9 @@ const SelectAsync = (props: ISelectAsyncProps) => {
           component="button"
           type="button"
           pointer
-          rightSection={query.isFetching ? <Loader size={18} /> : <Combobox.Chevron />}
+          rightSection={
+            query.isFetching ? <Loader size={18} /> : <Combobox.Chevron />
+          }
           onClick={() => combobox.toggleDropdown()}
           rightSectionPointerEvents="none"
           withAsterisk={withAsterisk}
@@ -63,7 +65,11 @@ const SelectAsync = (props: ISelectAsyncProps) => {
 
       <Combobox.Dropdown>
         <Combobox.Options>
-          {query.isFetching ? <Combobox.Empty>Loading....</Combobox.Empty> : options}
+          {query.isFetching ? (
+            <Combobox.Empty>Loading....</Combobox.Empty>
+          ) : (
+            options
+          )}
         </Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>

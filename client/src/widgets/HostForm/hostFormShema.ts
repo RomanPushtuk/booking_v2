@@ -13,7 +13,7 @@ export const updateShema = z.object({
       }),
     )
     .nonempty(),
-})
+});
 
 export const createShema = z.object({
   name: z.string().optional(),
@@ -30,8 +30,7 @@ export const createShema = z.object({
     .nonempty(),
   login: z.string().min(6),
   password: z.string().min(6),
-})
+});
 
-
-export type UpdateHostShemaType = z.infer<typeof updateShema>
-export type CreateHostShemaType = z.infer<typeof createShema>
+export type UpdateHostShemaType = z.infer<typeof updateShema>;
+export type CreateHostShemaType = z.infer<typeof createShema>;

@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router";
 import {
   Button,
-  Center,
   Container,
   Flex,
   Stack,
@@ -25,42 +24,43 @@ const ListBookingsAdminPage = () => {
     },
   });
 
-  const onEditClick = useCallback((id: string) => () => {
-    navigate(`/admin/bookings/${id}`);
-  }, [navigate]);
+  const onEditClick = useCallback(
+    (id: string) => () => {
+      navigate(`/admin/bookings/${id}`);
+    },
+    [navigate],
+  );
   const onDeleteClick = () => { };
   const handleBack = useCallback(() => {
     navigate("/admin");
   }, [navigate]);
 
   const onCreateClick = () => {
-    navigate('/admin/bookings/create')
-  }
+    navigate("/admin/bookings/create");
+  };
 
   return (
     <>
-      <Center h="100vh">
-        <Container maw={640} w="100%" mb="64px">
-          <Title mb="md">Bookings</Title>
+      <Container maw={640} w="100%" mb='100px'>
+        <Title mb="md">Bookings</Title>
 
-          {bookings.isFetching && <Text>...fetching</Text>}
-          {bookings.isError && <Text c={"red.7"}>Error</Text>}
-          {bookings.isSuccess && (
-            <Stack>
-              {bookings.data.map((item) => {
-                return (
-                  <EntityItem
-                    key={item.id}
-                    title={<Title order={4}>{truncate(item.id)}</Title>}
-                    onDeleteClick={onDeleteClick}
-                    onDetailsClick={onEditClick(item.id)}
-                  />
-                );
-              })}
-            </Stack>
-          )}
-        </Container>
-      </Center>
+        {bookings.isFetching && <Text>...fetching</Text>}
+        {bookings.isError && <Text c={"red.7"}>Error</Text>}
+        {bookings.isSuccess && (
+          <Stack>
+            {bookings.data.map((item) => {
+              return (
+                <EntityItem
+                  key={item.id}
+                  title={<Title order={4}>{truncate(item.id)}</Title>}
+                  onDeleteClick={onDeleteClick}
+                  onDetailsClick={onEditClick(item.id)}
+                />
+              );
+            })}
+          </Stack>
+        )}
+      </Container>
 
       <Footer onBack={handleBack}>
         <Flex flex={1} justify="center">

@@ -1,7 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { PropsWithChildren } from "react";
 import { useAuthLogin } from "../../queries/bookingComponents";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { DefaultErrorProps } from "../../queries/bookingFetcher";
+
+const FETCH_ERROR_CHANNEL = new BroadcastChannel("FETCH_ERROR_CHANNEL");
 
 interface AuthContextType {
   accessToken: string | null;
@@ -12,13 +15,41 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.setItem("lastVisitedUrl", location.pathname);
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [location]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent<DefaultErrorProps>) => {
+      const error = event.data;
+      if ([500, 404].includes(error.code)) {
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
+    };
+    FETCH_ERROR_CHANNEL.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
+
+  useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+    const lastVisitedUrl = localStorage.getItem("lastVisitedUrl");
     if (accessToken) {
       setAccessToken(accessToken);
-      navigate("/admin");
+      navigate(lastVisitedUrl ?? "/admin");
+    } else {
+      navigate("/login");
     }
   }, []);
 

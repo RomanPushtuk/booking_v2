@@ -1,40 +1,27 @@
 import { Button, Stack, Title, Paper, Group } from "@mantine/core";
-import { TimeInput } from "@mantine/dates";
+import { DateInput, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { bookingFormShema, type BookingShemaType } from "./bookingFormShema";
 import { SelectAsync } from "../SelectAsync";
-import { useAdminGetHosts, useAdminGetClients } from "../../queries/bookingComponents";
+import {
+  useAdminGetHosts,
+  useAdminGetClients,
+} from "../../queries/bookingComponents";
 import { useAuth } from "../../contexts";
-
 
 export interface IBookingFormItem {
   clientId?: string;
   hostId?: string;
+  date?: string;
   timeSlot?: { start: string; end: string };
 }
 
 interface IBookingFormProps {
   item?: IBookingFormItem;
-  onEdit?: (payload: BookingShemaType) => void
-  onCreate?: (payload: BookingShemaType) => void
+  onEdit?: (payload: BookingShemaType) => void;
+  onCreate?: (payload: BookingShemaType) => void;
 }
-
-// const getClients = async () => {
-//   return [
-//     { value: "fu039jf39", label: "Client1" },
-//     { value: "ffu390jf", label: "Client2" },
-//     { value: "fu2234", label: "Client3" },
-//   ];
-// };
-
-// const getHosts = async () => {
-//   return [
-//     { value: "ogkrjf39", label: "Host1" },
-//     { value: "fjjv390jf", label: "Host2" },
-//     { value: "fr822234", label: "Host3" },
-//   ];
-// };
 
 const BookingForm = (props: IBookingFormProps) => {
   const { item, onEdit, onCreate } = props;
@@ -49,7 +36,7 @@ const BookingForm = (props: IBookingFormProps) => {
     },
   });
 
-    const hosts = useAdminGetHosts({
+  const hosts = useAdminGetHosts({
     headers: {
       authorization: accessToken,
     },
@@ -59,6 +46,7 @@ const BookingForm = (props: IBookingFormProps) => {
     initialValues: {
       clientId: item?.clientId ?? "",
       hostId: item?.hostId ?? "",
+      date: item?.date ?? "",
       timeSlot: item?.timeSlot ?? { start: "", end: "" },
     },
 
@@ -67,12 +55,14 @@ const BookingForm = (props: IBookingFormProps) => {
 
   const handleSubmit = (values: typeof form.values) => {
     if (isEditing) {
-      if (onEdit) onEdit(values as BookingShemaType)
+      if (onEdit) onEdit(values as BookingShemaType);
     } else {
-      if (onCreate) onCreate(values as BookingShemaType)
+      if (onCreate) onCreate(values as BookingShemaType);
     }
     console.log("Form submitted:", values);
   };
+
+  console.log(form.values)
 
   return (
     <>
@@ -100,6 +90,12 @@ const BookingForm = (props: IBookingFormProps) => {
                 form.setFieldValue("hostId", value);
               }}
               query={hosts}
+            />
+            <DateInput
+              label="Date"
+              placeholder="Date input"
+              withAsterisk
+              {...form.getInputProps("date")}
             />
             <Group>
               <TimeInput

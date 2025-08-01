@@ -1,10 +1,17 @@
-import { type BookingContext } from "./bookingContext";
+import config from "../../config.json";
 
-const baseUrl = "http://localhost:3000";
+import { BookingContext } from "./bookingContext";
 
-export type ErrorWrapper<TError> =
-  | TError
-  | { status: "unknown"; payload: string };
+const FETCH_ERROR_CHANNEL = new BroadcastChannel("FETCH_ERROR_CHANNEL");
+const baseUrl = config.baseUrl;
+
+export type DefaultErrorProps = {
+  code: number;
+  statusText: string;
+  payload: string;
+};
+
+export type ErrorWrapper<TError> = TError | DefaultErrorProps;
 
 export type BookingFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> =
   {
@@ -72,12 +79,16 @@ export async function bookingFetch<
         headers: requestHeaders,
       },
     );
+
+    const { status: code, statusText } = response;
+
     if (!response.ok) {
       try {
         error = await response.json();
       } catch (e) {
         error = {
-          status: "unknown" as const,
+          code,
+          statusText,
           payload:
             e instanceof Error
               ? `Unexpected error (${e.message})`
@@ -97,8 +108,10 @@ export async function bookingFetch<
         e instanceof Error ? `Network error (${e.message})` : "Network error",
       stack: e as string,
     };
+    FETCH_ERROR_CHANNEL.postMessage(errorObject);
     throw errorObject;
   }
+  FETCH_ERROR_CHANNEL.postMessage(error);
   throw error;
 }
 

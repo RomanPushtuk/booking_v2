@@ -5,7 +5,7 @@ import {
   type QueryKey,
   type UseQueryOptions,
 } from "@tanstack/react-query";
-import { type QueryOperation } from "./bookingComponents";
+import { QueryOperation } from "./bookingComponents";
 
 export type BookingContext<
   TQueryFnData = unknown,

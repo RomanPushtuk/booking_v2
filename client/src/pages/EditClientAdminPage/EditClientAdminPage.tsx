@@ -1,23 +1,67 @@
 import { useCallback } from "react";
-import { useNavigate } from "react-router";
-import { Center, Container } from "@mantine/core";
+import { useNavigate, useParams } from "react-router";
+import { Center, Container, Text } from "@mantine/core";
 import { ClientForm, Footer } from "../../widgets";
+import {
+  useAdminGetClientById,
+  useAdminUpdateClietn,
+} from "../../queries/bookingComponents";
+import { useAuth } from "../../contexts";
+import type { UpdateClientShemaType } from "../../widgets/ClientForm/clientFormShema";
+import type { UpdateClientDTO } from "../../queries/bookingSchemas";
+
+const mapUpdateClientShemaTypeToUpdateClientDTO = (
+  payload: UpdateClientShemaType,
+): UpdateClientDTO => {
+  console.log(payload);
+  return {};
+};
 
 const EditClientAdminPage = () => {
+  const params = useParams();
+
+  if (!params.clientId) throw new Error("No clientId in params");
+
   const navigate = useNavigate();
   const handleBack = useCallback(() => {
     navigate("/admin/clients");
   }, [navigate]);
 
+  const { accessToken } = useAuth() as { accessToken: string };
+
+  const client = useAdminGetClientById({
+    pathParams: { clientId: params.clientId },
+    headers: {
+      authorization: accessToken,
+    },
+  });
+
+  const update = useAdminUpdateClietn();
+
+  const handleEdit = (data: UpdateClientShemaType) => {
+    update.mutate({
+      pathParams: { clientId: params.clientId as string },
+      body: mapUpdateClientShemaTypeToUpdateClientDTO(data),
+      headers: {
+        authorization: accessToken,
+      },
+    });
+  };
+
   return (
     <>
       <Center h="100vh">
         <Container maw={640} w="100%" mb="64px">
-          <ClientForm
-            item={{
-              name: "Client",
-            }}
-          />
+          {client.isFetching && <Text>...fetching</Text>}
+          {client.isError && <Text c="red.7">...error</Text>}
+          {client.isSuccess && (
+            <ClientForm
+              item={{
+                name: "Client",
+              }}
+              onUpdate={handleEdit}
+            />
+          )}
         </Container>
       </Center>
       <Footer onBack={handleBack} />

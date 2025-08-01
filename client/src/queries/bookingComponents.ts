@@ -6,7 +6,7 @@
 import * as reactQuery from "@tanstack/react-query";
 import {
   useBookingContext,
-  type BookingContext,
+  BookingContext,
   queryKeyFn,
 } from "./bookingContext";
 import { deepMerge } from "./bookingUtils";

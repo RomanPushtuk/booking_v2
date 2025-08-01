@@ -16,7 +16,12 @@ import {
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
-import { updateShema, createShema, type UpdateHostShemaType, type CreateHostShemaType } from "./hostFormShema";
+import {
+  updateShema,
+  createShema,
+  type UpdateHostShemaType,
+  type CreateHostShemaType,
+} from "./hostFormShema";
 import { IconTrash } from "@tabler/icons-react";
 
 export interface IHostFormProps {
@@ -28,8 +33,8 @@ export interface IHostFormProps {
     workingDays?: string[];
     workingHours?: { start: string; end: string }[];
   };
-  onEdit?: (payload: UpdateHostShemaType) => void
-  onCreate?: (payload: CreateHostShemaType) => void
+  onEdit?: (payload: UpdateHostShemaType) => void;
+  onCreate?: (payload: CreateHostShemaType) => void;
 }
 
 const HostForm = (props: IHostFormProps) => {
@@ -46,11 +51,11 @@ const HostForm = (props: IHostFormProps) => {
       description: item?.description ?? "",
       forwardBooking: item?.forwardBooking ?? "",
       workingDays: item?.workingDays ?? [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
       ],
       workingHours: item?.workingHours ?? [
         { start: "09:00", end: "13:00" },
@@ -66,15 +71,16 @@ const HostForm = (props: IHostFormProps) => {
     validate: zod4Resolver(isEditing ? updateShema : createShema),
   });
 
+  console.log(form.errors);
+
   const handleSubmit = (values: typeof form.values) => {
     if (isEditing) {
       if (onEdit) {
-        onEdit(values as UpdateHostShemaType)
+        onEdit(values as UpdateHostShemaType);
       }
-
     } else {
       if (onCreate) {
-        onCreate(values as CreateHostShemaType)
+        onCreate(values as CreateHostShemaType);
       }
     }
   };
@@ -222,7 +228,7 @@ const HostForm = (props: IHostFormProps) => {
               </>
             )}
 
-            <Button type="submit" fullWidth mt="md">
+            <Button type="submit" fullWidth mt="md" style={{ zIndex: 2 }}>
               {isEditing ? "Edit" : "Create New"} Host
             </Button>
           </Stack>

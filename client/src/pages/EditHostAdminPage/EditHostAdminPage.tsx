@@ -1,7 +1,10 @@
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
-import { Text } from "@mantine/core"
-import { useAdminGetHost, useAdminUpdateHost } from "../../queries/bookingComponents";
+import { Text } from "@mantine/core";
+import {
+  useAdminGetHost,
+  useAdminUpdateHost,
+} from "../../queries/bookingComponents";
 import { Center, Container } from "@mantine/core";
 import { Footer, HostForm } from "../../widgets";
 import { useAuth } from "../../contexts";
@@ -15,29 +18,38 @@ const mapHostToHostForm = (host: HostDTO): IHostFormProps => {
       forwardBooking: host.forwardBooking,
       workingDays: host.workDays,
       workingHours: host.workHours.map((item) => {
-        const { from, to } = item
-        return { start: from, end: to }
+        const { from, to } = item;
+        return { start: from, end: to };
       }),
-    }
-  }
-}
+    },
+  };
+};
 
-const mapUpdateHostShemaTypeToUpdateHostDTO = (payload: UpdateHostShemaType): UpdateHostDTO => {
+const mapUpdateHostShemaTypeToUpdateHostDTO = (
+  payload: UpdateHostShemaType,
+): UpdateHostDTO => {
   return {
     forwardBooking: payload.forwardBooking,
-    workDays: payload.workingDays as ("MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY")[],
+    workDays: payload.workingDays as (
+      | "MONDAY"
+      | "TUESDAY"
+      | "WEDNESDAY"
+      | "THURSDAY"
+      | "FRIDAY"
+      | "SATURDAY"
+      | "SUNDAY"
+    )[],
     workHours: payload.workingHours.map((item) => {
-      const { start, end } = item
-      return { from: start, to: end }
+      const { start, end } = item;
+      return { from: start, to: end };
     }),
-
-  }
-}
+  };
+};
 
 const EditHostAdminPage = () => {
   const params = useParams();
 
-  if (!params.hostId) throw new Error('No hostId in params');
+  if (!params.hostId) throw new Error("No hostId in params");
 
   const { accessToken } = useAuth() as { accessToken: string };
 
@@ -51,9 +63,9 @@ const EditHostAdminPage = () => {
     headers: {
       authorization: accessToken,
     },
-  })
+  });
 
-  const update = useAdminUpdateHost()
+  const update = useAdminUpdateHost();
 
   const handleEdit = (data: UpdateHostShemaType) => {
     update.mutate({
@@ -61,24 +73,19 @@ const EditHostAdminPage = () => {
       body: mapUpdateHostShemaTypeToUpdateHostDTO(data),
       headers: {
         authorization: accessToken,
-      }
-    })
-  }
+      },
+    });
+  };
 
   return (
     <>
-      <Center h="100vh">
-        <Container maw={640} w="100%" mb="64px">
-          {host.isFetching && <Text>...fetching</Text>}
-          {host.isError && <Text c='red.7'>...error</Text>}
-          {host.isSuccess && (
-            <HostForm
-              {...(mapHostToHostForm(host.data))}
-              onEdit={handleEdit}
-            />
-          )}
-        </Container>
-      </Center>
+      <Container maw={640} w="100%" mb={42}>
+        {host.isFetching && <Text>...fetching</Text>}
+        {host.isError && <Text c="red.7">...error</Text>}
+        {host.isSuccess && (
+          <HostForm {...mapHostToHostForm(host.data)} onEdit={handleEdit} />
+        )}
+      </Container>
 
       <Footer onBack={handleBack} />
     </>
