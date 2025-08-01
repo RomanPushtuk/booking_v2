@@ -1,1 +1,1 @@
-export * as cors from './cors';
+export * as cors from "./cors";

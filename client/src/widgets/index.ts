@@ -7,3 +7,4 @@ export { BookingForm } from "./BookingForm";
 export { EntityItem } from "./EntityItem";
 export { Footer } from "./Footer";
 export { PrivateRoute } from "./PrivateRoute";
+export { ErrorBoundary } from "./ErrorBoundary";

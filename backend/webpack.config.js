@@ -34,11 +34,11 @@ module.exports = {
       patterns: [
         { from: "src/gateway/swagger/BookingYml.openapi.yaml", to: "." },
         { from: "src/shared/logger/monitoring.js", to: "." },
-        "./node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui.css",
-        "./node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-bundle.js",
-        "./node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js",
-        "./node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-16x16.png",
-        "./node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-32x32.png",
+        "../node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui.css",
+        "../node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-bundle.js",
+        "../node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js",
+        "../node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-16x16.png",
+        "../node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-32x32.png",
         {
           from: "client/**/*",
           context: path.resolve(__dirname, "src", "gateway"),

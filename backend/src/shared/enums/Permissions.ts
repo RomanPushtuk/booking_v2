@@ -15,4 +15,17 @@ export enum Permissions {
   HOST_UPDATE_BOOKING = "host.update.booking",
   HOST_CANCEL_BOOKING = "host.cancel.booking",
 
+  ADMIN_READ_CLIENT = "admin.read.client",
+  ADMIN_CREATE_CLIENT = "admin.create.client",
+  ADMIN_UPDATE_CLIENT = "admin.update.client",
+  ADMIN_DELETE_CLIENT = "admin.delete.client",
+  ADMIN_READ_HOST = "admin.read.host",
+  ADMIN_CREATE_HOST = "admin.create.host",
+  ADMIN_UPDATE_HOST = "admin.update.host",
+  ADMIN_DELETE_HOST = "admin.delete.host",
+
+  ADMIN_READ_BOOKING = "admin.read.booking",
+  ADMIN_CREATE_BOOKING = "admin.create.booking",
+  ADMIN_UPDATE_BOOKING = "admin.update.booking",
+  ADMIN_DELETE_BOOKING = "admin.delete.booking",
 }

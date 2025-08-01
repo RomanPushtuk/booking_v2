@@ -1,5 +1,5 @@
 import { logger } from "../logger";
-import { saveClient, getClientById } from "../sql";
+import { saveClient, getClientById, getAllClients } from "../sql";
 import { Client } from "../domain";
 import { UnitOfWork } from "../services";
 import { ClientMapper } from "../mappers";
@@ -50,5 +50,25 @@ export class ClientRepository {
       role: user.getRole(),
       deleted: user.getDeleted(),
     });
+  }
+
+  getAll(): Client[] | null {
+    logger.info(this.constructor.name + " getAll");
+    const sql = getAllClients();
+    const data = this._uow.db.prepare(sql).all() as
+      | {
+          id: string;
+          role: string;
+          deleted: number;
+        }[]
+      | undefined;
+    if (!data) return null;
+    return data.map((clientData) =>
+      ClientMapper.toDomain({
+        ...clientData,
+        bookings: [],
+        deleted: Boolean(clientData.deleted),
+      }),
+    );
   }
 }

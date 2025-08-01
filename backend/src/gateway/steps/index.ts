@@ -19,3 +19,6 @@ export { UpdateClientInBookingServiceStep } from "./UpdateClientInBookingService
 export { UpdateClientInInfoServiceStep } from "./UpdateClientInInfoServiceStep";
 export { UpdateHostInBookingServiceStep } from "./UpdateHostInBookingServiceStep";
 export { UpdateHostInInfoServiceStep } from "./UpdateHostInInfoServiceStep";
+export { CreateHostInBookingServiceStep } from "./CreateHostInBookingServiceStep";
+export { CreateClientInBookingServiceStep } from "./CreateClientInBookingServiceStep";
+export { DeleteBookingInBookingServiceStep } from "./DeleteBookingInBookingServiceStep";

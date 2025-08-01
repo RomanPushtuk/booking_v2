@@ -1,17 +1,17 @@
-export type BookingFetcherExtraProps = {
-  /**
-   * You can add some extra props to your generated fetchers.
-   *
-   * Note: You need to re-gen after adding the first property to
-   * have the `BookingFetcherExtraProps` injected in `BookingComponents.ts`
-   **/
+import config from "../../config.json";
+
+import { BookingContext } from "./bookingContext";
+
+const FETCH_ERROR_CHANNEL = new BroadcastChannel("FETCH_ERROR_CHANNEL");
+const baseUrl = config.baseUrl;
+
+export type DefaultErrorProps = {
+  code: number;
+  statusText: string;
+  payload: string;
 };
 
-const baseUrl = "http://localhost:3000";
-
-export type ErrorWrapper<TError> =
-  | TError
-  | { status: "unknown"; payload: string };
+export type ErrorWrapper<TError> = TError | DefaultErrorProps;
 
 export type BookingFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> =
   {
@@ -22,7 +22,7 @@ export type BookingFetcherOptions<TBody, THeaders, TQueryParams, TPathParams> =
     queryParams?: TQueryParams;
     pathParams?: TPathParams;
     signal?: AbortSignal;
-  } & BookingFetcherExtraProps;
+  } & BookingContext["fetcherOptions"];
 
 export async function bookingFetch<
   TData,
@@ -79,12 +79,16 @@ export async function bookingFetch<
         headers: requestHeaders,
       },
     );
+
+    const { status: code, statusText } = response;
+
     if (!response.ok) {
       try {
         error = await response.json();
       } catch (e) {
         error = {
-          status: "unknown" as const,
+          code,
+          statusText,
           payload:
             e instanceof Error
               ? `Unexpected error (${e.message})`
@@ -104,8 +108,10 @@ export async function bookingFetch<
         e instanceof Error ? `Network error (${e.message})` : "Network error",
       stack: e as string,
     };
+    FETCH_ERROR_CHANNEL.postMessage(errorObject);
     throw errorObject;
   }
+  FETCH_ERROR_CHANNEL.postMessage(error);
   throw error;
 }
 

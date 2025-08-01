@@ -76,9 +76,9 @@ export function validateTimeIntervals(
   );
 
   const hasOverlap = intervals.some((interval, index) =>
-    intervals.slice(index + 1).some((otherInterval) =>
-      interval.overlaps(otherInterval),
-    ),
+    intervals
+      .slice(index + 1)
+      .some((otherInterval) => interval.overlaps(otherInterval)),
   );
 
   if (hasOverlap) {
@@ -107,10 +107,13 @@ export function addDurationToDate(
   return resultDate.toISO()!;
 }
 
-export function isIntervalInPast(fromDateTime: string, toDateTime: string): boolean {
+export function isIntervalInPast(
+  fromDateTime: string,
+  toDateTime: string,
+): boolean {
   const now = DateTime.now();
   const fromDate = DateTime.fromISO(fromDateTime);
   const toDate = DateTime.fromISO(toDateTime);
-  
+
   return fromDate < now || toDate < now;
 }

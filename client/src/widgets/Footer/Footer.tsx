@@ -12,7 +12,7 @@ const Footer = (props: PropsWithChildren<IFooterProps>) => {
     <Dialog opened display="none">
       <Affix
         position={{ bottom: 32, left: "50%" }}
-        style={{ transform: "translate(-50%, 0)" }}
+        style={{ transform: "translate(-50%, 0)", zIndex: 1 }}
       >
         <Flex w="100vw" px="md" align="center">
           {!!onBack && (

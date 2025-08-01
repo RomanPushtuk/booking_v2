@@ -67,15 +67,21 @@ export class Host {
     const toDateTime = booking.getToDateTime();
 
     if (this.checkIfWorkingHoursForHost(fromDateTime, toDateTime)) {
-      throw new Error("Can't create a booking. The host is not working at this time");
+      throw new Error(
+        "Can't create a booking. The host is not working at this time",
+      );
     }
 
     if (this.checkIfPastTimeForHost(fromDateTime, toDateTime)) {
-      throw new Error("Can't create a booking. The booking time is in the past");
+      throw new Error(
+        "Can't create a booking. The booking time is in the past",
+      );
     }
 
     if (this.checkIfBeyondForwardBookingForHost(fromDateTime)) {
-      throw new Error("Can't create a booking. The booking is beyond the forward booking limit");
+      throw new Error(
+        "Can't create a booking. The booking is beyond the forward booking limit",
+      );
     }
 
     this.validateAndAddBooking(booking);
@@ -85,18 +91,27 @@ export class Host {
     const fromDateTime = booking.getFromDateTime();
     const toDateTime = booking.getToDateTime();
 
-    const isOutsideWorkingHours = this.checkIfWorkingHours(fromDateTime, toDateTime);
+    const isOutsideWorkingHours = this.checkIfWorkingHours(
+      fromDateTime,
+      toDateTime,
+    );
 
     if (isOutsideWorkingHours) {
-      throw new Error("Can't create a booking. The host is not working at this time");
+      throw new Error(
+        "Can't create a booking. The host is not working at this time",
+      );
     }
 
     if (this.checkIfPastTime(fromDateTime, toDateTime)) {
-      throw new Error("Can't create a booking. The booking time is in the past");
+      throw new Error(
+        "Can't create a booking. The booking time is in the past",
+      );
     }
 
     if (this.checkIfBeyondForwardBooking(fromDateTime)) {
-      throw new Error("Can't create a booking. The booking is beyond the forward booking limit");
+      throw new Error(
+        "Can't create a booking. The booking is beyond the forward booking limit",
+      );
     }
 
     this.validateAndAddBooking(booking);
@@ -129,22 +144,27 @@ export class Host {
   }
 
   updateBookingByHost(booking: Booking, updateData: UpdateBookingData) {
-    
     if (updateData.hostId && updateData.hostId !== this._id) {
-      throw new Error("Can't update booking. Cannot transfer booking to another host");
+      throw new Error(
+        "Can't update booking. Cannot transfer booking to another host",
+      );
     }
-    
+
     if (updateData.clientId && updateData.clientId !== booking.getClientId()) {
-      throw new Error("Can't update booking. Cannot transfer booking to another client");
+      throw new Error(
+        "Can't update booking. Cannot transfer booking to another client",
+      );
     }
-    
+
     Booking.update(booking, updateData);
-    
+
     const fromDateTime = booking.getFromDateTime();
     const toDateTime = booking.getToDateTime();
 
     if (this.checkIfWorkingHoursForHost(fromDateTime, toDateTime)) {
-      throw new Error("Can't update booking. The host is not working at this time");
+      throw new Error(
+        "Can't update booking. The host is not working at this time",
+      );
     }
 
     if (this.checkIfPastTimeForHost(fromDateTime, toDateTime)) {
@@ -152,30 +172,36 @@ export class Host {
     }
 
     if (this.checkIfBeyondForwardBookingForHost(fromDateTime)) {
-      throw new Error("Can't update booking. The booking is beyond the forward booking limit");
+      throw new Error(
+        "Can't update booking. The booking is beyond the forward booking limit",
+      );
     }
-    
+
     this.validateUpdatedBooking(booking);
   }
 
   updateBookingByClient(booking: Booking, updateData: UpdateBookingData) {
-    
     if (updateData.hostId && updateData.hostId !== this._id) {
-      throw new Error("Can't update booking. Cannot transfer booking to another host");
+      throw new Error(
+        "Can't update booking. Cannot transfer booking to another host",
+      );
     }
-    
-    
+
     if (updateData.clientId && updateData.clientId !== booking.getClientId()) {
-      throw new Error("Can't update booking. Cannot transfer booking to another client");
+      throw new Error(
+        "Can't update booking. Cannot transfer booking to another client",
+      );
     }
-    
+
     Booking.update(booking, updateData);
-    
+
     const fromDateTime = booking.getFromDateTime();
     const toDateTime = booking.getToDateTime();
 
     if (this.checkIfWorkingHours(fromDateTime, toDateTime)) {
-      throw new Error("Can't update booking. The host is not working at this time");
+      throw new Error(
+        "Can't update booking. The host is not working at this time",
+      );
     }
 
     if (this.checkIfPastTime(fromDateTime, toDateTime)) {
@@ -183,9 +209,11 @@ export class Host {
     }
 
     if (this.checkIfBeyondForwardBooking(fromDateTime)) {
-      throw new Error("Can't update booking. The booking is beyond the forward booking limit");
+      throw new Error(
+        "Can't update booking. The booking is beyond the forward booking limit",
+      );
     }
-    
+
     this.validateUpdatedBooking(booking);
   }
 
@@ -271,7 +299,7 @@ export class Host {
 
     for (const [key, value] of entries) {
       if (value === undefined) continue;
-      
+
       switch (key) {
         case "forwardBooking":
           host.setForwardBooking(value as string);
@@ -375,28 +403,21 @@ export class Host {
     return this.checkIfPastTime(fromDateTime, toDateTime);
   }
 
-  private checkIfPastTime(
-    fromDateTime: string,
-    toDateTime: string,
-  ): boolean {
+  private checkIfPastTime(fromDateTime: string, toDateTime: string): boolean {
     return isIntervalInPast(fromDateTime, toDateTime);
   }
 
-  private checkIfBeyondForwardBooking(
-    fromDateTime: string,
-  ): boolean {
+  private checkIfBeyondForwardBooking(fromDateTime: string): boolean {
     const forwardBookingLimit = addDurationToDate(this._forwardBooking);
     const bookingDate = new Date(fromDateTime);
     const limitDate = new Date(forwardBookingLimit);
-    
+
     return bookingDate > limitDate;
   }
 
-  private checkIfBeyondForwardBookingForHost(
-    fromDateTime: string,
-  ): boolean {
+  private checkIfBeyondForwardBookingForHost(fromDateTime: string): boolean {
     const isBeyond = this.checkIfBeyondForwardBooking(fromDateTime);
-    
+
     if (config.allowHostForwardBookingOverride) {
       return false;
     }

@@ -26,7 +26,6 @@ export class BookingFilters {
     this.deleted = deleted;
 
     const errors = validateSync(this, { skipMissingProperties: true });
-    if (errors.length)
-      throw new DTOValidationError("BookingFilters", errors);
+    if (errors.length) throw new DTOValidationError("BookingFilters", errors);
   }
 }

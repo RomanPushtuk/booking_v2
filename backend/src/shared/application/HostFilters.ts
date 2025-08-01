@@ -28,7 +28,6 @@ export class HostFilters {
     this.deleted = deleted;
 
     const errors = validateSync(this, { skipMissingProperties: true });
-    if (errors.length)
-      throw new DTOValidationError("HostFilters", errors);
+    if (errors.length) throw new DTOValidationError("HostFilters", errors);
   }
 }

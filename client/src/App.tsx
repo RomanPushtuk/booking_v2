@@ -20,56 +20,64 @@ import {
 
 import { theme } from "./theme";
 import { AuthProvider } from "./contexts";
-import { PrivateRoute } from "./widgets";
+import { ErrorBoundary, PrivateRoute } from "./widgets";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <BrowserRouter basename="/">
-    <QueryClientProvider client={queryClient}>
-      <MantineProvider theme={theme}>
-        <AuthProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
+  <ErrorBoundary>
+    <BrowserRouter basename="/">
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider theme={theme}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
 
-            <Route element={<PrivateRoute />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/create" element={<CreateBookingPage />} />
-              <Route path="/details" element={<BookingDetailsPage />} />
-              <Route path="/admin/hosts" element={<ListHostsAdminPage />} />
-              <Route
-                path="/admin/hosts/create"
-                element={<CreateHostAdminPage />}
-              />
-              <Route path="/admin/hosts/edit" element={<EditHostAdminPage />} />
-              <Route path="/admin/clients" element={<ListClientsAdminPage />} />
-              <Route
-                path="/admin/clients/create"
-                element={<CreateClientAdminPage />}
-              />
-              <Route
-                path="/admin/clients/edit"
-                element={<EditClientAdminPage />}
-              />
-              <Route
-                path="/admin/bookings"
-                element={<ListBookingsAdminPage />}
-              />
-              <Route
-                path="/admin/bookings/create"
-                element={<CreateBookingAdminPage />}
-              />
-              <Route
-                path="/admin/bookings/edit"
-                element={<EditBookingAdminPage />}
-              />
-              <Route path="/admin" element={<AdminDashboard />} />
-            </Route>
-          </Routes>
-        </AuthProvider>
-      </MantineProvider>
-    </QueryClientProvider>
-  </BrowserRouter>
+              <Route element={<PrivateRoute />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/create" element={<CreateBookingPage />} />
+                <Route path="/details" element={<BookingDetailsPage />} />
+                <Route path="/admin/hosts" element={<ListHostsAdminPage />} />
+                <Route
+                  path="/admin/hosts/create"
+                  element={<CreateHostAdminPage />}
+                />
+                <Route
+                  path="/admin/hosts/:hostId"
+                  element={<EditHostAdminPage />}
+                />
+                <Route
+                  path="/admin/clients"
+                  element={<ListClientsAdminPage />}
+                />
+                <Route
+                  path="/admin/clients/create"
+                  element={<CreateClientAdminPage />}
+                />
+                <Route
+                  path="/admin/clients/:clientId"
+                  element={<EditClientAdminPage />}
+                />
+                <Route
+                  path="/admin/bookings"
+                  element={<ListBookingsAdminPage />}
+                />
+                <Route
+                  path="/admin/bookings/create"
+                  element={<CreateBookingAdminPage />}
+                />
+                <Route
+                  path="/admin/bookings/:bookingId"
+                  element={<EditBookingAdminPage />}
+                />
+                <Route path="/admin" element={<AdminDashboard />} />
+              </Route>
+            </Routes>
+          </AuthProvider>
+        </MantineProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  </ErrorBoundary>
 );
 
 export { App };

@@ -1,12 +1,13 @@
 import {
+  generateReactQueryComponents,
   generateSchemaTypes,
-  generateFetchers,
+  // generateFetchers,
 } from '@openapi-codegen/typescript';
 import { defineConfig } from '@openapi-codegen/cli';
 export default defineConfig({
   booking: {
     from: {
-      relativePath: 'openapi.yaml',
+      relativePath: '../backend/src/gateway/swagger/BookingYml.openapi.yaml',
       source: 'file',
     },
     outputDir: 'src/queries',
@@ -15,7 +16,11 @@ export default defineConfig({
       const { schemasFiles } = await generateSchemaTypes(context, {
         filenamePrefix,
       });
-      await generateFetchers(context, {
+      // await generateFetchers(context, {
+      //   filenamePrefix,
+      //   schemasFiles,
+      // });
+      await generateReactQueryComponents(context, {
         filenamePrefix,
         schemasFiles,
       });

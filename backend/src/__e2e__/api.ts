@@ -14,11 +14,17 @@ export const api = {
     getHostById: (id: string) => {
       return axiosInstance.get<gateway.dtos.HostDTO>(`/hosts/${id}`);
     },
-    getHostBookings: (id: string, params?: {
-      sortDirection?: string;
-      sortProperty?: string;
-    }) => {
-      return axiosInstance.get<gateway.dtos.BookingDTO[]>(`/hosts/${id}/bookings`, { params });
+    getHostBookings: (
+      id: string,
+      params?: {
+        sortDirection?: string;
+        sortProperty?: string;
+      },
+    ) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO[]>(
+        `/hosts/${id}/bookings`,
+        { params },
+      );
     },
   },
   auth: {
@@ -108,7 +114,10 @@ export const api = {
       return axiosInstance.get<gateway.dtos.HostDTO>("/hosts/me", config);
     },
     deleteMe: (config: AxiosRequestConfig) => {
-      return axiosInstance.delete<gateway.dtos.UserDeletedDTO>("/hosts/me", config);
+      return axiosInstance.delete<gateway.dtos.UserDeletedDTO>(
+        "/hosts/me",
+        config,
+      );
     },
     updateMe: (
       body: gateway.dtos.UpdateHostDTO,
@@ -120,16 +129,25 @@ export const api = {
         config,
       );
     },
-    getMyBookings: (config: AxiosRequestConfig, params?: {
-      sortDirection?: string;
-      sortProperty?: string;
-      fromDateTime?: string;
-      toDateTime?: string;
-    }) => {
-      return axiosInstance.get<gateway.dtos.BookingDTO[]>("/hosts/me/bookings", { ...config, params });
+    getMyBookings: (
+      config: AxiosRequestConfig,
+      params?: {
+        sortDirection?: string;
+        sortProperty?: string;
+        fromDateTime?: string;
+        toDateTime?: string;
+      },
+    ) => {
+      return axiosInstance.get<gateway.dtos.BookingDTO[]>(
+        "/hosts/me/bookings",
+        { ...config, params },
+      );
     },
     getBookingById: (bookingId: string, config: AxiosRequestConfig) => {
-      return axiosInstance.get<gateway.dtos.BookingDTO>(`/hosts/me/bookings/${bookingId}`, config);
+      return axiosInstance.get<gateway.dtos.BookingDTO>(
+        `/hosts/me/bookings/${bookingId}`,
+        config,
+      );
     },
     createBooking: (
       body: gateway.dtos.CreateHostBookingDTO,

@@ -41,7 +41,12 @@ export class UpdateHostBookingInBookingServiceStep extends Step<
     versionId: string,
   ): Promise<BookingUpdatedDTO> {
     logger.info(this.constructor.name + " invoke");
-    return await this._invokeCb(updateHostBookingDTO, hostId, bookingId, versionId);
+    return await this._invokeCb(
+      updateHostBookingDTO,
+      hostId,
+      bookingId,
+      versionId,
+    );
   }
 
   override async withCompensation(

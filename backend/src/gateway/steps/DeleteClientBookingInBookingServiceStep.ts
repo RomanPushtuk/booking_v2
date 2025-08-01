@@ -2,9 +2,14 @@ import { Step } from "../application";
 import { BookingDeletedDTO } from "../dtos";
 import { logger } from "../logger";
 
-export class DeleteClientBookingInBookingServiceStep extends Step<string, BookingDeletedDTO> {
+export class DeleteClientBookingInBookingServiceStep extends Step<
+  string,
+  BookingDeletedDTO
+> {
   private _invokeCb: (bookingId: string) => Promise<BookingDeletedDTO>;
-  private _withCompensationCb: (bookingId: string) => Promise<BookingDeletedDTO>;
+  private _withCompensationCb: (
+    bookingId: string,
+  ) => Promise<BookingDeletedDTO>;
 
   constructor(
     invokeCb: (bookingId: string) => Promise<BookingDeletedDTO>,
@@ -19,7 +24,9 @@ export class DeleteClientBookingInBookingServiceStep extends Step<string, Bookin
     return await this._invokeCb(bookingId);
   }
 
-  override async withCompensation(bookingId: string): Promise<BookingDeletedDTO> {
+  override async withCompensation(
+    bookingId: string,
+  ): Promise<BookingDeletedDTO> {
     logger.info(this.constructor.name + " withCompensation");
     return await this._withCompensationCb(bookingId);
   }

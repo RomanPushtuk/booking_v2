@@ -1,43 +1,51 @@
 import { Step } from "../application";
-import { UpdateBookingDTO } from "../dtos";
+import {
+  BookingRevertedDTO,
+  BookingUpdatedDTO,
+  UpdateBookingDTO,
+} from "../dtos";
 import { logger } from "../logger";
 
 export class UpdateBookingInBookingServiceStep extends Step<
-  UpdateBookingDTO,
-  void
+  UpdateBookingDTO & { id: string },
+  unknown
 > {
   private _invokeCb: (
-    updateBookingDTO: UpdateBookingDTO,
+    updateBookingDTO: UpdateBookingDTO & { id: string },
+    versionId: string,
+  ) => Promise<BookingUpdatedDTO>;
+  private _withCompensationCb: (
     bookingId: string,
-  ) => Promise<void>;
-  private _withCompensationCb: (bookingId: string) => Promise<void>;
+    versionId: string,
+  ) => Promise<BookingRevertedDTO>;
 
   constructor(
     invokeCb: (
-      updateBookingDTO: UpdateBookingDTO,
+      updateBookingDTO: UpdateBookingDTO & { id: string },
       bookingId: string,
-    ) => Promise<void>,
-    withCompensationCb: (bookingId: string) => Promise<void>,
+    ) => Promise<BookingUpdatedDTO>,
+    withCompensationCb: (
+      bookingId: string,
+      versionId: string,
+    ) => Promise<BookingRevertedDTO>,
   ) {
     super();
     this._invokeCb = invokeCb;
     this._withCompensationCb = withCompensationCb;
   }
   override async invoke(
-    updateBookingDTO: UpdateBookingDTO,
-    bookingId: string,
-  ): Promise<void> {
+    updateBookingDTO: UpdateBookingDTO & { id: string },
+    versionId: string,
+  ): Promise<BookingUpdatedDTO> {
     logger.info(this.constructor.name + " invoke");
-    await this._invokeCb(updateBookingDTO, bookingId);
-    return;
+    return await this._invokeCb(updateBookingDTO, versionId);
   }
 
   override async withCompensation(
-    _updateBookingDTO: UpdateBookingDTO,
-    bookingId: string,
-  ): Promise<void> {
+    updateBookingDTO: UpdateBookingDTO & { id: string },
+    versionId: string,
+  ): Promise<BookingRevertedDTO> {
     logger.info(this.constructor.name + " withCompensation");
-    await this._withCompensationCb(bookingId);
-    return;
+    return await this._withCompensationCb(updateBookingDTO.id, versionId);
   }
 }

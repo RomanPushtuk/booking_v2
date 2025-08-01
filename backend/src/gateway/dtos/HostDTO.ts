@@ -6,7 +6,10 @@ import {
   IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
-import { IsDurationFormat, IsValidTimeIntervals } from "../../shared/validators";
+import {
+  IsDurationFormat,
+  IsValidTimeIntervals,
+} from "../../shared/validators";
 
 class _WorkHour {
   @IsString()

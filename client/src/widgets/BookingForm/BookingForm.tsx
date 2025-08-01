@@ -1,43 +1,52 @@
 import { Button, Stack, Title, Paper, Group } from "@mantine/core";
-import { TimeInput } from "@mantine/dates";
+import { DateInput, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
-import { bookingFormShema } from "./bookingFormShema";
+import { bookingFormShema, type BookingShemaType } from "./bookingFormShema";
 import { SelectAsync } from "../SelectAsync";
+import {
+  useAdminGetHosts,
+  useAdminGetClients,
+} from "../../queries/bookingComponents";
+import { useAuth } from "../../contexts";
 
-interface IBookingFormProps {
-  item?: {
-    clientId?: string;
-    hostId?: string;
-    timeSlot?: { start: string; end: string };
-  };
+export interface IBookingFormItem {
+  clientId?: string;
+  hostId?: string;
+  date?: string;
+  timeSlot?: { start: string; end: string };
 }
 
-const getClients = async () => {
-  return [
-    { value: "fu039jf39", label: "Client1" },
-    { value: "ffu390jf", label: "Client2" },
-    { value: "fu2234", label: "Client3" },
-  ];
-};
-
-const getHosts = async () => {
-  return [
-    { value: "ogkrjf39", label: "Host1" },
-    { value: "fjjv390jf", label: "Host2" },
-    { value: "fr822234", label: "Host3" },
-  ];
-};
+interface IBookingFormProps {
+  item?: IBookingFormItem;
+  onEdit?: (payload: BookingShemaType) => void;
+  onCreate?: (payload: BookingShemaType) => void;
+}
 
 const BookingForm = (props: IBookingFormProps) => {
-  const { item } = props;
+  const { item, onEdit, onCreate } = props;
 
   const isEditing = Boolean(item);
+
+  const { accessToken } = useAuth() as { accessToken: string };
+
+  const clients = useAdminGetClients({
+    headers: {
+      authorization: accessToken,
+    },
+  });
+
+  const hosts = useAdminGetHosts({
+    headers: {
+      authorization: accessToken,
+    },
+  });
 
   const form = useForm({
     initialValues: {
       clientId: item?.clientId ?? "",
       hostId: item?.hostId ?? "",
+      date: item?.date ?? "",
       timeSlot: item?.timeSlot ?? { start: "", end: "" },
     },
 
@@ -45,8 +54,15 @@ const BookingForm = (props: IBookingFormProps) => {
   });
 
   const handleSubmit = (values: typeof form.values) => {
+    if (isEditing) {
+      if (onEdit) onEdit(values as BookingShemaType);
+    } else {
+      if (onCreate) onCreate(values as BookingShemaType);
+    }
     console.log("Form submitted:", values);
   };
+
+  console.log(form.values)
 
   return (
     <>
@@ -63,7 +79,7 @@ const BookingForm = (props: IBookingFormProps) => {
               onChange={(value) => {
                 form.setFieldValue("clientId", value);
               }}
-              fetchFn={getClients}
+              query={clients}
             />
             <SelectAsync
               label="Host"
@@ -73,7 +89,13 @@ const BookingForm = (props: IBookingFormProps) => {
               onChange={(value) => {
                 form.setFieldValue("hostId", value);
               }}
-              fetchFn={getHosts}
+              query={hosts}
+            />
+            <DateInput
+              label="Date"
+              placeholder="Date input"
+              withAsterisk
+              {...form.getInputProps("date")}
             />
             <Group>
               <TimeInput

@@ -90,10 +90,10 @@ export class HostController {
       deleted: false,
     });
 
-    return await booking.services.hostService.getHostBookings(
-      user.id,
-      { sorting, filters },
-    );
+    return await booking.services.hostService.getHostBookings(user.id, {
+      sorting,
+      filters,
+    });
   }
 
   @Get("/:id/bookings")
@@ -119,10 +119,10 @@ export class HostController {
       deleted: false,
     });
 
-    return await booking.services.hostService.getHostBookings(
-      hostId,
-      { sorting, filters },
-    );
+    return await booking.services.hostService.getHostBookings(hostId, {
+      sorting,
+      filters,
+    });
   }
 
   @Authorized([shared.enums.Permissions.HOST_DELETE_PROFILE])

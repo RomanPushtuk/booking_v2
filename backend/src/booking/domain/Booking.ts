@@ -21,6 +21,8 @@ export class Booking {
     const entries = Object.entries(updateData);
 
     for (const [key, value] of entries) {
+      if (value === undefined) continue;
+
       switch (key) {
         case "clientId":
           booking.setClientId(value);
