@@ -71,5 +71,11 @@ export const authorizationChecker = async (
     if (permissions.includes(permission)) return true;
   }
 
-  throw new ForbiddenException();
+  throw new ForbiddenException({
+    context: {
+      user: { id: user.id, role: user.role },
+      userPermissions,
+      permissions,
+    },
+  });
 };
