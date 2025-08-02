@@ -1,5 +1,5 @@
 import { Step } from "./Step";
-import { SagaFailedError } from "../errors";
+// import { SagaFailedError } from "../errors";
 import { logger } from "../logger";
 
 export class Saga<T, R> {
@@ -14,11 +14,11 @@ export class Saga<T, R> {
       try {
         result = await step.invoke(payload, ...args);
         this.successfulSteps.unshift(step);
-      } catch (err) {
+      } catch (error) {
         this.successfulSteps.forEach(async (step) => {
           await step.withCompensation(payload, ...args);
         });
-        throw new SagaFailedError(this.constructor.name, err as Error);
+        throw error;
       }
     }
     logger.info(`Saga execution finished - ${this.constructor.name}`);
