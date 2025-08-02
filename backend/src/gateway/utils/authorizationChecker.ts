@@ -1,6 +1,11 @@
 import { Action } from "routing-controllers";
-import jwt from "jsonwebtoken";
+import jwt, { VerifyErrors } from "jsonwebtoken";
 import { auth, shared } from "../imports";
+import {
+  ForbiddenException,
+  TokenExpiredException,
+  UnauthorizedException,
+} from "../../auth/exceptions/exceptions";
 
 const permissionsByRole = {
   [shared.enums.Roles.CLIENT]: [
@@ -42,7 +47,22 @@ export const authorizationChecker = async (
   permissions: shared.enums.Permissions[],
 ) => {
   const token = action.request.headers["authorization"];
-  const decoded = jwt.verify(token, "secret") as jwt.JwtPayload;
+  const decoded = jwt.verify(
+    token,
+    "secret",
+    (error: VerifyErrors | null, decoded: unknown) => {
+      if (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+          throw new TokenExpiredException({ cause: error });
+        }
+
+        throw new UnauthorizedException({ cause: error });
+      }
+
+      return decoded;
+    },
+  ) as unknown as jwt.JwtPayload;
+
   const user = await auth.services.authService.getUserById(decoded["id"]);
 
   const userPermissions = permissionsByRole[user.role];
@@ -51,5 +71,5 @@ export const authorizationChecker = async (
     if (permissions.includes(permission)) return true;
   }
 
-  return false;
+  throw new ForbiddenException();
 };

@@ -1,21 +1,86 @@
 import {
   Middleware,
   ExpressErrorMiddlewareInterface,
+  BadRequestError,
 } from "routing-controllers";
-import { Request, Response, NextFunction } from "express";
 import { logger } from "../logger";
 import { Service } from "typedi";
+import { Response } from "express";
+import { asyncLocalStorage } from "../../context";
+import { classValidatorErrorFormat } from "../../shared/utils";
+import { BaseException } from "../../shared/errors";
+import { ExceptionGroup } from "../../shared/errors/BaseException";
+import {
+  InternalServerException,
+  ValidationException,
+} from "../exceptions/exceptions";
+
+const mappedExceptionToHttpCode: Record<string, number> = {
+  [ExceptionGroup.BAD_REQUEST]: 400,
+  [ExceptionGroup.UNAUTHORIZED]: 401,
+  [ExceptionGroup.FORBIDDEN]: 403,
+  [ExceptionGroup.NOT_FOUND]: 404,
+  [ExceptionGroup.SERVER_ERROR]: 500,
+};
 
 @Middleware({ type: "after" })
 @Service()
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
-  error(
-    error: unknown,
-    _request: Request,
-    _response: Response,
-    next: NextFunction,
-  ) {
-    logger.error(error);
-    next(error);
+  error(exception: unknown, _request: Request, _response: Response) {
+    logger.error(exception);
+
+    const store = asyncLocalStorage.getStore() as Map<string, string>;
+    const traceId = store.get("traceId");
+
+    if (exception instanceof BaseException) {
+      const statusCode = mappedExceptionToHttpCode[exception.group];
+
+      const error = {
+        message: exception.message,
+        code: exception.code,
+        statusCode,
+        traceId,
+        details: {},
+      };
+
+      logger.error({ ...error });
+
+      return _response.status(statusCode).json(error);
+    }
+
+    if (this.isClassValidatorException(exception)) {
+      const formattedDetails = classValidatorErrorFormat(exception.errors);
+      const statusCode = mappedExceptionToHttpCode[ExceptionGroup.BAD_REQUEST];
+
+      const error = {
+        message: ValidationException.DEFAULT_MESSAGE,
+        code: ValidationException.CODE,
+        statusCode,
+        traceId,
+        details: formattedDetails,
+      };
+
+      logger.error({ ...error });
+
+      _response.status(statusCode).json(error);
+    }
+
+    const statusCode = mappedExceptionToHttpCode[ExceptionGroup.SERVER_ERROR];
+
+    return _response.status(statusCode).json({
+      message: InternalServerException.DEFAULT_MESSAGE,
+      code: InternalServerException.CODE,
+      statusCode,
+      traceId,
+      details: {},
+    });
+  }
+
+  private isClassValidatorException(
+    exception: unknown,
+  ): exception is BadRequestError {
+    return (
+      exception instanceof BadRequestError && Array.isArray(exception.errors)
+    );
   }
 }
