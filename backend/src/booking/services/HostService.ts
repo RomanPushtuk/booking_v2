@@ -266,18 +266,24 @@ export class HostService {
   async revertBooking(bookingId: string, versionId: string) {
     logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
     const booking = this._uow.bookingRepository.getById(bookingId);
+
     if (!booking) throw new Error("booking not found");
+
     const version = await this._vs
       .findOneAsync({ id: bookingId, versionId })
       .execAsync();
+
     if (!version) throw new Error("version not found");
+
     const updateData = version["data"] as UpdateBookingData;
     const numRemoved = await this._vs.removeAsync(
       { id: bookingId, versionId },
       {},
     );
+
     if (!numRemoved)
       throw new Error("version was not removed from version storage");
+    
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 
