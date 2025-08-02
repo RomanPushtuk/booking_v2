@@ -70,34 +70,34 @@ export class BookingService {
     updateBookingDTO: gateway.dtos.UpdateBookingDTO & { id: string },
     versionId: string,
   ) {
-    console.log('1')
+    console.log("1");
     try {
       this._uow.begin();
-      console.log('2')
+      console.log("2");
 
       const booking = this._uow.bookingRepository.getById(updateBookingDTO.id);
-      console.log('3', booking)
+      console.log("3", booking);
       if (!booking) throw new Error("Booking not found");
-      console.log('4')
+      console.log("4");
 
       Booking.update(booking, updateBookingDTO);
-      console.log('5', booking)
+      console.log("5", booking);
       this._uow.bookingRepository.save(booking);
-      console.log('6')
+      console.log("6");
 
       await this._vs.insertAsync({
         id: updateBookingDTO.id,
         versionId,
         data: updateBookingDTO,
       });
-      console.log('7')
+      console.log("7");
 
       this._uow.commit();
-      console.log('8')
+      console.log("8");
 
       return new gateway.dtos.BookingUpdatedDTO({ id: booking.getId() });
     } catch (error) {
-      console.log('9')
+      console.log("9");
       this._uow.rollback();
       throw error;
     }
