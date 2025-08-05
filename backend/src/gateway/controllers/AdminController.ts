@@ -84,7 +84,6 @@ export class AdminController {
   @HttpCode(201)
   @Post("/clients")
   async createClient(@Body() createClientDTO: CreateClientDTO) {
-    console.log(createClientDTO);
     const clientDTO: CreateClientDTO & { id: string } = {
       id: shared.utils.generateId(),
       ...createClientDTO,

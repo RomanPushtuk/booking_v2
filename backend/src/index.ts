@@ -1,12 +1,8 @@
 Error.stackTraceLimit = Infinity;
 
-declare module "routing-controllers" {
-  interface BadRequestError {
-    errors?: ValidationError[];
-  }
-}
-
 import "reflect-metadata";
+
+import "./declarations.d";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -18,7 +14,6 @@ config.init();
 
 import * as gateway from "./gateway/exports";
 import * as shared from "./shared/exports";
-import { ValidationError } from "class-validator";
 
 let connections: Socket[] = [];
 

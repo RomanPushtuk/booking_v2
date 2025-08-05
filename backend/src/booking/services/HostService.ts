@@ -39,7 +39,7 @@ export class HostService {
   }
 
   async deleteHost(hostId: string) {
-    console.log(hostId);
+    logger.info({ hostId }, this.constructor.name + " deleteHost");
   }
 
   async getAllHosts(options?: {
@@ -283,7 +283,7 @@ export class HostService {
 
     if (!numRemoved)
       throw new Error("version was not removed from version storage");
-    
+
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 

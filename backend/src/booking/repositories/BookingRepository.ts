@@ -15,9 +15,7 @@ export class BookingRepository {
   save(booking: Booking) {
     logger.info(this.constructor.name + " save");
     const bookingDbModel = BookingMapper.toDbModel(booking);
-    console.log("bookingDbModel", bookingDbModel);
     const sql = saveBooking(bookingDbModel);
-    console.log("sql", sql);
     logger.info(this._uow.db.exec(sql), "saving Booking to DB");
     return { id: booking.getId() };
   }

@@ -1,11 +1,7 @@
 import { Action } from "routing-controllers";
-import jwt, { VerifyErrors } from "jsonwebtoken";
 import { auth, shared } from "../imports";
-import {
-  ForbiddenException,
-  TokenExpiredException,
-  UnauthorizedException,
-} from "../../auth/exceptions/exceptions";
+import { ForbiddenException } from "../../auth/exceptions/exceptions";
+import { validateJWT } from "./validateJWT";
 
 const permissionsByRole = {
   [shared.enums.Roles.CLIENT]: [
@@ -47,21 +43,7 @@ export const authorizationChecker = async (
   permissions: shared.enums.Permissions[],
 ) => {
   const token = action.request.headers["authorization"];
-  const decoded = jwt.verify(
-    token,
-    "secret",
-    (error: VerifyErrors | null, decoded: unknown) => {
-      if (error) {
-        if (error instanceof jwt.TokenExpiredError) {
-          throw new TokenExpiredException({ cause: error });
-        }
-
-        throw new UnauthorizedException({ cause: error });
-      }
-
-      return decoded;
-    },
-  ) as unknown as jwt.JwtPayload;
+  const decoded = validateJWT(token);
 
   const user = await auth.services.authService.getUserById(decoded["id"]);
 

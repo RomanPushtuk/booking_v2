@@ -48,7 +48,10 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
       return _response.status(statusCode).json(error);
     }
 
-    if (this.isClassValidatorException(exception)) {
+    if (
+      exception instanceof BadRequestError &&
+      Array.isArray(exception.errors)
+    ) {
       const formattedDetails = classValidatorErrorFormat(exception.errors);
       const statusCode = mappedExceptionToHttpCode[ExceptionGroup.BAD_REQUEST];
 
@@ -74,13 +77,5 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
       traceId,
       details: {},
     });
-  }
-
-  private isClassValidatorException(
-    exception: unknown,
-  ): exception is BadRequestError {
-    return (
-      exception instanceof BadRequestError && Array.isArray(exception.errors)
-    );
   }
 }

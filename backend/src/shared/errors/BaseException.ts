@@ -48,7 +48,7 @@ export class BaseException extends Error {
     cause,
     group,
   }: IBaseConstructorException) {
-    super(message);
+    super(message, { cause });
     this.name = this.constructor.name;
     this.code = code;
     this.context = context;
@@ -57,19 +57,49 @@ export class BaseException extends Error {
 
     this.parsedStack = this._captureStack();
 
-    this.functionName = this.parsedStack[0]?.functionName;
-    this.fileName = this.parsedStack[0]?.fileName;
-    this.lineNumber = this.parsedStack[0]?.lineNumber;
-    this.columnNumber = this.parsedStack[0]?.columnNumber;
-    this.path = this.parsedStack[0]?.path;
+    const [reasonLocation] = this.parsedStack as [ParsedStack];
+
+    this.functionName = reasonLocation.functionName;
+    this.fileName = reasonLocation.fileName;
+    this.lineNumber = reasonLocation.lineNumber;
+    this.columnNumber = reasonLocation.columnNumber;
+    this.path = reasonLocation.path;
   }
 
   private _captureStack(): ParsedStack[] {
     const originalPrepare = Error.prepareStackTrace;
 
-    Error.prepareStackTrace = (_err, structuredStack) => structuredStack;
+    const cwd = process.cwd();
 
-    const callSites = this.stack as unknown as NodeJS.CallSite[];
+    Error.prepareStackTrace = (_err, structuredStack) => {
+      const callSites = structuredStack as NodeJS.CallSite[];
+      const parsedStack = [];
+
+      for (const callSite of callSites) {
+        if (!this.isRelevantStack(callSite)) continue;
+
+        const file = callSite.getFileName() as string;
+        const fileName = file.startsWith(cwd)
+          ? file.slice(cwd.length + 1)
+          : file;
+        const lineNumber = callSite.getLineNumber() as number;
+        const columnNumber = callSite.getColumnNumber() as number;
+        const path = `${fileName}:${callSite.getLineNumber()}:${callSite.getColumnNumber()}`;
+        const functionName = callSite.getFunctionName() as string;
+
+        parsedStack.push({
+          path,
+          fileName,
+          lineNumber,
+          columnNumber,
+          functionName,
+        });
+      }
+
+      return parsedStack;
+    };
+
+    const parsedStack = this.stack as unknown as ParsedStack[];
 
     Error.prepareStackTrace = originalPrepare;
 
@@ -80,24 +110,16 @@ export class BaseException extends Error {
 
     this.stack = dummyError.stack;
 
-    const cwd = process.cwd();
+    return parsedStack;
+  }
 
-    return callSites.map((callSite) => {
-      const file = callSite.getFileName();
-      const fileName = file?.startsWith(cwd)
-        ? file.slice(cwd.length + 1)
-        : (file ?? undefined);
-      const lineNumber = callSite.getLineNumber() || 0;
-      const columnNumber = callSite.getColumnNumber() || 0;
-      const path = `${fileName}:${callSite.getLineNumber()}:${callSite.getColumnNumber()}`;
-
-      return {
-        path,
-        fileName,
-        lineNumber,
-        columnNumber,
-        functionName: callSite.getFunctionName() ?? undefined,
-      };
-    });
+  private isRelevantStack(callSite: NodeJS.CallSite): boolean {
+    const fileName = callSite.getFileName();
+    return Boolean(
+      fileName &&
+        !fileName.includes("node_modules") &&
+        !fileName.startsWith("node:") &&
+        !callSite.isNative(),
+    );
   }
 }
