@@ -11,8 +11,8 @@ export const validateJWT = (token: string): jwt.JwtPayload => {
     return decoded as jwt.JwtPayload;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError)
-      throw new TokenExpiredException({ cause: error });
+      throw new TokenExpiredException();
 
-    throw new UnauthorizedException({ cause: error });
+    throw new UnauthorizedException();
   }
 };

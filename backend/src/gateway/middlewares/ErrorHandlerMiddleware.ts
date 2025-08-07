@@ -29,15 +29,19 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   error(exception: unknown, _request: Request, _response: Response) {
     logger.error(exception);
 
+    let rootException = exception as Error;
+
+    while (rootException?.cause) rootException = rootException.cause as Error;
+
     const store = asyncLocalStorage.getStore() as Map<string, string>;
     const traceId = store.get("traceId");
 
-    if (exception instanceof BaseException) {
-      const statusCode = mappedExceptionToHttpCode[exception.group];
+    if (rootException instanceof BaseException) {
+      const statusCode = mappedExceptionToHttpCode[rootException.group];
 
       const error = {
-        message: exception.message,
-        code: exception.code,
+        message: rootException.message,
+        code: rootException.code,
         statusCode,
         traceId,
         details: {},
@@ -49,10 +53,10 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     }
 
     if (
-      exception instanceof BadRequestError &&
-      Array.isArray(exception.errors)
+      rootException instanceof BadRequestError &&
+      Array.isArray(rootException.errors)
     ) {
-      const formattedDetails = classValidatorErrorFormat(exception.errors);
+      const formattedDetails = classValidatorErrorFormat(rootException.errors);
       const statusCode = mappedExceptionToHttpCode[ExceptionGroup.BAD_REQUEST];
 
       const error = {

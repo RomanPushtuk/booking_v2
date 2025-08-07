@@ -1,8 +1,8 @@
-Error.stackTraceLimit = Infinity;
+Error.stackTraceLimit = 100;
 
 import "reflect-metadata";
 
-import "./declarations.d";
+import {} from "./declarations";
 
 import dotenv from "dotenv";
 dotenv.config();
