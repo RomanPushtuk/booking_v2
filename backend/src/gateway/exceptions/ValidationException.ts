@@ -19,19 +19,3 @@ export class ValidationException extends BaseException {
     });
   }
 }
-
-export class InternalServerException extends BaseException {
-  static readonly DEFAULT_MESSAGE = "Interval server error";
-  static readonly CODE = "INTERVAL_SERVER_ERROR";
-  static readonly GROUP = ExceptionGroup.SERVER_ERROR;
-
-  constructor({ message, cause, context }: IConstructorException = {}) {
-    super({
-      cause,
-      context,
-      code: InternalServerException.CODE,
-      group: InternalServerException.GROUP,
-      message: message || InternalServerException.DEFAULT_MESSAGE,
-    });
-  }
-}

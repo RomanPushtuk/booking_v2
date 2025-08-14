@@ -9,11 +9,8 @@ import { Response } from "express";
 import { asyncLocalStorage } from "../../context";
 import { classValidatorErrorFormat } from "../../shared/utils";
 import { BaseException } from "../../shared/errors";
-import { ExceptionGroup } from "../../shared/errors/BaseException";
-import {
-  InternalServerException,
-  ValidationException,
-} from "../exceptions/exceptions";
+import { ExceptionGroup } from "../../shared/errors";
+import { InternalServerException, ValidationException } from "../exceptions";
 
 const mappedExceptionToHttpCode: Record<string, number> = {
   [ExceptionGroup.BAD_REQUEST]: 400,
