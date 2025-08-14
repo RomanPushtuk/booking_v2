@@ -7,11 +7,9 @@ import { vs } from "../vs";
 import { UpdateBookingData, UpdateClientData } from "../types";
 import {
   ClientNotFoundException,
-  HostNotFoundException,
   BookingNotFoundException,
-  VersionNotFoundException,
-  VersionRemovalFailedException,
   NoClientsFoundException,
+  HostReferenceNotFoundException,
 } from "../exceptions";
 
 @Service()
@@ -144,7 +142,7 @@ export class ClientService {
       const hostId = createClientBookingDTO.hostId;
       const host = this._uow.hostRepository.getById(hostId);
       if (!host)
-        throw new HostNotFoundException({
+        throw new HostReferenceNotFoundException({
           context: { hostId },
         });
 
@@ -182,7 +180,7 @@ export class ClientService {
       const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
       if (!host)
-        throw new HostNotFoundException({
+        throw new HostReferenceNotFoundException({
           context: { hostId },
         });
 
@@ -234,7 +232,7 @@ export class ClientService {
       const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
       if (!host)
-        throw new HostNotFoundException({
+        throw new HostReferenceNotFoundException({
           context: { hostId },
         });
 
@@ -260,25 +258,23 @@ export class ClientService {
     logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking)
-      throw new BookingNotFoundException({
-        context: { bookingId },
-      });
+      throw new Error(`Booking ${bookingId} not found when reverting`);
     const version = await this._vs
       .findOneAsync({ id: bookingId, versionId })
       .execAsync();
     if (!version)
-      throw new VersionNotFoundException({
-        context: { bookingId, versionId },
-      });
+      throw new Error(
+        `Version ${versionId} not found for booking ${bookingId}`,
+      );
     const updateData = version["data"] as UpdateBookingData;
     const numRemoved = await this._vs.removeAsync(
       { id: bookingId, versionId },
       {},
     );
     if (!numRemoved)
-      throw new VersionRemovalFailedException({
-        context: { bookingId, versionId },
-      });
+      throw new Error(
+        `Failed to remove version ${versionId} for booking ${bookingId}`,
+      );
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 
@@ -330,18 +326,13 @@ export class ClientService {
     );
 
     const client = this._uow.clientRepository.getById(clientId);
-    if (!client)
-      throw new ClientNotFoundException({
-        context: { clientId },
-      });
+    if (!client) throw new Error(`Client ${clientId} not found when reverting`);
 
     const version = await this._vs
       .findOneAsync({ id: clientId, versionId })
       .execAsync();
     if (!version)
-      throw new VersionNotFoundException({
-        context: { clientId, versionId },
-      });
+      throw new Error(`Version ${versionId} not found for client ${clientId}`);
 
     const updateData = version["data"] as UpdateClientData;
     const numRemoved = await this._vs.removeAsync(
@@ -349,9 +340,9 @@ export class ClientService {
       {},
     );
     if (!numRemoved)
-      throw new VersionRemovalFailedException({
-        context: { clientId, versionId },
-      });
+      throw new Error(
+        `Failed to remove version ${versionId} for client ${clientId}`,
+      );
 
     Client.update(client, updateData);
     this._uow.clientRepository.save(client);

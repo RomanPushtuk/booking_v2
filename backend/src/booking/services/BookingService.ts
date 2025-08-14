@@ -4,11 +4,7 @@ import { gateway } from "../imports";
 import { Booking } from "../domain";
 import { vs } from "../vs";
 import { UpdateBookingData } from "../types";
-import {
-  BookingNotFoundException,
-  VersionNotFoundException,
-  VersionRemovalFailedException,
-} from "../exceptions";
+import { BookingNotFoundException } from "../exceptions";
 
 @Service()
 export class BookingService {
@@ -136,25 +132,23 @@ export class BookingService {
   async revertBooking(bookingId: string, versionId: string) {
     const booking = this._uow.bookingRepository.getById(bookingId);
     if (!booking)
-      throw new BookingNotFoundException({
-        context: { bookingId },
-      });
+      throw new Error(`Booking ${bookingId} not found when reverting`);
     const version = await this._vs
       .findOneAsync({ id: bookingId, versionId })
       .execAsync();
     if (!version)
-      throw new VersionNotFoundException({
-        context: { bookingId, versionId },
-      });
+      throw new Error(
+        `Version ${versionId} not found for booking ${bookingId}`,
+      );
     const updateData = version["data"] as UpdateBookingData;
     const numRemoved = await this._vs.removeAsync(
       { id: bookingId, versionId },
       {},
     );
     if (!numRemoved)
-      throw new VersionRemovalFailedException({
-        context: { bookingId, versionId },
-      });
+      throw new Error(
+        `Failed to remove version ${versionId} for booking ${bookingId}`,
+      );
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 

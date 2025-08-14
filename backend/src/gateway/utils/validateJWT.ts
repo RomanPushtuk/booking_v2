@@ -13,12 +13,10 @@ export const validateJWT = (token: string): jwt.JwtPayload => {
     if (error instanceof jwt.TokenExpiredError)
       throw new JwtTokenExpiredException({
         context: { token },
-        cause: error,
       });
 
     throw new JwtTokenInvalidException({
       context: { token },
-      cause: error,
     });
   }
 };

@@ -66,7 +66,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
 
       logger.error({ ...error });
 
-      _response.status(statusCode).json(error);
+      return _response.status(statusCode).json(error);
     }
 
     const statusCode = mappedExceptionToHttpCode[ExceptionGroup.SERVER_ERROR];

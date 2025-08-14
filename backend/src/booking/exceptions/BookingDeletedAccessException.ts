@@ -6,7 +6,7 @@ import {
 
 export class BookingDeletedAccessException extends BaseException {
   static readonly CODE = "BOOKING_DELETED_ACCESS";
-  static readonly GROUP = ExceptionGroup.BAD_REQUEST;
+  static readonly GROUP = ExceptionGroup.NOT_FOUND;
   static readonly DEFAULT_MESSAGE = "Cannot access deleted booking";
 
   constructor({ message, cause, context }: IConstructorException = {}) {
