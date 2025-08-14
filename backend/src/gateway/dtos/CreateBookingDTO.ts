@@ -8,11 +8,13 @@ import {
 } from "class-validator";
 
 class _Info {
+  @IsOptional()
   @IsString()
-  title: string;
+  title?: string;
 
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 }
 
 export class CreateBookingDTO {

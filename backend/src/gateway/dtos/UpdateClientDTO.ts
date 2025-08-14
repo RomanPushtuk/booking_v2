@@ -1,10 +1,5 @@
-import {
-  IsOptional,
-  IsString,
-  ValidateNested,
-  validateSync,
-} from "class-validator";
-import { shared } from "../imports";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 
 class _Info {
   @IsOptional()
@@ -19,13 +14,6 @@ class _Info {
 export class UpdateClientDTO {
   @IsOptional()
   @ValidateNested()
+  @Type(() => _Info)
   info?: _Info;
-
-  constructor(data: shared.types.GetInterface<UpdateClientDTO> = {}) {
-    this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(UpdateClientDTO.name, errors);
-  }
 }

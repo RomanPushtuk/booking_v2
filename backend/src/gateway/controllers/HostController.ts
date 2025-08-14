@@ -119,7 +119,7 @@ export class HostController {
       deleted: false,
     });
 
-    return await booking.services.hostService.getHostBookings(hostId, {
+    return await booking.services.hostService.getPublicHostBookings(hostId, {
       sorting,
       filters,
     });

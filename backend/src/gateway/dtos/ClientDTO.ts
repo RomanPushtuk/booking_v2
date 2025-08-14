@@ -2,10 +2,10 @@ import {
   MaxLength,
   IsString,
   ValidateNested,
-  validateSync,
   IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
+import { Type } from "class-transformer";
 
 class _Info {
   @IsOptional()
@@ -21,16 +21,13 @@ export class ClientDTO {
   @MaxLength(36)
   id: string;
 
-  @ValidateNested()
   @IsOptional()
+  @ValidateNested()
+  @Type(() => _Info)
   info?: _Info;
 
   constructor(data: shared.types.GetInterface<ClientDTO>) {
     this.id = data.id;
     this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(ClientDTO.name, errors);
   }
 }

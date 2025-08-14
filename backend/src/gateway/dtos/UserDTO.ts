@@ -1,4 +1,4 @@
-import { IsString, MaxLength, IsIn, validateSync } from "class-validator";
+import { IsString, MaxLength, IsIn } from "class-validator";
 import { shared } from "../imports";
 
 export class UserDTO {
@@ -19,9 +19,5 @@ export class UserDTO {
     this.login = data.login;
     this.password = data.password;
     this.role = data.role;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(UserDTO.name, errors);
   }
 }

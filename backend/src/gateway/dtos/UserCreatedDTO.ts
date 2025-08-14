@@ -1,5 +1,5 @@
-import { MaxLength, validateSync } from "class-validator";
 import { shared } from "../imports";
+import { MaxLength } from "class-validator";
 
 export class UserCreatedDTO {
   @MaxLength(36)
@@ -7,9 +7,5 @@ export class UserCreatedDTO {
 
   constructor(data: shared.types.GetInterface<UserCreatedDTO>) {
     this.id = data.id;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(UserCreatedDTO.name, errors);
   }
 }

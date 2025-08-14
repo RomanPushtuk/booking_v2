@@ -2,10 +2,10 @@ import {
   MaxLength,
   IsString,
   ValidateNested,
-  validateSync,
   IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
+import { Type } from "class-transformer";
 import {
   IsDurationFormat,
   IsValidTimeIntervals,
@@ -36,13 +36,15 @@ export class HostDTO {
 
   @IsValidTimeIntervals()
   @ValidateNested({ each: true })
+  @Type(() => _WorkHour)
   workHours: _WorkHour[];
 
   @IsString({ each: true })
   workDays: string[];
 
-  @ValidateNested()
   @IsOptional()
+  @ValidateNested()
+  @Type(() => _Info)
   info?: _Info;
 
   constructor(data: shared.types.GetInterface<HostDTO>) {
@@ -51,9 +53,5 @@ export class HostDTO {
     this.workHours = data.workHours;
     this.workDays = data.workDays;
     this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(HostDTO.name, errors);
   }
 }
