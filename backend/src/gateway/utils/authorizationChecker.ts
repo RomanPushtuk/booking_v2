@@ -1,6 +1,6 @@
 import { Action } from "routing-controllers";
 import { auth, shared } from "../imports";
-import { ForbiddenException } from "../../auth/exceptions/exceptions";
+import { InsufficientPermissionsException } from "../../auth/exceptions";
 import { validateJWT } from "./validateJWT";
 
 const permissionsByRole = {
@@ -53,11 +53,11 @@ export const authorizationChecker = async (
     if (permissions.includes(permission)) return true;
   }
 
-  throw new ForbiddenException({
+  throw new InsufficientPermissionsException({
     context: {
       user: { id: user.id, role: user.role },
       userPermissions,
-      permissions,
+      requiredPermissions: permissions,
     },
   });
 };

@@ -4,6 +4,11 @@ import { gateway } from "../imports";
 import { Booking } from "../domain";
 import { vs } from "../vs";
 import { UpdateBookingData } from "../types";
+import {
+  BookingNotFoundException,
+  VersionNotFoundException,
+  VersionRemovalFailedException,
+} from "../exceptions";
 
 @Service()
 export class BookingService {
@@ -20,7 +25,7 @@ export class BookingService {
 
   async getBookings() {
     const bookings = this._uow.bookingRepository.getAll();
-    if (!bookings) throw new Error("Bookings not found");
+    if (!bookings) throw new BookingNotFoundException();
 
     return bookings.map((booking) => {
       return new gateway.dtos.BookingDTO({
@@ -35,7 +40,10 @@ export class BookingService {
 
   async getBookingById(bookingId: string) {
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("Booking not found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
 
     return new gateway.dtos.BookingDTO({
       id: booking.getId(),
@@ -75,7 +83,10 @@ export class BookingService {
 
       const booking = this._uow.bookingRepository.getById(updateBookingDTO.id);
 
-      if (!booking) throw new Error("Booking not found");
+      if (!booking)
+        throw new BookingNotFoundException({
+          context: { bookingId: updateBookingDTO.id },
+        });
 
       Booking.update(booking, updateBookingDTO);
 
@@ -100,7 +111,10 @@ export class BookingService {
     bookingId: string,
   ): Promise<gateway.dtos.BookingDeletedDTO> {
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("No booking found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
     booking.setDeleted(true);
     this._uow.bookingRepository.save(booking);
     return new gateway.dtos.BookingDeletedDTO({ id: bookingId });
@@ -110,7 +124,10 @@ export class BookingService {
     bookingId: string,
   ): Promise<gateway.dtos.BookingRestoredDTO> {
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("No booking found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
     return new gateway.dtos.BookingRestoredDTO({ id: bookingId });
@@ -118,18 +135,26 @@ export class BookingService {
 
   async revertBooking(bookingId: string, versionId: string) {
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
     const version = await this._vs
       .findOneAsync({ id: bookingId, versionId })
       .execAsync();
-    if (!version) throw new Error("version not found");
+    if (!version)
+      throw new VersionNotFoundException({
+        context: { bookingId, versionId },
+      });
     const updateData = version["data"] as UpdateBookingData;
     const numRemoved = await this._vs.removeAsync(
       { id: bookingId, versionId },
       {},
     );
     if (!numRemoved)
-      throw new Error("version was not removed from version storage");
+      throw new VersionRemovalFailedException({
+        context: { bookingId, versionId },
+      });
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 

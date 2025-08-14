@@ -4,6 +4,10 @@ import { gateway } from "../imports";
 import { logger } from "../logger";
 import { AuthRepository } from "../repositories";
 import { User } from "../domain";
+import {
+  UserNotFoundException,
+  InvalidCredentialsException,
+} from "../exceptions";
 
 @Service()
 export class AuthService {
@@ -17,7 +21,10 @@ export class AuthService {
   async getUserById(userId: string): Promise<User> {
     logger.info({ userId }, this.constructor.name + " getUserById");
     const user = await this._authRepository.findById(userId);
-    if (!user) throw new Error("User not found");
+    if (!user)
+      throw new UserNotFoundException({
+        context: { userId },
+      });
     return user;
   }
 
@@ -30,7 +37,10 @@ export class AuthService {
       loginUserDTO.login,
       loginUserDTO.password,
     );
-    if (!user) throw new Error("User not found");
+    if (!user)
+      throw new InvalidCredentialsException({
+        context: { login: loginUserDTO.login },
+      });
     const payload = { id: user.id, login: user.login, role: user.role };
     const token = jwt.sign(payload, "secret", { expiresIn: "1h" });
 
@@ -48,7 +58,10 @@ export class AuthService {
   async deleteUser(userId: string): Promise<{ id: string }> {
     logger.info({ userId }, this.constructor.name + " deleteUser");
     const user = await this._authRepository.findById(userId);
-    if (!user) throw new Error("User not found");
+    if (!user)
+      throw new UserNotFoundException({
+        context: { userId },
+      });
     user.deleted = true;
     const deletedUser = await this._authRepository.save(user);
     return new gateway.dtos.UserDeletedDTO({ id: deletedUser.id });
@@ -57,7 +70,10 @@ export class AuthService {
   async restoreUser(userId: string): Promise<{ id: string }> {
     logger.info({ userId }, this.constructor.name + " restoreUser");
     const user = await this._authRepository.findById(userId);
-    if (!user) throw new Error("User not found");
+    if (!user)
+      throw new UserNotFoundException({
+        context: { userId },
+      });
     user.deleted = false;
     return this._authRepository.save(user);
   }

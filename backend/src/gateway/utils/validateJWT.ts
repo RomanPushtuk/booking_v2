@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import {
-  TokenExpiredException,
-  UnauthorizedException,
-} from "../../auth/exceptions/exceptions";
+  JwtTokenExpiredException,
+  JwtTokenInvalidException,
+} from "../../auth/exceptions";
 
 export const validateJWT = (token: string): jwt.JwtPayload => {
   try {
@@ -11,8 +11,14 @@ export const validateJWT = (token: string): jwt.JwtPayload => {
     return decoded as jwt.JwtPayload;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError)
-      throw new TokenExpiredException();
+      throw new JwtTokenExpiredException({
+        context: { token },
+        cause: error,
+      });
 
-    throw new UnauthorizedException();
+    throw new JwtTokenInvalidException({
+      context: { token },
+      cause: error,
+    });
   }
 };

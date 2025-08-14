@@ -3,6 +3,7 @@ import { gateway, shared } from "../imports";
 import { logger } from "../logger";
 import { UnitOfWork } from "./UnitOfWork";
 import { Client, Host } from "../domain";
+import { UserNotFoundException } from "../../auth/exceptions";
 
 @Service()
 export class UserService {
@@ -47,7 +48,10 @@ export class UserService {
   async deleteUser(userId: string) {
     logger.info({ userId }, this.constructor.name + " deleteUser");
     const user = this._uow.userRepository.getById(userId);
-    if (!user) throw new Error("user not found");
+    if (!user)
+      throw new UserNotFoundException({
+        context: { userId },
+      });
     user.setDeleted(true);
     this._uow.userRepository.save(user);
 
@@ -57,7 +61,10 @@ export class UserService {
   async restoreUser(userId: string) {
     logger.info({ userId }, this.constructor.name + " restoreUser");
     const user = this._uow.userRepository.getById(userId);
-    if (!user) throw new Error("user not found");
+    if (!user)
+      throw new UserNotFoundException({
+        context: { userId },
+      });
     user.setDeleted(false);
     this._uow.userRepository.save(user);
 

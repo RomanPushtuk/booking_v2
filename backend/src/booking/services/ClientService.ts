@@ -5,6 +5,14 @@ import { UnitOfWork } from "./UnitOfWork";
 import { Booking, Client } from "../domain";
 import { vs } from "../vs";
 import { UpdateBookingData, UpdateClientData } from "../types";
+import {
+  ClientNotFoundException,
+  HostNotFoundException,
+  BookingNotFoundException,
+  VersionNotFoundException,
+  VersionRemovalFailedException,
+  NoClientsFoundException,
+} from "../exceptions";
 
 @Service()
 export class ClientService {
@@ -38,7 +46,10 @@ export class ClientService {
 
   async deleteClient(clientId: string) {
     const client = this._uow.clientRepository.getById(clientId);
-    if (!client) throw new Error("Client not found");
+    if (!client)
+      throw new ClientNotFoundException({
+        context: { clientId },
+      });
     client.setDeleted(true);
     this._uow.clientRepository.save(client);
   }
@@ -46,7 +57,7 @@ export class ClientService {
   async getClients() {
     const clients = this._uow.clientRepository.getAll();
 
-    if (!clients) throw new Error("No clients");
+    if (!clients) throw new NoClientsFoundException();
 
     return clients.map((client) => {
       return new gateway.dtos.ClientDTO({
@@ -58,7 +69,10 @@ export class ClientService {
   async getClientById(clientId: string) {
     const client = this._uow.clientRepository.getById(clientId);
 
-    if (!client) throw new Error("Client not found");
+    if (!client)
+      throw new ClientNotFoundException({
+        context: { clientId },
+      });
 
     return new gateway.dtos.ClientDTO({
       id: client.getId(),
@@ -74,7 +88,10 @@ export class ClientService {
   ) {
     const client = this._uow.clientRepository.getById(clientId);
 
-    if (!client) throw new Error("Client not found");
+    if (!client)
+      throw new ClientNotFoundException({
+        context: { clientId },
+      });
 
     const bookings = client.getBookings(options);
 
@@ -95,7 +112,10 @@ export class ClientService {
   async getClientBookingById(clientId: string, bookingId: string) {
     const client = this._uow.clientRepository.getById(clientId);
 
-    if (!client) throw new Error("Client not found");
+    if (!client)
+      throw new ClientNotFoundException({
+        context: { clientId },
+      });
 
     const booking = client.getBookingById(bookingId);
 
@@ -123,7 +143,10 @@ export class ClientService {
 
       const hostId = createClientBookingDTO.hostId;
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("Host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       const booking = new Booking({
         id: bookingId,
@@ -151,11 +174,17 @@ export class ClientService {
       this._uow.begin();
 
       const booking = this._uow.bookingRepository.getById(bookingId);
-      if (!booking) throw new Error("Booking not found");
+      if (!booking)
+        throw new BookingNotFoundException({
+          context: { bookingId },
+        });
 
       const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("Host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       host.deleteBooking(booking);
 
@@ -173,7 +202,10 @@ export class ClientService {
   async restoreBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
 
@@ -194,11 +226,17 @@ export class ClientService {
       this._uow.begin();
 
       const booking = this._uow.bookingRepository.getById(bookingId);
-      if (!booking) throw new Error("Booking not found");
+      if (!booking)
+        throw new BookingNotFoundException({
+          context: { bookingId },
+        });
 
       const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("Host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       host.updateBookingByClient(booking, updateClientBookingDTO);
       this._uow.bookingRepository.save(booking);
@@ -221,18 +259,26 @@ export class ClientService {
   async revertBooking(bookingId: string, versionId: string) {
     logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
     const version = await this._vs
       .findOneAsync({ id: bookingId, versionId })
       .execAsync();
-    if (!version) throw new Error("version not found");
+    if (!version)
+      throw new VersionNotFoundException({
+        context: { bookingId, versionId },
+      });
     const updateData = version["data"] as UpdateBookingData;
     const numRemoved = await this._vs.removeAsync(
       { id: bookingId, versionId },
       {},
     );
     if (!numRemoved)
-      throw new Error("version was not removed from version storage");
+      throw new VersionRemovalFailedException({
+        context: { bookingId, versionId },
+      });
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 
@@ -253,7 +299,10 @@ export class ClientService {
       this._uow.begin();
 
       const client = this._uow.clientRepository.getById(clientId);
-      if (!client) throw new Error("client not found");
+      if (!client)
+        throw new ClientNotFoundException({
+          context: { clientId },
+        });
 
       Client.update(client, updateClientDTO);
 
@@ -281,12 +330,18 @@ export class ClientService {
     );
 
     const client = this._uow.clientRepository.getById(clientId);
-    if (!client) throw new Error("Client not found");
+    if (!client)
+      throw new ClientNotFoundException({
+        context: { clientId },
+      });
 
     const version = await this._vs
       .findOneAsync({ id: clientId, versionId })
       .execAsync();
-    if (!version) throw new Error("version not found");
+    if (!version)
+      throw new VersionNotFoundException({
+        context: { clientId, versionId },
+      });
 
     const updateData = version["data"] as UpdateClientData;
     const numRemoved = await this._vs.removeAsync(
@@ -294,7 +349,9 @@ export class ClientService {
       {},
     );
     if (!numRemoved)
-      throw new Error("version was not removed from version storage");
+      throw new VersionRemovalFailedException({
+        context: { clientId, versionId },
+      });
 
     Client.update(client, updateData);
     this._uow.clientRepository.save(client);
