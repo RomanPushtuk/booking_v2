@@ -56,8 +56,6 @@ export const authorizationChecker = async (
   throw new InsufficientPermissionsException({
     context: {
       user: { id: user.id, role: user.role },
-      userPermissions,
-      requiredPermissions: permissions,
     },
   });
 };

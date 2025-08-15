@@ -2,9 +2,6 @@ export { HostNotFoundException } from "./HostNotFoundException";
 export { ClientNotFoundException } from "./ClientNotFoundException";
 export { BookingNotFoundException } from "./BookingNotFoundException";
 
-export { HostReferenceNotFoundException } from "./HostReferenceNotFoundException";
-export { ClientReferenceNotFoundException } from "./ClientReferenceNotFoundException";
-
 export { BookingDeletedAccessException } from "./BookingDeletedAccessException";
 
 export { HostNotWorkingException } from "./HostNotWorkingException";

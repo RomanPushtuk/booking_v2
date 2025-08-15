@@ -9,7 +9,7 @@ import {
   ClientNotFoundException,
   BookingNotFoundException,
   NoClientsFoundException,
-  HostReferenceNotFoundException,
+  HostNotFoundException,
 } from "../exceptions";
 
 @Service()
@@ -142,7 +142,7 @@ export class ClientService {
       const hostId = createClientBookingDTO.hostId;
       const host = this._uow.hostRepository.getById(hostId);
       if (!host)
-        throw new HostReferenceNotFoundException({
+        throw new HostNotFoundException({
           context: { hostId },
         });
 
@@ -180,7 +180,7 @@ export class ClientService {
       const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
       if (!host)
-        throw new HostReferenceNotFoundException({
+        throw new HostNotFoundException({
           context: { hostId },
         });
 
@@ -232,7 +232,7 @@ export class ClientService {
       const hostId = booking.getHostId();
       const host = this._uow.hostRepository.getById(hostId);
       if (!host)
-        throw new HostReferenceNotFoundException({
+        throw new HostNotFoundException({
           context: { hostId },
         });
 

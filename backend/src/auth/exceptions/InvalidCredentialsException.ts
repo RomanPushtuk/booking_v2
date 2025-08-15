@@ -7,7 +7,7 @@ import {
 export class InvalidCredentialsException extends BaseException {
   static readonly CODE = "INVALID_CREDENTIALS";
   static readonly GROUP = ExceptionGroup.UNAUTHORIZED;
-  static readonly DEFAULT_MESSAGE = "Invalid login credentials";
+  static readonly DEFAULT_MESSAGE = "Invalid login or password";
 
   constructor({ message, cause, context }: IConstructorException = {}) {
     super({

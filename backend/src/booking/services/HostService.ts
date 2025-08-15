@@ -7,8 +7,8 @@ import { vs } from "../vs";
 import { UpdateBookingData, UpdateHostData } from "../types";
 import {
   HostNotFoundException,
-  ClientReferenceNotFoundException,
   BookingNotFoundException,
+  ClientNotFoundException,
 } from "../exceptions";
 
 @Service()
@@ -257,7 +257,7 @@ export class HostService {
         createHostBookingDTO.clientId,
       );
       if (!client)
-        throw new ClientReferenceNotFoundException({
+        throw new ClientNotFoundException({
           context: { clientId: createHostBookingDTO.clientId },
         });
 
