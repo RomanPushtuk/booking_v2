@@ -4,8 +4,8 @@ build
 logs
 
 # Databases
-backend/src/auth/db/database.db
-backend/src/booking/db/database.db
+backend/src/auth/db/auth.db
+backend/src/booking/db/auth.db
 
 # Dependency directories
 node_modules/
@@ -18,5 +18,15 @@ node_modules/
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+# Turborepo files
+.turbo/
+
 # MAC OS files
 **/.DS_Store
+
+# DB files
+backend/src/auth/db/auth.db
+backend/src/booking/db/booking.db
+backend/src/booking/vs/versions.db
+backend/src/info/db/info.db
+backend/src/monitoring/monitoring.db

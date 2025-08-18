@@ -77,7 +77,7 @@ export function publicGetHostsQuery(
 /**
  * Get list of all available hosts
  */
-export const useSuspensePublicGetHosts = <TData = PublicGetHostsResponse>(
+export const useSuspensePublicGetHosts = <TData = PublicGetHostsResponse,>(
   variables: PublicGetHostsVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -103,7 +103,7 @@ export const useSuspensePublicGetHosts = <TData = PublicGetHostsResponse>(
 /**
  * Get list of all available hosts
  */
-export const usePublicGetHosts = <TData = PublicGetHostsResponse>(
+export const usePublicGetHosts = <TData = PublicGetHostsResponse,>(
   variables: PublicGetHostsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -193,7 +193,7 @@ export function publicGetHostByIdQuery(
 /**
  * Each user of the system can get information about the host
  */
-export const useSuspensePublicGetHostById = <TData = Schemas.HostDTO12>(
+export const useSuspensePublicGetHostById = <TData = Schemas.HostDTO12,>(
   variables: PublicGetHostByIdVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -219,7 +219,7 @@ export const useSuspensePublicGetHostById = <TData = Schemas.HostDTO12>(
 /**
  * Each user of the system can get information about the host
  */
-export const usePublicGetHostById = <TData = Schemas.HostDTO12>(
+export const usePublicGetHostById = <TData = Schemas.HostDTO12,>(
   variables: PublicGetHostByIdVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -350,7 +350,9 @@ export const useSuspensePublicGetHostBookings = <
 /**
  * Get host's bookings from now until the host's forward booking period. Shows occupied time slots for planning appointments.
  */
-export const usePublicGetHostBookings = <TData = PublicGetHostBookingsResponse>(
+export const usePublicGetHostBookings = <
+  TData = PublicGetHostBookingsResponse,
+>(
   variables: PublicGetHostBookingsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -565,7 +567,7 @@ export function clientsGetClientQuery(
 /**
  * Get current client information
  */
-export const useSuspenseClientsGetClient = <TData = Schemas.ClientDTO2>(
+export const useSuspenseClientsGetClient = <TData = Schemas.ClientDTO2,>(
   variables: ClientsGetClientVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -591,7 +593,7 @@ export const useSuspenseClientsGetClient = <TData = Schemas.ClientDTO2>(
 /**
  * Get current client information
  */
-export const useClientsGetClient = <TData = Schemas.ClientDTO2>(
+export const useClientsGetClient = <TData = Schemas.ClientDTO2,>(
   variables: ClientsGetClientVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -824,7 +826,7 @@ export const useSuspenseClientsGetBookings = <
 /**
  * Get current client's bookings with filtering and sorting
  */
-export const useClientsGetBookings = <TData = ClientsGetBookingsResponse>(
+export const useClientsGetBookings = <TData = ClientsGetBookingsResponse,>(
   variables: ClientsGetBookingsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -971,7 +973,7 @@ export function clientsGetBookingByIdQuery(
 /**
  * Get specific booking by ID for current client
  */
-export const useSuspenseClientsGetBookingById = <TData = Schemas.BookingDTO1>(
+export const useSuspenseClientsGetBookingById = <TData = Schemas.BookingDTO1,>(
   variables: ClientsGetBookingByIdVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -997,7 +999,7 @@ export const useSuspenseClientsGetBookingById = <TData = Schemas.BookingDTO1>(
 /**
  * Get specific booking by ID for current client
  */
-export const useClientsGetBookingById = <TData = Schemas.BookingDTO1>(
+export const useClientsGetBookingById = <TData = Schemas.BookingDTO1,>(
   variables: ClientsGetBookingByIdVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -1197,7 +1199,7 @@ export function hostsGetMeQuery(
 /**
  * Get information about the current host
  */
-export const useSuspenseHostsGetMe = <TData = Schemas.HostDTO6>(
+export const useSuspenseHostsGetMe = <TData = Schemas.HostDTO6,>(
   variables: HostsGetMeVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.HostDTO6, HostsGetMeError, TData>,
@@ -1215,7 +1217,7 @@ export const useSuspenseHostsGetMe = <TData = Schemas.HostDTO6>(
 /**
  * Get information about the current host
  */
-export const useHostsGetMe = <TData = Schemas.HostDTO6>(
+export const useHostsGetMe = <TData = Schemas.HostDTO6,>(
   variables: HostsGetMeVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.HostDTO6, HostsGetMeError, TData>,
@@ -1519,7 +1521,7 @@ export const useSuspenseHostsGetMyBookings = <
 /**
  * Get all bookings for the current host with optional filtering and sorting
  */
-export const useHostsGetMyBookings = <TData = HostsGetMyBookingsResponse>(
+export const useHostsGetMyBookings = <TData = HostsGetMyBookingsResponse,>(
   variables: HostsGetMyBookingsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -1619,7 +1621,7 @@ export function hostsGetBookingByIdQuery(
 /**
  * Get specific booking by ID for current host
  */
-export const useSuspenseHostsGetBookingById = <TData = Schemas.BookingDTO7>(
+export const useSuspenseHostsGetBookingById = <TData = Schemas.BookingDTO7,>(
   variables: HostsGetBookingByIdVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -1645,7 +1647,7 @@ export const useSuspenseHostsGetBookingById = <TData = Schemas.BookingDTO7>(
 /**
  * Get specific booking by ID for current host
  */
-export const useHostsGetBookingById = <TData = Schemas.BookingDTO7>(
+export const useHostsGetBookingById = <TData = Schemas.BookingDTO7,>(
   variables: HostsGetBookingByIdVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -1866,7 +1868,7 @@ export const useSuspenseHostsGetHostSettings = <
   });
 };
 
-export const useHostsGetHostSettings = <TData = Schemas.HostSettingsDTO>(
+export const useHostsGetHostSettings = <TData = Schemas.HostSettingsDTO,>(
   variables: HostsGetHostSettingsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2000,7 +2002,7 @@ export function adminGetClientsQuery(
 /**
  * Allows you to get all the clients created in the system
  */
-export const useSuspenseAdminGetClients = <TData = AdminGetClientsResponse>(
+export const useSuspenseAdminGetClients = <TData = AdminGetClientsResponse,>(
   variables: AdminGetClientsVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2026,7 +2028,7 @@ export const useSuspenseAdminGetClients = <TData = AdminGetClientsResponse>(
 /**
  * Allows you to get all the clients created in the system
  */
-export const useAdminGetClients = <TData = AdminGetClientsResponse>(
+export const useAdminGetClients = <TData = AdminGetClientsResponse,>(
   variables: AdminGetClientsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2170,7 +2172,7 @@ export function adminGetClientByIdQuery(
 /**
  * Allows you to get a specific client by his id
  */
-export const useSuspenseAdminGetClientById = <TData = Schemas.ClientDTO>(
+export const useSuspenseAdminGetClientById = <TData = Schemas.ClientDTO,>(
   variables: AdminGetClientByIdVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2196,7 +2198,7 @@ export const useSuspenseAdminGetClientById = <TData = Schemas.ClientDTO>(
 /**
  * Allows you to get a specific client by his id
  */
-export const useAdminGetClientById = <TData = Schemas.ClientDTO>(
+export const useAdminGetClientById = <TData = Schemas.ClientDTO,>(
   variables: AdminGetClientByIdVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2392,7 +2394,7 @@ export function adminGetHostsQuery(
 /**
  * Allows you to get all the hosts
  */
-export const useSuspenseAdminGetHosts = <TData = AdminGetHostsResponse>(
+export const useSuspenseAdminGetHosts = <TData = AdminGetHostsResponse,>(
   variables: AdminGetHostsVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2418,7 +2420,7 @@ export const useSuspenseAdminGetHosts = <TData = AdminGetHostsResponse>(
 /**
  * Allows you to get all the hosts
  */
-export const useAdminGetHosts = <TData = AdminGetHostsResponse>(
+export const useAdminGetHosts = <TData = AdminGetHostsResponse,>(
   variables: AdminGetHostsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2550,7 +2552,7 @@ export function adminGetHostQuery(
 /**
  * Allows you to get a host by its Id
  */
-export const useSuspenseAdminGetHost = <TData = Schemas.HostDTO>(
+export const useSuspenseAdminGetHost = <TData = Schemas.HostDTO,>(
   variables: AdminGetHostVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.HostDTO, AdminGetHostError, TData>,
@@ -2570,7 +2572,7 @@ export const useSuspenseAdminGetHost = <TData = Schemas.HostDTO>(
 /**
  * Allows you to get a host by its Id
  */
-export const useAdminGetHost = <TData = Schemas.HostDTO>(
+export const useAdminGetHost = <TData = Schemas.HostDTO,>(
   variables: AdminGetHostVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.HostDTO, AdminGetHostError, TData>,
@@ -2761,7 +2763,7 @@ export function adminGetBookingsQuery(
 /**
  * Allows you to get all the booklets created in the system
  */
-export const useSuspenseAdminGetBookings = <TData = AdminGetBookingsResponse>(
+export const useSuspenseAdminGetBookings = <TData = AdminGetBookingsResponse,>(
   variables: AdminGetBookingsVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2787,7 +2789,7 @@ export const useSuspenseAdminGetBookings = <TData = AdminGetBookingsResponse>(
 /**
  * Allows you to get all the booklets created in the system
  */
-export const useAdminGetBookings = <TData = AdminGetBookingsResponse>(
+export const useAdminGetBookings = <TData = AdminGetBookingsResponse,>(
   variables: AdminGetBookingsVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<
@@ -2929,7 +2931,7 @@ export function adminGetBookingQuery(
 /**
  * Get a booking by his Id
  */
-export const useSuspenseAdminGetBooking = <TData = Schemas.BookingDTO>(
+export const useSuspenseAdminGetBooking = <TData = Schemas.BookingDTO,>(
   variables: AdminGetBookingVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.BookingDTO, AdminGetBookingError, TData>,
@@ -2951,7 +2953,7 @@ export const useSuspenseAdminGetBooking = <TData = Schemas.BookingDTO>(
 /**
  * Get a booking by his Id
  */
-export const useAdminGetBooking = <TData = Schemas.BookingDTO>(
+export const useAdminGetBooking = <TData = Schemas.BookingDTO,>(
   variables: AdminGetBookingVariables | reactQuery.SkipToken,
   options?: Omit<
     reactQuery.UseQueryOptions<Schemas.BookingDTO, AdminGetBookingError, TData>,

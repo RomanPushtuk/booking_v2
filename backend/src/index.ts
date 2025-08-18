@@ -3,8 +3,11 @@ import "reflect-metadata";
 
 import dotenv from "dotenv";
 dotenv.config();
-
 import { Socket } from "net";
+
+import * as config from "./config/exports";
+
+config.init();
 
 import * as gateway from "./gateway/exports";
 import * as shared from "./shared/exports";

@@ -1,7 +1,6 @@
 import { DatabaseSync } from "node:sqlite";
-import path from "path";
+import { config } from "../imports";
 
-const pathToDbFile = path.join(__dirname, "booking.db");
-const db = new DatabaseSync(pathToDbFile);
+const db = new DatabaseSync(config.BOOKING_DB_PATH);
 
 export { db };

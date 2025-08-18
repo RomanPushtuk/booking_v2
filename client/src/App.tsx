@@ -1,83 +1,33 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  HomePage,
-  CreateBookingPage,
-  BookingDetailsPage,
-  LoginPage,
-  CreateHostAdminPage,
-  EditHostAdminPage,
-  CreateClientAdminPage,
-  EditClientAdminPage,
-  CreateBookingAdminPage,
-  EditBookingAdminPage,
-  AdminDashboard,
-  ListClientsAdminPage,
-  ListHostsAdminPage,
-  ListBookingsAdminPage,
-} from "./pages";
 
 import { theme } from "./theme";
-import { AuthProvider } from "./contexts";
-import { ErrorBoundary, PrivateRoute } from "./widgets";
+
+import * as auth from "./auth";
+import * as client from "./client";
+import * as admin from "./admin";
+import * as monitoring from "./monitoring";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ErrorBoundary>
-    <BrowserRouter basename="/">
-      <QueryClientProvider client={queryClient}>
-        <MantineProvider theme={theme}>
-          <AuthProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-
-              <Route element={<PrivateRoute />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/create" element={<CreateBookingPage />} />
-                <Route path="/details" element={<BookingDetailsPage />} />
-                <Route path="/admin/hosts" element={<ListHostsAdminPage />} />
-                <Route
-                  path="/admin/hosts/create"
-                  element={<CreateHostAdminPage />}
-                />
-                <Route
-                  path="/admin/hosts/:hostId"
-                  element={<EditHostAdminPage />}
-                />
-                <Route
-                  path="/admin/clients"
-                  element={<ListClientsAdminPage />}
-                />
-                <Route
-                  path="/admin/clients/create"
-                  element={<CreateClientAdminPage />}
-                />
-                <Route
-                  path="/admin/clients/:clientId"
-                  element={<EditClientAdminPage />}
-                />
-                <Route
-                  path="/admin/bookings"
-                  element={<ListBookingsAdminPage />}
-                />
-                <Route
-                  path="/admin/bookings/create"
-                  element={<CreateBookingAdminPage />}
-                />
-                <Route
-                  path="/admin/bookings/:bookingId"
-                  element={<EditBookingAdminPage />}
-                />
-                <Route path="/admin" element={<AdminDashboard />} />
-              </Route>
-            </Routes>
-          </AuthProvider>
-        </MantineProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
-  </ErrorBoundary>
+  <BrowserRouter basename="/">
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider theme={theme}>
+        <auth.AuthProvider>
+          <Routes>
+            {auth.AuthRoutes}
+            <Route element={<auth.PrivateRoute />}>
+              {client.ClientRoutes}
+              {admin.AdminRoutes}
+              {monitoring.MonitoringRoutes}
+            </Route>
+          </Routes>
+        </auth.AuthProvider>
+      </MantineProvider>
+    </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export { App };

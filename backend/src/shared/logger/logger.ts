@@ -26,15 +26,6 @@ const logger = pino({
     targets: [
       {
         level: "trace",
-        target: "pino/file",
-        options: {
-          destination: "./logs/output.log",
-          mkdir: true,
-          colorize: false,
-        },
-      },
-      {
-        level: "trace",
         target: "pino-pretty",
         options: { destination: process.stdout.fd, colorize: true },
       },

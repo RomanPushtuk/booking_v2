@@ -1,0 +1,56 @@
+
+
+> @pushtuk/backend@2.0.0 build /Users/oadmin/Desktop/booking_v2/backend
+> webpack
+
+Executing post-build scripts
+(node:53042) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Webpack End
+assets by path [1m[32m*.js[39m[22m 3.57 MiB
+  asset [1m[32mmain.js[39m[22m 1.9 MiB [1m[33m[compared for emit][39m[22m [1m[32m[minimized][39m[22m (name: main) 1 related asset
+  asset [1m[32mswagger-ui-bundle.js[39m[22m 1.3 MiB [1m[33m[compared for emit][39m[22m [from: ../node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-bundle.js] [1m[32m[copied][39m[22m [1m[32m[minimized][39m[22m
+  asset [1m[32mswagger-ui-standalone-preset.js[39m[22m 203 KiB [1m[33m[compared for emit][39m[22m [from: ../node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js] [1m[32m[copied][39m[22m [1m[32m[minimized][39m[22m
+  + 5 assets
+assets by path [1m[32mclient/[39m[22m 819 KiB
+  assets by path [1m[32mclient/assets/[39m[22m 817 KiB 2 assets
+  asset [1m[32mclient/vite.svg[39m[22m 1.46 KiB [1m[33m[compared for emit][39m[22m [from: ../client/dist/vite.svg] [1m[32m[copied][39m[22m
+  asset [1m[32mclient/index.html[39m[22m 454 bytes [1m[33m[compared for emit][39m[22m [from: ../client/dist/index.html] [1m[32m[copied][39m[22m
+assets by path [1m[32m*.png[39m[22m 1.26 KiB
+  asset [1m[32mfavicon-16x16.png[39m[22m 665 bytes [1m[33m[compared for emit][39m[22m [from: ../node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-16x16.png] [1m[32m[copied][39m[22m
+  asset [1m[32mfavicon-32x32.png[39m[22m 628 bytes [1m[33m[compared for emit][39m[22m [from: ../node_modules/.pnpm/node_modules/swagger-ui-dist/favicon-32x32.png] [1m[32m[copied][39m[22m
+asset [1m[32mswagger-ui.css[39m[22m 152 KiB [1m[33m[compared for emit][39m[22m [from: ../node_modules/.pnpm/node_modules/swagger-ui-dist/swagger-ui.css] [1m[32m[copied][39m[22m
+asset [1m[32mBookingYml.openapi.yaml[39m[22m 69.4 KiB [1m[33m[compared for emit][39m[22m [from: src/gateway/swagger/BookingYml.openapi.yaml] [1m[32m[copied][39m[22m
+runtime modules 211 bytes 2 modules
+modules by path [1m../node_modules/.pnpm/[39m[22m 3.63 MiB
+  javascript modules 3.22 MiB
+    cacheable modules 3.22 MiB 901 modules
+    [1m../node_modules/.pnpm/routing-controllers@0.11.2_class-transformer@0.5.1_class-v...(truncated)[39m[22m 160 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+    [1m../node_modules/.pnpm/express@4.21.2/node_modules/express/lib/ sync[39m[22m 160 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  json modules 421 KiB
+    modules by path [1m../node_modules/.pnpm/iconv-lite@0.4.24/node_modules/iconv-lite/[39m[22m 86.7 KiB
+      [1m../node_modules/.pnpm/iconv-lite@0.4.24/node_modules/iconv-lite/encodings/tables...(truncated)[39m[22m 8.78 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+      [1m../node_modules/.pnpm/iconv-lite@0.4.24/node_modules/iconv-lite/encodings/tab...(truncated)[39m[22m 15.1 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+      + 6 modules
+    + 7 modules
+modules by path [1m./src/[39m[22m 304 KiB 214 modules
++ 31 modules
+
+[1m[33mWARNING[39m[22m in [1m../node_modules/.pnpm/express@4.21.2/node_modules/express/lib/view.js[39m[22m [1m[32m81:13-25[39m[22m
+[1mCritical dependency: the request of a dependency is an expression[39m[22m
+ @ ../node_modules/.pnpm/express@4.21.2/node_modules/express/lib/application.js 22:11-28
+ @ ../node_modules/.pnpm/express@4.21.2/node_modules/express/lib/express.js 18:12-36
+ @ ../node_modules/.pnpm/express@4.21.2/node_modules/express/index.js 11:0-41
+ @ ./src/gateway/exports.ts 30:34-52
+ @ ./src/index.ts 35:29-57
+
+[1m[33mWARNING[39m[22m in [1m../node_modules/.pnpm/routing-controllers@0.11.2_class-transformer@0.5.1_class-validator@0.14.1/node_modules/routing-controllers/cjs/util/importClassesFromDirectories.js[39m[22m [1m[32m64:15-28[39m[22m
+[1mCritical dependency: the request of a dependency is an expression[39m[22m
+ @ ../node_modules/.pnpm/routing-controllers@0.11.2_class-transformer@0.5.1_class-validator@0.14.1/node_modules/routing-controllers/cjs/index.js 29:39-85
+ @ ./src/gateway/exports.ts 31:30-60
+ @ ./src/index.ts 35:29-57
+
+2 warnings have detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack 5.99.9 compiled with [1m[33m2 warnings[39m[22m in 8745 ms

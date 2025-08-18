@@ -25,3 +25,9 @@ Run migrations
 
 cd backend
 node ./src/migrations/run_migrations.js up
+
+
+1) generate client queries based on SwaggerApi
+2) build client
+3) build backend
+4) create db's
