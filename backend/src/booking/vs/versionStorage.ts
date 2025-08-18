@@ -1,6 +1,8 @@
 import Datastore from "@seald-io/nedb";
+import { config } from "../imports";
+
 const vs = new Datastore({
-  filename: "./src/booking/vs/versions.db",
+  filename: config.VERION_STORAGE_DB_PATH,
   autoload: true,
 });
 

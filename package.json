@@ -13,20 +13,12 @@
   },
   "scripts": {
     "preinstall": "node ./preinstall-script.js",
-    "build": "webpack",
-    "start": "node ./dist/main.js",
-    "dev": "nodemon ./src/index.ts",
-    "lint": "eslint",
-    "p": "prettier . --check",
-    "prettier": "prettier ./src --write",
-    "fix": "eslint --fix",
-    "test:unit": "jest ./src/__unit__/index.test.ts",
-    "test:e2e": "jest ./src/__e2e__/index.test.ts",
-    "debug": "nodemon --inspect ./src/index.ts",
-    "swagger": "npm run dev -- run swagger",
-    "migration": "node ./src/migrations/run_migrations.js"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "cd ./backend && pnpm run start"
   },
-  "devDependencies": {},
+  "keywords": [],
+  "packageManager": "pnpm@10.13.1",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   }

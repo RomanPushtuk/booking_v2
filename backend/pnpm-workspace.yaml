@@ -1,2 +1,0 @@
-neverHoist:
-  - 'swagger-ui-express'

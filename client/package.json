@@ -4,12 +4,14 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "type-check": "tsc",
+    "build": "vite build",
     "lint": "eslint",
     "prettier": "prettier ./src --write",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "gen": "npx openapi-codegen gen"
   },
   "dependencies": {
     "@mantine/core": "8.1.3",

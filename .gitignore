@@ -3,10 +3,6 @@ dist
 build
 logs
 
-# Databases
-backend/src/auth/db/database.db
-backend/src/booking/db/database.db
-
 # Dependency directories
 node_modules/
 
@@ -18,5 +14,11 @@ node_modules/
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+# Turborepo files
+.turbo/
+
 # MAC OS files
 **/.DS_Store
+
+# DB files
+**/*.db
