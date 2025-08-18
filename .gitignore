@@ -3,10 +3,6 @@ dist
 build
 logs
 
-# Databases
-backend/src/auth/db/auth.db
-backend/src/booking/db/auth.db
-
 # Dependency directories
 node_modules/
 
@@ -25,8 +21,4 @@ node_modules/
 **/.DS_Store
 
 # DB files
-backend/src/auth/db/auth.db
-backend/src/booking/db/booking.db
-backend/src/booking/vs/versions.db
-backend/src/info/db/info.db
-backend/src/monitoring/monitoring.db
+**/*.db
