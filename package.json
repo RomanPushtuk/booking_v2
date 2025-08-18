@@ -13,9 +13,9 @@
   },
   "scripts": {
     "preinstall": "node ./preinstall-script.js",
-    "gen": "pnpm --filter 'client' gen",
     "dev": "turbo run dev",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "start": "NODE_ENV=production node ./backend/dist/main.js"
   },
   "keywords": [],
   "packageManager": "pnpm@10.13.1",
