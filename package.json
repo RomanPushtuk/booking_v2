@@ -15,7 +15,7 @@
     "preinstall": "node ./preinstall-script.js",
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "start": "NODE_ENV=production node ./backend/dist/main.js"
+    "start": "cd ./backend && pnpm run start"
   },
   "keywords": [],
   "packageManager": "pnpm@10.13.1",
