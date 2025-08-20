@@ -1,12 +1,12 @@
 import {
   MaxLength,
-  validateSync,
   IsDateString,
   IsString,
   ValidateNested,
   IsOptional,
 } from "class-validator";
 import { shared } from "../imports";
+import { Type } from "class-transformer";
 
 class _Info {
   @IsString()
@@ -26,8 +26,9 @@ export class PublicBookingDTO {
   @IsDateString()
   toDateTime: string;
 
-  @ValidateNested()
   @IsOptional()
+  @ValidateNested()
+  @Type(() => _Info)
   info?: _Info;
 
   constructor(data: shared.types.GetInterface<PublicBookingDTO>) {
@@ -35,9 +36,5 @@ export class PublicBookingDTO {
     this.fromDateTime = data.fromDateTime;
     this.toDateTime = data.toDateTime;
     this.info = data.info;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(PublicBookingDTO.name, errors);
   }
 }

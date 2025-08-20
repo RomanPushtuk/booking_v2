@@ -2,6 +2,10 @@ import { gateway, shared } from "../imports";
 import { ClientProperties, UpdateClientData } from "../types";
 import { Booking } from "./Booking";
 import { User } from "./User";
+import {
+  BookingDeletedAccessException,
+  BookingNotFoundException,
+} from "../exceptions";
 
 export class Client {
   private _id: string;
@@ -52,9 +56,15 @@ export class Client {
   getBookingById(bookingId: string) {
     const booking = this._bookings.find((b) => b.getId() === bookingId);
 
-    if (!booking) throw new Error("Booking not found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
 
-    if (booking.getDeleted()) throw new Error("Booking is deleted");
+    if (booking.getDeleted())
+      throw new BookingDeletedAccessException({
+        context: { bookingId },
+      });
 
     return booking;
   }

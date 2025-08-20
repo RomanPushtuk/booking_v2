@@ -1,6 +1,5 @@
-import { IsBoolean, IsDateString, validateSync } from "class-validator";
 import { GetInterface } from "../types";
-import { DTOValidationError } from "../errors";
+import { IsBoolean, IsDateString } from "class-validator";
 
 export class BookingFilters {
   clientId?: string;
@@ -24,8 +23,5 @@ export class BookingFilters {
     this.fromDateTime = fromDateTime;
     this.toDateTime = toDateTime;
     this.deleted = deleted;
-
-    const errors = validateSync(this, { skipMissingProperties: true });
-    if (errors.length) throw new DTOValidationError("BookingFilters", errors);
   }
 }

@@ -5,6 +5,11 @@ import { UnitOfWork } from "./UnitOfWork";
 import { Booking, Host } from "../domain";
 import { vs } from "../vs";
 import { UpdateBookingData, UpdateHostData } from "../types";
+import {
+  HostNotFoundException,
+  BookingNotFoundException,
+  ClientNotFoundException,
+} from "../exceptions";
 
 @Service()
 export class HostService {
@@ -39,7 +44,7 @@ export class HostService {
   }
 
   async deleteHost(hostId: string) {
-    console.log(hostId);
+    logger.info({ hostId }, this.constructor.name + " deleteHost");
   }
 
   async getAllHosts(options?: {
@@ -64,7 +69,10 @@ export class HostService {
   async getHostById(hostId: string) {
     const host = this._uow.hostRepository.getById(hostId);
 
-    if (!host || host.getDeleted()) throw new Error("Host not found");
+    if (!host || host.getDeleted())
+      throw new HostNotFoundException({
+        context: { hostId },
+      });
 
     return new gateway.dtos.HostDTO({
       id: host.getId(),
@@ -88,7 +96,10 @@ export class HostService {
       this._uow.begin();
 
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       Host.update(host, updateHostDTO);
       this._uow.hostRepository.save(host);
@@ -116,12 +127,13 @@ export class HostService {
     logger.info({ hostId, versionId }, this.constructor.name + " revertHost");
 
     const host = this._uow.hostRepository.getById(hostId);
-    if (!host) throw new Error("host not found");
+    if (!host) throw new Error(`Host ${hostId} not found when reverting`);
 
     const version = await this._vs
       .findOneAsync({ id: hostId, versionId })
       .execAsync();
-    if (!version) throw new Error("version not found");
+    if (!version)
+      throw new Error(`Version ${versionId} not found for host ${hostId}`);
 
     const updateData = version["data"] as UpdateHostData;
     const numRemoved = await this._vs.removeAsync(
@@ -129,7 +141,9 @@ export class HostService {
       {},
     );
     if (!numRemoved)
-      throw new Error("version was not removed from version storage");
+      throw new Error(
+        `Failed to remove version ${versionId} for host ${hostId}`,
+      );
 
     Host.update(host, updateData);
     this._uow.hostRepository.save(host);
@@ -151,7 +165,10 @@ export class HostService {
       "HostService getHostBookings result",
     );
 
-    if (!host) throw new Error("Host not found");
+    if (!host)
+      throw new HostNotFoundException({
+        context: { hostId },
+      });
 
     const bookings = host.getBookings(options);
 
@@ -169,10 +186,42 @@ export class HostService {
     );
   }
 
+  async getPublicHostBookings(
+    hostId: string,
+    options?: {
+      sorting?: shared.application.BookingSorting;
+      filters?: shared.application.BookingFilters;
+    },
+  ) {
+    logger.info({ hostId }, "HostService getPublicHostBookings");
+    const host = this._uow.hostRepository.getById(hostId);
+
+    if (!host)
+      throw new HostNotFoundException({
+        context: { hostId },
+      });
+
+    const bookings = host.getBookings(options);
+
+    if (!bookings) return [];
+
+    return bookings.map(
+      (booking) =>
+        new gateway.dtos.PublicBookingDTO({
+          id: booking.getId(),
+          fromDateTime: booking.getFromDateTime(),
+          toDateTime: booking.getToDateTime(),
+        }),
+    );
+  }
+
   async getHostBookingById(hostId: string, bookingId: string) {
     const host = this._uow.hostRepository.getById(hostId);
 
-    if (!host) throw new Error("Host not found");
+    if (!host)
+      throw new HostNotFoundException({
+        context: { hostId },
+      });
 
     const booking = host.getBookingById(bookingId);
 
@@ -199,12 +248,18 @@ export class HostService {
       this._uow.begin();
 
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("Host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       const client = this._uow.clientRepository.getById(
         createHostBookingDTO.clientId,
       );
-      if (!client) throw new Error("Client not found");
+      if (!client)
+        throw new ClientNotFoundException({
+          context: { clientId: createHostBookingDTO.clientId },
+        });
 
       const booking = new Booking({
         id: bookingId,
@@ -240,10 +295,16 @@ export class HostService {
       this._uow.begin();
 
       const booking = this._uow.bookingRepository.getById(bookingId);
-      if (!booking) throw new Error("Booking not found");
+      if (!booking)
+        throw new BookingNotFoundException({
+          context: { bookingId },
+        });
 
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("Host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       host.updateBookingByHost(booking, updateHostBookingDTO);
       this._uow.bookingRepository.save(booking);
@@ -266,18 +327,30 @@ export class HostService {
   async revertBooking(bookingId: string, versionId: string) {
     logger.info({ bookingId }, this.constructor.name + " revertBookingVersion");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not found");
+
+    if (!booking)
+      throw new Error(`Booking ${bookingId} not found when reverting`);
+
     const version = await this._vs
       .findOneAsync({ id: bookingId, versionId })
       .execAsync();
-    if (!version) throw new Error("version not found");
+
+    if (!version)
+      throw new Error(
+        `Version ${versionId} not found for booking ${bookingId}`,
+      );
+
     const updateData = version["data"] as UpdateBookingData;
     const numRemoved = await this._vs.removeAsync(
       { id: bookingId, versionId },
       {},
     );
+
     if (!numRemoved)
-      throw new Error("version was not removed from version storage");
+      throw new Error(
+        `Failed to remove version ${versionId} for booking ${bookingId}`,
+      );
+
     Booking.update(booking, updateData);
     this._uow.bookingRepository.save(booking);
 
@@ -291,10 +364,16 @@ export class HostService {
       this._uow.begin();
 
       const booking = this._uow.bookingRepository.getById(bookingId);
-      if (!booking) throw new Error("Booking not found");
+      if (!booking)
+        throw new BookingNotFoundException({
+          context: { bookingId },
+        });
 
       const host = this._uow.hostRepository.getById(hostId);
-      if (!host) throw new Error("Host not found");
+      if (!host)
+        throw new HostNotFoundException({
+          context: { hostId },
+        });
 
       host.deleteBooking(booking);
 
@@ -312,7 +391,10 @@ export class HostService {
   async restoreBooking(bookingId: string) {
     logger.info({ bookingId }, this.constructor.name + " restoreBooking");
     const booking = this._uow.bookingRepository.getById(bookingId);
-    if (!booking) throw new Error("booking not find");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
     booking.setDeleted(false);
     this._uow.bookingRepository.save(booking);
 

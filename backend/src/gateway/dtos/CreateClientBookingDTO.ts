@@ -1,12 +1,10 @@
 import {
-  validateSync,
   IsDateString,
   IsString,
   ValidateNested,
   IsOptional,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { shared } from "../imports";
 
 class _Info {
   @IsOptional()
@@ -32,21 +30,4 @@ export class CreateClientBookingDTO {
   @ValidateNested()
   @Type(() => _Info)
   info?: _Info;
-
-  constructor(data?: shared.types.GetInterface<CreateClientBookingDTO>) {
-    if (data) {
-      this.hostId = data.hostId;
-      this.fromDateTime = data.fromDateTime;
-      this.toDateTime = data.toDateTime;
-      this.info = data.info;
-
-      const errors = validateSync(this);
-      if (errors.length) {
-        throw new shared.errors.DTOValidationError(
-          CreateClientBookingDTO.name,
-          errors,
-        );
-      }
-    }
-  }
 }

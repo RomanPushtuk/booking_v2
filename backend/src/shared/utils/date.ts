@@ -1,5 +1,11 @@
 import { DateTime, Duration, Interval } from "luxon";
 import { Days } from "../enums/Days";
+import {
+  InvalidTimeFormatException,
+  InvalidTimeIntervalException,
+  OverlappingTimeIntervalsException,
+  InvalidDurationFormatException,
+} from "../errors";
 
 export function intervalsOverlap(
   fromA: string,
@@ -50,7 +56,9 @@ export function isTimeIntervalInWorkingHours(
 
 function validateTimeFormat(time: string): void {
   if (!DateTime.fromFormat(time, "HH:mm").isValid) {
-    throw new Error(`Invalid time format: ${time}. Expected format: HH:MM`);
+    throw new InvalidTimeFormatException({
+      context: { input: time, expectedFormat: "HH:MM" },
+    });
   }
 }
 
@@ -62,9 +70,9 @@ export function validateTimeIntervals(
     validateTimeFormat(timeInterval.to);
 
     if (timeInterval.from >= timeInterval.to) {
-      throw new Error(
-        `Invalid time interval: from time (${timeInterval.from}) must be earlier than to time (${timeInterval.to})`,
-      );
+      throw new InvalidTimeIntervalException({
+        context: { from: timeInterval.from, to: timeInterval.to },
+      });
     }
   }
 
@@ -82,15 +90,20 @@ export function validateTimeIntervals(
   );
 
   if (hasOverlap) {
-    throw new Error("Overlapping time intervals detected");
+    throw new OverlappingTimeIntervalsException({
+      context: { intervals: timeIntervals },
+    });
   }
 }
 
 export function validateDurationFormat(durationString: string): void {
   if (!Duration.fromISO(durationString).isValid) {
-    throw new Error(
-      `Invalid duration format: ${durationString}. Expected ISO 8601 format like P1D, P1W, P1M, P1Y, PT1H`,
-    );
+    throw new InvalidDurationFormatException({
+      context: {
+        input: durationString,
+        expectedFormat: "ISO 8601 (like P1D, P1W, P1M, P1Y, PT1H)",
+      },
+    });
   }
 }
 

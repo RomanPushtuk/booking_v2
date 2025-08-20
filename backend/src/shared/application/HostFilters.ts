@@ -1,6 +1,5 @@
-import { IsBoolean, IsArray, IsString, validateSync } from "class-validator";
 import { GetInterface } from "../types";
-import { DTOValidationError } from "../errors";
+import { IsBoolean, IsArray, IsString } from "class-validator";
 
 export class HostFilters {
   @IsArray()
@@ -26,8 +25,5 @@ export class HostFilters {
     this.workHours = workHours;
     this.forwardBooking = forwardBooking;
     this.deleted = deleted;
-
-    const errors = validateSync(this, { skipMissingProperties: true });
-    if (errors.length) throw new DTOValidationError("HostFilters", errors);
   }
 }

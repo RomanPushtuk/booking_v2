@@ -1,5 +1,5 @@
-import { MaxLength, validateSync } from "class-validator";
 import { shared } from "../imports";
+import { MaxLength } from "class-validator";
 
 export class BookingRevertedDTO {
   @MaxLength(36)
@@ -7,12 +7,5 @@ export class BookingRevertedDTO {
 
   constructor(data: shared.types.GetInterface<BookingRevertedDTO>) {
     this.id = data.id;
-
-    const errors = validateSync(this);
-    if (errors.length)
-      throw new shared.errors.DTOValidationError(
-        BookingRevertedDTO.name,
-        errors,
-      );
   }
 }

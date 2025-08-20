@@ -15,9 +15,7 @@ export class BookingRepository {
   save(booking: Booking) {
     logger.info(this.constructor.name + " save");
     const bookingDbModel = BookingMapper.toDbModel(booking);
-    console.log('bookingDbModel', bookingDbModel);
     const sql = saveBooking(bookingDbModel);
-    console.log('sql', sql)
     logger.info(this._uow.db.exec(sql), "saving Booking to DB");
     return { id: booking.getId() };
   }
@@ -27,13 +25,13 @@ export class BookingRepository {
     const sql = getBookingById(bookingId);
     const data = this._uow.db.prepare(sql).get() as
       | {
-        id: string;
-        clientId: string;
-        hostId: string;
-        fromDateTime: string;
-        toDateTime: string;
-        deleted: boolean;
-      }
+          id: string;
+          clientId: string;
+          hostId: string;
+          fromDateTime: string;
+          toDateTime: string;
+          deleted: boolean;
+        }
       | undefined;
     if (!data) return null;
     return BookingMapper.toDomain(data);
@@ -51,13 +49,13 @@ export class BookingRepository {
     const sql = getAllBookings(filters);
     const data = this._uow.db.prepare(sql).all() as
       | {
-        id: string;
-        clientId: string;
-        hostId: string;
-        fromDateTime: string;
-        toDateTime: string;
-        deleted: boolean;
-      }[]
+          id: string;
+          clientId: string;
+          hostId: string;
+          fromDateTime: string;
+          toDateTime: string;
+          deleted: boolean;
+        }[]
       | undefined;
     if (!data) return null;
     return data.map(BookingMapper.toDomain);

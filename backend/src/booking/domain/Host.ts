@@ -13,6 +13,16 @@ import {
   isIntervalInPast,
   addDurationToDate,
 } from "../../shared/utils/date";
+import {
+  BookingNotFoundException,
+  BookingDeletedAccessException,
+  DuplicateBookingException,
+  HostNotWorkingException,
+  PastTimeBookingException,
+  ForwardBookingLimitExceededException,
+  OverlappingBookingsException,
+  BookingTransferNotAllowedException,
+} from "../exceptions";
 
 export class Host {
   private _id: string;
@@ -55,9 +65,15 @@ export class Host {
   getBookingById(bookingId: string) {
     const booking = this._bookings.find((b) => b.getId() === bookingId);
 
-    if (!booking) throw new Error("Booking not found");
+    if (!booking)
+      throw new BookingNotFoundException({
+        context: { bookingId },
+      });
 
-    if (booking.getDeleted()) throw new Error("Booking is deleted");
+    if (booking.getDeleted())
+      throw new BookingDeletedAccessException({
+        context: { bookingId },
+      });
 
     return booking;
   }
@@ -67,21 +83,29 @@ export class Host {
     const toDateTime = booking.getToDateTime();
 
     if (this.checkIfWorkingHoursForHost(fromDateTime, toDateTime)) {
-      throw new Error(
-        "Can't create a booking. The host is not working at this time",
-      );
+      throw new HostNotWorkingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+          hostWorkHours: this._workHours,
+          hostWorkDays: this._workDays,
+        },
+      });
     }
 
     if (this.checkIfPastTimeForHost(fromDateTime, toDateTime)) {
-      throw new Error(
-        "Can't create a booking. The booking time is in the past",
-      );
+      throw new PastTimeBookingException({
+        context: { fromDateTime, toDateTime },
+      });
     }
 
     if (this.checkIfBeyondForwardBookingForHost(fromDateTime)) {
-      throw new Error(
-        "Can't create a booking. The booking is beyond the forward booking limit",
-      );
+      throw new ForwardBookingLimitExceededException({
+        context: {
+          fromDateTime,
+          maxForwardBookingLimit: this._forwardBooking,
+        },
+      });
     }
 
     this.validateAndAddBooking(booking);
@@ -97,21 +121,32 @@ export class Host {
     );
 
     if (isOutsideWorkingHours) {
-      throw new Error(
-        "Can't create a booking. The host is not working at this time",
-      );
+      throw new HostNotWorkingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+          hostWorkHours: this._workHours,
+          hostWorkDays: this._workDays,
+        },
+      });
     }
 
     if (this.checkIfPastTime(fromDateTime, toDateTime)) {
-      throw new Error(
-        "Can't create a booking. The booking time is in the past",
-      );
+      throw new PastTimeBookingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+        },
+      });
     }
 
     if (this.checkIfBeyondForwardBooking(fromDateTime)) {
-      throw new Error(
-        "Can't create a booking. The booking is beyond the forward booking limit",
-      );
+      throw new ForwardBookingLimitExceededException({
+        context: {
+          fromDateTime,
+          maxForwardBookingLimit: this._forwardBooking,
+        },
+      });
     }
 
     this.validateAndAddBooking(booking);
@@ -125,7 +160,13 @@ export class Host {
         booking.getToDateTime(),
       )
     ) {
-      throw new Error("Can't create a booking. Booking already exists");
+      throw new DuplicateBookingException({
+        context: {
+          clientId: booking.getClientId(),
+          fromDateTime: booking.getFromDateTime(),
+          toDateTime: booking.getToDateTime(),
+        },
+      });
     }
 
     if (
@@ -134,9 +175,12 @@ export class Host {
         booking.getToDateTime(),
       )
     ) {
-      throw new Error(
-        "Can't create a booking. There are overlapping bookings.",
-      );
+      throw new OverlappingBookingsException({
+        context: {
+          fromDateTime: booking.getFromDateTime(),
+          toDateTime: booking.getToDateTime(),
+        },
+      });
     }
 
     this._bookings.push(booking);
@@ -145,15 +189,23 @@ export class Host {
 
   updateBookingByHost(booking: Booking, updateData: UpdateBookingData) {
     if (updateData.hostId && updateData.hostId !== this._id) {
-      throw new Error(
-        "Can't update booking. Cannot transfer booking to another host",
-      );
+      throw new BookingTransferNotAllowedException({
+        context: {
+          bookingId: booking.getId(),
+          currentHostId: this._id,
+          transferHostId: updateData.hostId,
+        },
+      });
     }
 
     if (updateData.clientId && updateData.clientId !== booking.getClientId()) {
-      throw new Error(
-        "Can't update booking. Cannot transfer booking to another client",
-      );
+      throw new BookingTransferNotAllowedException({
+        context: {
+          bookingId: booking.getId(),
+          currentHostId: this._id,
+          transferHostId: updateData.hostId,
+        },
+      });
     }
 
     Booking.update(booking, updateData);
@@ -162,19 +214,32 @@ export class Host {
     const toDateTime = booking.getToDateTime();
 
     if (this.checkIfWorkingHoursForHost(fromDateTime, toDateTime)) {
-      throw new Error(
-        "Can't update booking. The host is not working at this time",
-      );
+      throw new HostNotWorkingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+          hostWorkHours: this._workHours,
+          hostWorkDays: this._workDays,
+        },
+      });
     }
 
     if (this.checkIfPastTimeForHost(fromDateTime, toDateTime)) {
-      throw new Error("Can't update booking. The booking time is in the past");
+      throw new PastTimeBookingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+        },
+      });
     }
 
     if (this.checkIfBeyondForwardBookingForHost(fromDateTime)) {
-      throw new Error(
-        "Can't update booking. The booking is beyond the forward booking limit",
-      );
+      throw new ForwardBookingLimitExceededException({
+        context: {
+          fromDateTime,
+          maxForwardBookingLimit: this._forwardBooking,
+        },
+      });
     }
 
     this.validateUpdatedBooking(booking);
@@ -182,15 +247,23 @@ export class Host {
 
   updateBookingByClient(booking: Booking, updateData: UpdateBookingData) {
     if (updateData.hostId && updateData.hostId !== this._id) {
-      throw new Error(
-        "Can't update booking. Cannot transfer booking to another host",
-      );
+      throw new BookingTransferNotAllowedException({
+        context: {
+          bookingId: booking.getId(),
+          currentHostId: this._id,
+          transferHostId: updateData.hostId,
+        },
+      });
     }
 
     if (updateData.clientId && updateData.clientId !== booking.getClientId()) {
-      throw new Error(
-        "Can't update booking. Cannot transfer booking to another client",
-      );
+      throw new BookingTransferNotAllowedException({
+        context: {
+          bookingId: booking.getId(),
+          currentHostId: this._id,
+          transferHostId: updateData.hostId,
+        },
+      });
     }
 
     Booking.update(booking, updateData);
@@ -199,19 +272,32 @@ export class Host {
     const toDateTime = booking.getToDateTime();
 
     if (this.checkIfWorkingHours(fromDateTime, toDateTime)) {
-      throw new Error(
-        "Can't update booking. The host is not working at this time",
-      );
+      throw new HostNotWorkingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+          hostWorkHours: this._workHours,
+          hostWorkDays: this._workDays,
+        },
+      });
     }
 
     if (this.checkIfPastTime(fromDateTime, toDateTime)) {
-      throw new Error("Can't update booking. The booking time is in the past");
+      throw new PastTimeBookingException({
+        context: {
+          fromDateTime,
+          toDateTime,
+        },
+      });
     }
 
     if (this.checkIfBeyondForwardBooking(fromDateTime)) {
-      throw new Error(
-        "Can't update booking. The booking is beyond the forward booking limit",
-      );
+      throw new ForwardBookingLimitExceededException({
+        context: {
+          fromDateTime,
+          maxForwardBookingLimit: this._forwardBooking,
+        },
+      });
     }
 
     this.validateUpdatedBooking(booking);
@@ -226,7 +312,14 @@ export class Host {
         booking.getId(),
       )
     ) {
-      throw new Error("Can't update a booking. Booking already exists");
+      throw new DuplicateBookingException({
+        context: {
+          bookingId: booking.getId(),
+          fromDateTime: booking.getFromDateTime(),
+          toDateTime: booking.getToDateTime(),
+          clientId: booking.getClientId(),
+        },
+      });
     }
 
     if (
@@ -236,9 +329,12 @@ export class Host {
         [booking],
       )
     ) {
-      throw new Error(
-        "Can't update a booking. There are overlapping bookings.",
-      );
+      throw new OverlappingBookingsException({
+        context: {
+          fromDateTime: booking.getFromDateTime(),
+          toDateTime: booking.getToDateTime(),
+        },
+      });
     }
 
     logger.info("Updated booking");

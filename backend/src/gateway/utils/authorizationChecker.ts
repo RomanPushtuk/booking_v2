@@ -1,6 +1,7 @@
 import { Action } from "routing-controllers";
-import jwt from "jsonwebtoken";
 import { auth, shared } from "../imports";
+import { InsufficientPermissionsException } from "../../auth/exceptions";
+import { validateJWT } from "./validateJWT";
 
 const permissionsByRole = {
   [shared.enums.Roles.CLIENT]: [
@@ -42,7 +43,8 @@ export const authorizationChecker = async (
   permissions: shared.enums.Permissions[],
 ) => {
   const token = action.request.headers["authorization"];
-  const decoded = jwt.verify(token, "secret") as jwt.JwtPayload;
+  const decoded = validateJWT(token);
+
   const user = await auth.services.authService.getUserById(decoded["id"]);
 
   const userPermissions = permissionsByRole[user.role];
@@ -51,5 +53,9 @@ export const authorizationChecker = async (
     if (permissions.includes(permission)) return true;
   }
 
-  return false;
+  throw new InsufficientPermissionsException({
+    context: {
+      user: { id: user.id, role: user.role },
+    },
+  });
 };

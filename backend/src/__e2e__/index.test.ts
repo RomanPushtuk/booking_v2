@@ -386,7 +386,7 @@ describe("Client Bookings testing", () => {
     expect(response.status).toBe(403);
   });
 
-  test("Create booking with invalid data", async () => {
+  test("Create booking with non-existent client", async () => {
     const createBookingDTO: gateway.dtos.CreateClientBookingDTO = {
       hostId: "invalid-host-id",
       ...generateBookingDates(Days.MONDAY, "12:00", "PT1H"),
@@ -396,7 +396,7 @@ describe("Client Bookings testing", () => {
       createBookingDTO,
       clientConfig,
     );
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
   });
 
   test("Get booking by id success", async () => {
@@ -1453,7 +1453,7 @@ describe("Host testing", () => {
         createHostBookingDTO,
         hostConfig,
       );
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(404);
     });
 
     test("Host creates booking in the past - config allowHostPastTimeBookings behavior", async () => {

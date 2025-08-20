@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { gateway } from "./imports";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3000/api",
   validateStatus: () => true,
 });
 
