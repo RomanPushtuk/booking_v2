@@ -46,9 +46,9 @@ import {
 @Service()
 @JsonController("/hosts")
 export class HostController {
-  constructor() {}
+  constructor() { }
 
-  @Get()
+  @Get("")
   async getHosts(): Promise<HostDTO[]> {
     const filters = new shared.application.HostFilters({
       deleted: false,

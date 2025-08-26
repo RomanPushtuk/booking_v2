@@ -3,13 +3,13 @@ import { DateTime } from "luxon";
 import { Center, Container, Text } from "@mantine/core";
 import { useNavigate, useParams } from "react-router";
 
-import { useAuth } from "../../../auth";
 import { BookingDTO, UpdateBookingDTO } from "../../../queries/bookingSchemas";
 import { useAdminGetBooking, useAdminUpdateBooking } from "../../../queries/bookingComponents";
 
 import { BookingForm, IBookingFormItem } from "../../components/BookingForm/BookingForm";
 import { BookingShemaType } from "../../components/BookingForm/bookingFormShema";
 import { Footer } from "../../components";
+import { auth } from "../../imports";
 
 
 const mapBookingDTOToBookingFormItem = (
@@ -66,7 +66,7 @@ export const EditBookingAdminPage = () => {
 
   if (!params.bookingId) throw new Error("No bookingId in params");
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const booking = useAdminGetBooking({
     pathParams: { bookingId: params.bookingId },

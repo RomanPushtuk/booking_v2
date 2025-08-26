@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Center, Container, Text } from "@mantine/core";
 
-import { useAuth } from "../../../auth";
 import { UpdateClientDTO } from "../../../queries/bookingSchemas";
 import { useAdminGetClientById, useAdminUpdateClietn } from "../../../queries/bookingComponents";
 
 import { UpdateClientShemaType } from "../../components/ClientForm/clientFormShema";
 import { ClientForm, Footer } from "../../components";
+import { auth } from "../../imports";
 
 const mapUpdateClientShemaTypeToUpdateClientDTO = (
   payload: UpdateClientShemaType,
@@ -26,7 +26,7 @@ const EditClientAdminPage = () => {
     navigate("/admin/clients");
   }, [navigate]);
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const client = useAdminGetClientById({
     pathParams: { clientId: params.clientId },

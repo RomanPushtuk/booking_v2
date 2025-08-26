@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router";
 import { Center, Container } from "@mantine/core";
 
-import { useAuth } from "../../../auth";
 import { CreateClientDTO } from "../../../queries/bookingSchemas";
 import { useAdminCreateNewClient } from "../../../queries/bookingComponents";
 
 import { CreateClientShemaType } from "../../components/ClientForm/clientFormShema";
 import { ClientForm, Footer } from "../../components";
+import { auth } from "../../imports";
 
 const mapCreateClientShemaTypeToCreateClientDTO = (
   data: CreateClientShemaType,
@@ -25,7 +25,7 @@ const CreateClientAdminPage = () => {
     navigate("/admin/clients");
   }, [navigate]);
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const create = useAdminCreateNewClient();
 

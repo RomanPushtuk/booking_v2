@@ -1,7 +1,7 @@
 import { Center, Container } from "@mantine/core";
 
-import { useAuth } from "../../contexts";
 import { LoginForm } from "../../components";
+import { useAuth } from "../../hooks";
 
 const LoginPage = () => {
   const { login: authLogin } = useAuth();

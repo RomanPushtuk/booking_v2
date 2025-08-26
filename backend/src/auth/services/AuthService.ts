@@ -46,6 +46,7 @@ export class AuthService {
 
     return new gateway.dtos.UserLoggedInDTO({
       accessToken: token,
+      role: user.role,
     });
   }
 

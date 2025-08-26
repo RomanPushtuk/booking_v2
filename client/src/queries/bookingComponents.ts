@@ -38,7 +38,7 @@ export const fetchPublicGetHosts = (
     {},
     {},
     {}
-  >({ url: "/api//hosts", method: "get", ...variables, signal });
+  >({ url: "/api/hosts", method: "get", ...variables, signal });
 
 /**
  * Get list of all available hosts
@@ -62,7 +62,7 @@ export function publicGetHostsQuery(
 ) {
   return {
     queryKey: queryKeyFn({
-      path: "/api//hosts",
+      path: "/api/hosts",
       operationId: "publicGetHosts",
       variables,
     }),
@@ -3087,7 +3087,7 @@ export const useAdminDeleteBooking = (
 
 export type QueryOperation =
   | {
-      path: "/api//hosts";
+      path: "/api/hosts";
       operationId: "publicGetHosts";
       variables: PublicGetHostsVariables | reactQuery.SkipToken;
     }

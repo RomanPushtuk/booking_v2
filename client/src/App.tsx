@@ -15,16 +15,16 @@ const App = () => (
   <BrowserRouter basename="/">
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
-        <auth.AuthProvider>
+        <auth.components.AuthProvider>
           <Routes>
-            {auth.AuthRoutes}
-            <Route element={<auth.PrivateRoute />}>
-              {client.ClientRoutes}
-              {admin.AdminRoutes}
-              {monitoring.MonitoringRoutes}
+            {auth.components.AuthRoutes}
+            <Route element={<auth.components.PrivateRoute />}>
+              {client.components.ClientRoutes}
+              {admin.components.AdminRoutes}
+              {monitoring.components.MonitoringRoutes}
             </Route>
           </Routes>
-        </auth.AuthProvider>
+        </auth.components.AuthProvider>
       </MantineProvider>
     </QueryClientProvider>
   </BrowserRouter>

@@ -3,7 +3,7 @@ import { DateInput, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 
-import { useAuth } from "../../../auth";
+import { auth } from "../../imports";
 import { useAdminGetClients, useAdminGetHosts } from "../../../queries/bookingComponents";
 
 import { bookingFormShema, type BookingShemaType } from "./bookingFormShema";
@@ -28,7 +28,7 @@ const BookingForm = (props: IBookingFormProps) => {
 
   const isEditing = Boolean(item);
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const clients = useAdminGetClients({
     headers: {

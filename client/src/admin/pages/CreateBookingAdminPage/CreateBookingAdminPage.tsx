@@ -3,12 +3,12 @@ import { useNavigate } from "react-router";
 import { Center, Container } from "@mantine/core";
 import { DateTime } from "luxon";
 
-import { useAuth } from "../../../auth";
 import { CreateBookingDTO } from "../../../queries/bookingSchemas";
 import { useAdminCreateNewBooking } from "../../../queries/bookingComponents";
 
 import { BookingShemaType } from "../../components/BookingForm/bookingFormShema";
 import { BookingForm, Footer } from "../../components";
+import { auth } from "../../imports";
 
 
 const mapBookingShemaTypeToCreateBookingDTO = (
@@ -53,7 +53,7 @@ const CreateBookingAdminPage = () => {
     navigate("/admin/bookings");
   }, [navigate]);
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const create = useAdminCreateNewBooking();
 

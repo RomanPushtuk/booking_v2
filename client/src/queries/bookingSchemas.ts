@@ -763,6 +763,7 @@ export type UserLoggedInDTO = {
    * JWT access token
    */
   accessToken: string;
+  role: "CLIENT" | "HOST" | "ADMIN";
 };
 
 export type BookingDTO711 = {

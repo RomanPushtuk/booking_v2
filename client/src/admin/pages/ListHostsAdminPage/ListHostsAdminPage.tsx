@@ -9,16 +9,16 @@ import {
   Text
 } from "@mantine/core";
 
-import { useAuth } from "../../../auth";
 import { useAdminGetHosts } from "../../../queries/bookingComponents";
 
 import { EntityItem, Footer } from "../../components";
 import { truncate } from "../../utils";
+import { auth } from "../../imports";
 
 const ListHostsAdminPage = () => {
   const navigate = useNavigate();
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const hosts = useAdminGetHosts({
     headers: {
@@ -32,7 +32,7 @@ const ListHostsAdminPage = () => {
     },
     [navigate],
   );
-  const onDeleteClick = () => {};
+  const onDeleteClick = () => { };
   const handleBack = useCallback(() => {
     navigate("/admin");
   }, [navigate]);

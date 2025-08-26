@@ -7,7 +7,6 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
-// import { ShortHostInfo } from "../ShortHostInfo";
 import { useNavigate } from "react-router";
 import { useCallback } from "react";
 
@@ -27,18 +26,13 @@ const NearestBooking = (props: INearestBooking) => {
   const navigate = useNavigate();
 
   const handleDetaisClick = useCallback(() => {
-    navigate("/details");
+    navigate("/client/details");
   }, [navigate]);
 
   return (
     <Card withBorder shadow={theme.shadows.sm}>
       <Flex align={"center"}>
         <Stack flex={1}>
-          {/* <ShortHostInfo
-            name={name}
-            description={description}
-            avatarSrc={avatarSrc}
-          /> */}
           <Text>
             {date} {time}
           </Text>

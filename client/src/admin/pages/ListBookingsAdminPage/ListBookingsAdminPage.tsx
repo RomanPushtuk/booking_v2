@@ -9,16 +9,16 @@ import {
   Text
 } from "@mantine/core";
 
-import { useAuth } from "../../../auth";
 import { useAdminGetBookings } from "../../../queries/bookingComponents";
 
 import { EntityItem, Footer } from "../../components";
 import { truncate } from "../../utils";
+import { auth } from "../../imports";
 
 const ListBookingsAdminPage = () => {
   const navigate = useNavigate();
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const bookings = useAdminGetBookings({
     headers: {

@@ -2,13 +2,13 @@ import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Container, Text } from "@mantine/core";
 
-import { useAuth } from "../../../auth";
 import { HostDTO, UpdateHostDTO } from "../../../queries/bookingSchemas";
 import { useAdminGetHost, useAdminUpdateHost } from "../../../queries/bookingComponents";
 
 import { HostForm, IHostFormProps } from "../../components/HostForm/HostForm";
 import { UpdateHostShemaType } from "../../components/HostForm/hostFormShema";
 import { Footer } from "../../components";
+import { auth } from "../../imports";
 
 
 const mapHostToHostForm = (host: HostDTO): IHostFormProps => {
@@ -50,7 +50,7 @@ const EditHostAdminPage = () => {
 
   if (!params.hostId) throw new Error("No hostId in params");
 
-  const { accessToken } = useAuth() as { accessToken: string };
+  const { accessToken } = auth.hooks.useAuth() as { accessToken: string };
 
   const navigate = useNavigate();
   const handleBack = useCallback(() => {
