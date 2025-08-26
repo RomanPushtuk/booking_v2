@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class OverlappingBookingsException extends BaseException {
+export class OverlappingBookingsException extends error.classes.BaseException {
   static readonly CODE = "OVERLAPPING_BOOKINGS";
-  static readonly GROUP = ExceptionGroup.BAD_REQUEST;
+  static readonly GROUP = error.enums.ExceptionGroup.BAD_REQUEST;
   static readonly DEFAULT_MESSAGE = "Booking overlaps with existing bookings";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

@@ -5,11 +5,7 @@ import * as ws from "ws";
 
 import Datastore from "@seald-io/nedb";
 import throttle from "lodash.throttle";
-import {
-  Application,
-  Request,
-  Response,
-} from "express";
+import { Application, Request, Response } from "express";
 
 import { config } from "./imports";
 
@@ -22,17 +18,14 @@ import {
   createFolderIfNotExists,
   mapDataToMessage,
 } from "./utils";
-import {
-  MAX_DB_SIZE_BYTES,
-  MAX_LOG_FOLDER_SIZE_BYTES
-} from './config';
+import { MAX_DB_SIZE_BYTES, MAX_LOG_FOLDER_SIZE_BYTES } from "./config";
 
-import type { Data } from './types';
+import type { Data } from "./types";
 
-// The buffer is used during database archiving. 
-// While the database is being archived with a subsequent reset, 
-// it is not writable, for this purpose a temporary buffer was created 
-// in which the data is stored. After the archiving is completed, 
+// The buffer is used during database archiving.
+// While the database is being archived with a subsequent reset,
+// it is not writable, for this purpose a temporary buffer was created
+// in which the data is stored. After the archiving is completed,
 // the data from the buffer fills the database again.
 let bufferMode = false;
 let buffer: Data[] = [];
@@ -125,7 +118,7 @@ const useMonitoring = (app: Application): void => {
 
   server.listen(MONITORING_SERVER_PORT, () => {
     console.log(
-      `Monitoring server running at http://localhost:${MONITORING_SERVER_PORT}`
+      `Monitoring server running at http://localhost:${MONITORING_SERVER_PORT}`,
     );
   });
 };
@@ -139,4 +132,3 @@ bus.onmessage = (event: unknown) => {
 };
 
 export { useMonitoring, insert };
-

@@ -1,1 +1,1 @@
-export type { Data } from './Data'
+export type { Data } from "./Data";

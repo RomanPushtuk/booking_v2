@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class JwtTokenInvalidException extends BaseException {
+export class JwtTokenInvalidException extends error.classes.BaseException {
   static readonly CODE = "JWT_TOKEN_INVALID";
-  static readonly GROUP = ExceptionGroup.UNAUTHORIZED;
+  static readonly GROUP = error.enums.ExceptionGroup.UNAUTHORIZED;
   static readonly DEFAULT_MESSAGE = "JWT token is invalid";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

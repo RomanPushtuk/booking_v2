@@ -1,8 +1,6 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { BaseException } from "../classes";
+import { ExceptionGroup } from "../enums";
+import { IConstructorException } from "../types";
 
 export class InternalServerException extends BaseException {
   static readonly DEFAULT_MESSAGE = "Internal server error";

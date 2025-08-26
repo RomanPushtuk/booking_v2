@@ -47,9 +47,9 @@ const createBookingModuleBookingsTable = `
 `;
 
 export {
-    createAuthModuleUserTable,
-    createBookingModuleUserTable,
-    createBookingModuleClientsTable,
-    createBookingModuleHostsTable,
-    createBookingModuleBookingsTable,
+  createAuthModuleUserTable,
+  createBookingModuleUserTable,
+  createBookingModuleClientsTable,
+  createBookingModuleHostsTable,
+  createBookingModuleBookingsTable,
 };

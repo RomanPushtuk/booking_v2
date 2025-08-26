@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class PastTimeBookingException extends BaseException {
+export class PastTimeBookingException extends error.classes.BaseException {
   static readonly CODE = "PAST_TIME_BOOKING";
-  static readonly GROUP = ExceptionGroup.BAD_REQUEST;
+  static readonly GROUP = error.enums.ExceptionGroup.BAD_REQUEST;
   static readonly DEFAULT_MESSAGE = "Cannot create booking in the past";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

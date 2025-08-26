@@ -1,4 +1,4 @@
 export interface Data {
-	time?: number;
-	[key: string]: unknown;
+  time?: number;
+  [key: string]: unknown;
 }

@@ -1,32 +1,5 @@
-export enum ExceptionGroup {
-  BAD_REQUEST = "BAD_REQUEST",
-  UNAUTHORIZED = "UNAUTHORIZED",
-  FORBIDDEN = "FORBIDDEN",
-  NOT_FOUND = "NOT_FOUND",
-  SERVER_ERROR = "SERVER_ERROR",
-}
-
-interface IBaseConstructorException {
-  code: string;
-  message?: string;
-  group: ExceptionGroup;
-  context?: unknown;
-  cause?: unknown;
-}
-
-export interface IConstructorException {
-  message?: string;
-  context?: unknown;
-  cause?: unknown;
-}
-
-type ParsedStack = {
-  functionName?: string;
-  fileName?: string;
-  lineNumber?: number;
-  columnNumber?: number;
-  path?: string;
-};
+import { ExceptionGroup } from "../enums";
+import { IBaseConstructorException, ParsedStack } from "../types";
 
 export class BaseException extends Error {
   public readonly code: string;

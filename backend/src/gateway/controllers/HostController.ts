@@ -43,10 +43,13 @@ import {
   UpdateHostInBookingServiceStep,
 } from "../steps";
 
+// TODO - resolve modularity conflict
+import { addDurationToDate } from "../../booking/utils";
+
 @Service()
 @JsonController("/hosts")
 export class HostController {
-  constructor() { }
+  constructor() {}
 
   @Get("")
   async getHosts(): Promise<HostDTO[]> {
@@ -106,7 +109,7 @@ export class HostController {
     const host = await booking.services.hostService.getHostById(hostId);
 
     const fromDateTime = new Date().toISOString();
-    const toDateTime = shared.utils.addDurationToDate(host.forwardBooking);
+    const toDateTime = addDurationToDate(host.forwardBooking);
 
     const sorting = new shared.application.BookingSorting(
       sortDirection,

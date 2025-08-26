@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class HostNotFoundException extends BaseException {
+export class HostNotFoundException extends error.classes.BaseException {
   static readonly CODE = "HOST_NOT_FOUND";
-  static readonly GROUP = ExceptionGroup.NOT_FOUND;
+  static readonly GROUP = error.enums.ExceptionGroup.NOT_FOUND;
   static readonly DEFAULT_MESSAGE = "Host not found";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

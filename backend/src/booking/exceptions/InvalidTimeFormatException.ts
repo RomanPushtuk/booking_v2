@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "./BaseException";
+import { error } from "../imports";
 
-export class InvalidTimeFormatException extends BaseException {
+export class InvalidTimeFormatException extends error.classes.BaseException {
   static readonly CODE = "INVALID_TIME_FORMAT";
-  static readonly GROUP = ExceptionGroup.BAD_REQUEST;
+  static readonly GROUP = error.enums.ExceptionGroup.BAD_REQUEST;
   static readonly DEFAULT_MESSAGE = "Invalid time format provided";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

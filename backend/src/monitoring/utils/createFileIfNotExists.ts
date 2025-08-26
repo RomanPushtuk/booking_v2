@@ -1,6 +1,9 @@
 import fs from "fs";
 
-const createFileIfNotExists = (filePath: string, defaultContent: string = ""): void => {
+const createFileIfNotExists = (
+  filePath: string,
+  defaultContent: string = "",
+): void => {
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, defaultContent, "utf8");
   }

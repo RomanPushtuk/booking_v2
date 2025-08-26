@@ -2,7 +2,10 @@ import fs from "fs";
 import path from "path";
 import zlib from "zlib";
 
-const createArchive = (filePath: string, folderPath: string = __dirname): void => {
+const createArchive = (
+  filePath: string,
+  folderPath: string = __dirname,
+): void => {
   const date = Date.now();
   const archiveName = `${date}.log.gz`;
 

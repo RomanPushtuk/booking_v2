@@ -1,18 +1,23 @@
-import { intervalsOverlap } from "../../shared/utils";
+import { shared } from "../imports";
 import { logger } from "../logger";
+
+import config from "../../config.json";
+
 import { HostProperties, UpdateBookingData, UpdateHostData } from "../types";
+
 import { Booking } from "./Booking";
 import { User } from "./User";
-import config from "../../config.json";
-import { shared } from "../imports";
+
 import {
-  isSameDay,
+  addDurationToDate,
   getDayOfWeek,
   getTimeFromDateTime,
-  isTimeIntervalInWorkingHours,
+  intervalsOverlap,
   isIntervalInPast,
-  addDurationToDate,
-} from "../../shared/utils/date";
+  isSameDay,
+  isTimeIntervalInWorkingHours,
+} from "../utils";
+
 import {
   BookingNotFoundException,
   BookingDeletedAccessException,

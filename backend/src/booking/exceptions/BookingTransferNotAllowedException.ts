@@ -1,15 +1,16 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class BookingTransferNotAllowedException extends BaseException {
+export class BookingTransferNotAllowedException extends error.classes
+  .BaseException {
   static readonly CODE = "BOOKING_TRANSFER_NOT_ALLOWED";
-  static readonly GROUP = ExceptionGroup.BAD_REQUEST;
+  static readonly GROUP = error.enums.ExceptionGroup.BAD_REQUEST;
   static readonly DEFAULT_MESSAGE = "Booking transfer is not allowed";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

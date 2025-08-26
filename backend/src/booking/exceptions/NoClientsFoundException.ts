@@ -1,15 +1,14 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
-
-export class NoClientsFoundException extends BaseException {
+import { error } from "../imports";
+export class NoClientsFoundException extends error.classes.BaseException {
   static readonly CODE = "NO_CLIENTS_FOUND";
-  static readonly GROUP = ExceptionGroup.NOT_FOUND;
+  static readonly GROUP = error.enums.ExceptionGroup.NOT_FOUND;
   static readonly DEFAULT_MESSAGE = "No clients found matching the criteria";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

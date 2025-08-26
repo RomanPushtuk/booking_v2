@@ -20,7 +20,7 @@ const getOldestFileByDateName = (folderPath: string): string | null => {
     })
     .filter(
       (f): f is { name: string; timestamp: number } =>
-        typeof f.timestamp === "number" && !isNaN(f.timestamp)
+        typeof f.timestamp === "number" && !isNaN(f.timestamp),
     );
 
   if (timestampedFiles.length === 0) return null;

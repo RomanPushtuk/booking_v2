@@ -17,7 +17,7 @@ import {
   dropBookingModuleUsersTable,
   dropBookingModuleClientsTable,
   dropBookingModuleHostsTable,
-  dropBookingModuleBookingsTable
+  dropBookingModuleBookingsTable,
 } from "./init/down";
 
 const mode = process.argv[2];

@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class DuplicateBookingException extends BaseException {
+export class DuplicateBookingException extends error.classes.BaseException {
   static readonly CODE = "DUPLICATE_BOOKING";
-  static readonly GROUP = ExceptionGroup.BAD_REQUEST;
+  static readonly GROUP = error.enums.ExceptionGroup.BAD_REQUEST;
   static readonly DEFAULT_MESSAGE = "Duplicate booking already exists";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

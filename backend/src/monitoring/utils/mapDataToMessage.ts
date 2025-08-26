@@ -1,4 +1,4 @@
-import type { Data } from '../types';
+import type { Data } from "../types";
 
 const mapDataToMessage = (data: Data): string => {
   return JSON.stringify({

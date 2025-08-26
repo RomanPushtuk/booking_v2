@@ -1,5 +1,8 @@
 import { registerDecorator, ValidationOptions } from "class-validator";
-import { validateDurationFormat, validateTimeIntervals } from "../utils/date";
+
+// TODO - resolve modularity conflict
+import { validateDurationFormat, validateTimeIntervals } from "../../booking/utils";
+
 
 export function IsDurationFormat(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string): void {

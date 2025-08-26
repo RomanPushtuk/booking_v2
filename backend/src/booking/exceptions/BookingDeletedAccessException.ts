@@ -1,15 +1,15 @@
-import {
-  BaseException,
-  ExceptionGroup,
-  IConstructorException,
-} from "../../shared/errors/BaseException";
+import { error } from "../imports";
 
-export class BookingDeletedAccessException extends BaseException {
+export class BookingDeletedAccessException extends error.classes.BaseException {
   static readonly CODE = "BOOKING_DELETED_ACCESS";
-  static readonly GROUP = ExceptionGroup.NOT_FOUND;
+  static readonly GROUP = error.enums.ExceptionGroup.NOT_FOUND;
   static readonly DEFAULT_MESSAGE = "Cannot access deleted booking";
 
-  constructor({ message, cause, context }: IConstructorException = {}) {
+  constructor({
+    message,
+    cause,
+    context,
+  }: error.types.IConstructorException = {}) {
     super({
       cause,
       context,

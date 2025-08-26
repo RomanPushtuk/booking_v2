@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: BookingYml
-  description: ''
+  description: ""
   version: 1.0.0
 tags:
   - name: public
@@ -20,39 +20,39 @@ paths:
         - public
       parameters: []
       responses:
-        '200':
+        "200":
           description: List of hosts
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/HostDTO12'
+                  $ref: "#/components/schemas/HostDTO12"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     id: QfgtBGhO
                     forwardBooking: P3W
                     workHours:
-                      - from: '09:00'
-                        to: '13:00'
-                      - from: '14:00'
-                        to: '18:00'
+                      - from: "09:00"
+                        to: "13:00"
+                      - from: "14:00"
+                        to: "18:00"
                     workDays:
                       - MONDAY
                       - TUESDAY
                       - WEDNESDAY
                       - THURSDAY
                       - FRIDAY
-                '2':
+                "2":
                   summary: Success
                   value:
                     id: XyzABC12
                     forwardBooking: P2W
                     workHours:
-                      - from: '10:00'
-                        to: '17:00'
+                      - from: "10:00"
+                        to: "17:00"
                     workDays:
                       - MONDAY
                       - WEDNESDAY
@@ -70,26 +70,26 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDTO12'
+                $ref: "#/components/schemas/HostDTO12"
               example:
                 id: QfgtBGhO
                 forwardBooking: P3W
                 workHours:
-                  - from: '09:00'
-                    to: '13:00'
-                  - from: '14:00'
-                    to: '18:00'
+                  - from: "09:00"
+                    to: "13:00"
+                  - from: "14:00"
+                    to: "18:00"
                 workDays:
                   - MONDAY
                   - TUESDAY
@@ -113,7 +113,7 @@ paths:
           in: path
           description: Host ID
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
         - name: sortDirection
@@ -128,34 +128,34 @@ paths:
               - ASC
             default: ASC
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO711'
+                  $ref: "#/components/schemas/BookingDTO711"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     id: W5yzHBnj
                     clientId: RHufHq84
                     hostId: DHhd82df
-                    date: '2025-09-24'
+                    date: "2025-09-24"
                     time:
-                      from: '09:00'
-                      to: '11:30'
-                '2':
+                      from: "09:00"
+                      to: "11:30"
+                "2":
                   summary: Success
                   value:
                     id: peYQTB5F
                     hostId: DHhd82df
-                    date: '2025-09-29'
+                    date: "2025-09-29"
                     time:
-                      from: '14:00'
-                      to: '15:00'
+                      from: "14:00"
+                      to: "15:00"
           headers: {}
       security: []
   /api/auth/register:
@@ -171,18 +171,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUserDTO'
+              $ref: "#/components/schemas/CreateUserDTO"
             example:
               login: newuser123
               password: StrongPassword123!
               role: CLIENT
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserLoggedInDTO'
+                $ref: "#/components/schemas/UserLoggedInDTO"
           headers: {}
       security: []
   /api/auth/login:
@@ -209,22 +209,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthUserDTO'
+              $ref: "#/components/schemas/AuthUserDTO"
             example:
               login: client_test
               password: password123
       responses:
-        '200':
+        "200":
           description: Login successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserLoggedInDTO'
+                $ref: "#/components/schemas/UserLoggedInDTO"
               example:
                 access_token: >-
                   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaWVudF90ZXN0Iiwicm9sZSI6IkNMSUVOVCIsImlhdCI6MTY0MDk5NTIwMH0.signature
           headers: {}
-        '401':
+        "401":
           description: Invalid credentials
           content:
             application/json:
@@ -247,19 +247,19 @@ paths:
         - clients
       parameters: []
       responses:
-        '200':
+        "200":
           description: Client information retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDTO2'
+                $ref: "#/components/schemas/ClientDTO2"
               example:
                 id: client_123
                 info:
                   firstName: John
                   lastName: Doe
           headers: {}
-        '401':
+        "401":
           description: Unauthorized - Invalid or missing JWT token
           content:
             application/json:
@@ -271,7 +271,7 @@ paths:
                     examples:
                       - Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           content:
             application/json:
@@ -297,28 +297,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClientDTO5'
+              $ref: "#/components/schemas/UpdateClientDTO5"
             example:
               info:
                 firstName: John
                 lastName: Smith
       responses:
-        '200':
+        "200":
           description: Client updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserUpdatedDTO'
+                $ref: "#/components/schemas/UserUpdatedDTO"
               example:
                 id: client_123
           headers: {}
-        '400':
+        "400":
           description: Bad Request - Invalid input data
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
       security:
@@ -332,19 +332,19 @@ paths:
         - clients
       parameters: []
       responses:
-        '200':
+        "200":
           description: Client deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsedDeletedDTO'
+                $ref: "#/components/schemas/UsedDeletedDTO"
               example:
                 id: client_123
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
       security:
@@ -381,7 +381,7 @@ paths:
           in: query
           description: Filter bookings that start after this time (ISO8601).
           required: false
-          example: '2025-06-21T10:00:00Z'
+          example: "2025-06-21T10:00:00Z"
           schema:
             type: string
             format: date-time
@@ -389,33 +389,33 @@ paths:
           in: query
           description: Filter bookings that end before this time (ISO8601).
           required: false
-          example: '2025-06-28T18:00:00Z'
+          example: "2025-06-28T18:00:00Z"
           schema:
             type: string
             format: date-time
       responses:
-        '200':
+        "200":
           description: List of client's bookings retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO1'
+                  $ref: "#/components/schemas/BookingDTO1"
               example:
                 id: booking_789
                 clientId: client_123
                 hostId: host_456
-                fromDateTime: '2025-06-25T10:00:00Z'
-                toDateTime: '2025-06-25T11:00:00Z'
+                fromDateTime: "2025-06-25T10:00:00Z"
+                toDateTime: "2025-06-25T11:00:00Z"
                 info:
                   title: Consultation
                   description: Regular checkup
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
       security:
@@ -432,34 +432,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBookingDTO3'
+              $ref: "#/components/schemas/CreateBookingDTO3"
             example:
               hostId: host_456
-              fromDateTime: '2025-06-25T10:00:00Z'
-              toDateTime: '2025-06-25T11:00:00Z'
+              fromDateTime: "2025-06-25T10:00:00Z"
+              toDateTime: "2025-06-25T11:00:00Z"
               info:
                 title: Consultation
                 description: Regular checkup
       responses:
-        '201':
+        "201":
           description: Booking created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingCreatedDTO'
+                $ref: "#/components/schemas/BookingCreatedDTO"
               example:
                 id: booking_789
           headers: {}
-        '400':
+        "400":
           description: Bad Request - Invalid input data
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
-        '409':
+        "409":
           description: Conflict - Time slot not available
           headers: {}
       security:
@@ -481,29 +481,29 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Booking retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDTO1'
+                $ref: "#/components/schemas/BookingDTO1"
               example:
                 id: booking_789
                 clientId: client_123
                 hostId: host_456
-                fromDateTime: '2025-06-25T10:00:00Z'
-                toDateTime: '2025-06-25T11:00:00Z'
+                fromDateTime: "2025-06-25T10:00:00Z"
+                toDateTime: "2025-06-25T11:00:00Z"
                 info:
                   title: Consultation
                   description: Regular checkup
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
-        '404':
+        "404":
           description: Booking not found or access denied
           headers: {}
       security:
@@ -527,36 +527,36 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBookingDTO4'
+              $ref: "#/components/schemas/UpdateBookingDTO4"
             example:
-              fromDateTime: '2025-06-25T14:00:00Z'
-              toDateTime: '2025-06-25T15:00:00Z'
+              fromDateTime: "2025-06-25T14:00:00Z"
+              toDateTime: "2025-06-25T15:00:00Z"
               info:
                 title: Updated Consultation
                 description: Updated description
       responses:
-        '200':
+        "200":
           description: Booking updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingUpdatedDTO'
+                $ref: "#/components/schemas/BookingUpdatedDTO"
               example:
                 id: booking_789
           headers: {}
-        '400':
+        "400":
           description: Bad Request - Invalid input data
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
-        '404':
+        "404":
           description: Booking not found or access denied
           headers: {}
-        '409':
+        "409":
           description: Conflict - Time slot not available
           headers: {}
       security:
@@ -577,22 +577,22 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Booking cancelled successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingUpdatedDTO'
+                $ref: "#/components/schemas/BookingUpdatedDTO"
               example:
                 id: booking_789
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a client
           headers: {}
-        '404':
+        "404":
           description: Booking not found or access denied
           headers: {}
       security:
@@ -607,26 +607,26 @@ paths:
         - hosts
       parameters: []
       responses:
-        '200':
+        "200":
           description: Host information
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDTO6'
+                $ref: "#/components/schemas/HostDTO6"
               example:
                 id: qMzpUi3C
                 forwardBooking: P3W
                 workHours:
-                  - from: '08:00'
-                    to: '20:00'
+                  - from: "08:00"
+                    to: "20:00"
                 workDays:
                   - SUNDAY
                   - THURSDAY
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
       security:
@@ -640,17 +640,17 @@ paths:
         - hosts
       parameters: []
       responses:
-        '200':
+        "200":
           description: Host deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsedDeletedDTO'
+                $ref: "#/components/schemas/UsedDeletedDTO"
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
       security:
@@ -667,14 +667,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateHostDTO10'
+              $ref: "#/components/schemas/UpdateHostDTO10"
             example:
               forwardBooking: P3W
               workHours:
-                - from: '09:00'
-                  to: '13:00'
-                - from: '14:00'
-                  to: '18:00'
+                - from: "09:00"
+                  to: "13:00"
+                - from: "14:00"
+                  to: "18:00"
               workDays:
                 - MONDAY
                 - TUESDAY
@@ -682,23 +682,23 @@ paths:
                 - THURSDAY
                 - FRIDAY
       responses:
-        '200':
+        "200":
           description: Host updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserUpdatedDTO'
+                $ref: "#/components/schemas/UserUpdatedDTO"
           headers: {}
-        '400':
+        "400":
           description: >-
             Bad Request - Invalid input data. Check forwardBooking format (ISO
             8601 duration) and workHours validation (time format, chronological
             order, no overlaps)
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
       security:
@@ -742,38 +742,38 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBookingDTO8'
+              $ref: "#/components/schemas/CreateBookingDTO8"
             example:
               clientId: client_123
               hostId: ignored_will_be_overridden
-              fromDateTime: '2025-06-25T10:00:00Z'
-              toDateTime: '2025-06-25T11:00:00Z'
+              fromDateTime: "2025-06-25T10:00:00Z"
+              toDateTime: "2025-06-25T11:00:00Z"
               info:
                 title: Medical Consultation
                 description: General health checkup and consultation
       responses:
-        '201':
+        "201":
           description: Booking created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingCreatedDTO'
+                $ref: "#/components/schemas/BookingCreatedDTO"
               example:
                 id: booking_456
           headers: {}
-        '400':
+        "400":
           description: Bad Request - Invalid input data or time slot not available
           headers: {}
-        '401':
+        "401":
           description: Unauthorized - Invalid or missing authentication token
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
-        '404':
+        "404":
           description: Not Found - Client not found
           headers: {}
-        '409':
+        "409":
           description: Conflict - Time slot already booked or outside working hours
           headers: {}
       security:
@@ -820,7 +820,7 @@ paths:
           in: query
           description: Filter bookings from this date-time (ISO8601)
           required: false
-          example: '2025-06-25T00:00:00Z'
+          example: "2025-06-25T00:00:00Z"
           schema:
             type: string
             format: date-time
@@ -828,24 +828,24 @@ paths:
           in: query
           description: Filter bookings until this date-time (ISO8601)
           required: false
-          example: '2025-06-30T23:59:59Z'
+          example: "2025-06-30T23:59:59Z"
           schema:
             type: string
             format: date-time
       responses:
-        '200':
+        "200":
           description: List of host's bookings
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO7'
+                  $ref: "#/components/schemas/BookingDTO7"
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
       security:
@@ -867,29 +867,29 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Booking details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDTO7'
+                $ref: "#/components/schemas/BookingDTO7"
               example:
                 id: booking_123
                 clientId: client_456
                 hostId: host_789
-                fromDateTime: '2025-06-25T10:00:00Z'
-                toDateTime: '2025-06-25T11:00:00Z'
+                fromDateTime: "2025-06-25T10:00:00Z"
+                toDateTime: "2025-06-25T11:00:00Z"
                 info:
                   title: Consultation
                   description: Medical consultation
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
-        '404':
+        "404":
           description: Booking not found
           headers: {}
       security:
@@ -910,22 +910,22 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Booking deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDeletedDTO'
+                $ref: "#/components/schemas/BookingDeletedDTO"
               example:
                 id: booking_123
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
-        '404':
+        "404":
           description: Booking not found
           headers: {}
       security:
@@ -949,34 +949,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBookingDTO9'
+              $ref: "#/components/schemas/UpdateBookingDTO9"
             example:
               hostId: host_123
-              fromDateTime: '2025-06-25T14:00:00Z'
-              toDateTime: '2025-06-25T15:00:00Z'
+              fromDateTime: "2025-06-25T14:00:00Z"
+              toDateTime: "2025-06-25T15:00:00Z"
               info:
                 title: Updated Consultation
                 description: Updated description
       responses:
-        '200':
+        "200":
           description: Booking updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDeletedDTO'
+                $ref: "#/components/schemas/BookingDeletedDTO"
               example:
                 id: booking_123
           headers: {}
-        '400':
+        "400":
           description: Bad Request - Invalid input data
           headers: {}
-        '401':
+        "401":
           description: Unauthorized
           headers: {}
-        '403':
+        "403":
           description: Forbidden - User is not a host
           headers: {}
-        '404':
+        "404":
           description: Booking not found
           headers: {}
       security:
@@ -985,24 +985,24 @@ paths:
     get:
       summary: GetMySettings
       deprecated: false
-      description: ''
+      description: ""
       operationId: HOSTS_GET_HOST_SETTINGS
       tags:
         - hosts
       parameters: []
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostSettingsDTO'
+                $ref: "#/components/schemas/HostSettingsDTO"
           headers: {}
       security: []
     patch:
       summary: UpdateSettings
       deprecated: false
-      description: ''
+      description: ""
       operationId: HOSTS_UPDATE_SETTINGS
       tags:
         - hosts
@@ -1011,10 +1011,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateHostSettingsDTO'
+              $ref: "#/components/schemas/UpdateHostSettingsDTO"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
@@ -1035,14 +1035,14 @@ paths:
         - admin
       parameters: []
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDTO'
+                  $ref: "#/components/schemas/ClientDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1058,14 +1058,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateClientDTO'
+              $ref: "#/components/schemas/CreateClientDTO"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserCreatedDTO'
+                $ref: "#/components/schemas/UserCreatedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1080,18 +1080,18 @@ paths:
       parameters:
         - name: clientId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDTO'
+                $ref: "#/components/schemas/ClientDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1105,23 +1105,23 @@ paths:
       parameters:
         - name: clientId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClientDTO5'
+              $ref: "#/components/schemas/UpdateClientDTO5"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserUpdatedDTO'
+                $ref: "#/components/schemas/UserUpdatedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1135,9 +1135,9 @@ paths:
       parameters:
         - name: clientId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       requestBody:
@@ -1147,12 +1147,12 @@ paths:
               type: object
               properties: {}
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsedDeletedDTO'
+                $ref: "#/components/schemas/UsedDeletedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1166,14 +1166,14 @@ paths:
         - admin
       parameters: []
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/HostDTO'
+                  $ref: "#/components/schemas/HostDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1189,14 +1189,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateHostDTO'
+              $ref: "#/components/schemas/CreateHostDTO"
       responses:
-        '201':
-          description: ''
+        "201":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserCreatedDTO'
+                $ref: "#/components/schemas/UserCreatedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1211,18 +1211,18 @@ paths:
       parameters:
         - name: hostId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HostDTO'
+                $ref: "#/components/schemas/HostDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1236,23 +1236,23 @@ paths:
       parameters:
         - name: hostId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateHostDTO10'
+              $ref: "#/components/schemas/UpdateHostDTO10"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserUpdatedDTO'
+                $ref: "#/components/schemas/UserUpdatedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1266,18 +1266,18 @@ paths:
       parameters:
         - name: hostId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsedDeletedDTO'
+                $ref: "#/components/schemas/UsedDeletedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1291,14 +1291,14 @@ paths:
         - admin
       parameters: []
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookingDTO'
+                  $ref: "#/components/schemas/BookingDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1314,14 +1314,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBookingDTO'
+              $ref: "#/components/schemas/CreateBookingDTO"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingCreatedDTO'
+                $ref: "#/components/schemas/BookingCreatedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1336,18 +1336,18 @@ paths:
       parameters:
         - name: bookingId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDTO'
+                $ref: "#/components/schemas/BookingDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1361,23 +1361,23 @@ paths:
       parameters:
         - name: bookingId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateBookingDTO'
+              $ref: "#/components/schemas/UpdateBookingDTO"
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingUpdatedDTO'
+                $ref: "#/components/schemas/BookingUpdatedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1391,18 +1391,18 @@ paths:
       parameters:
         - name: bookingId
           in: path
-          description: ''
+          description: ""
           required: true
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
-          description: ''
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingDeletedDTO'
+                $ref: "#/components/schemas/BookingDeletedDTO"
           headers: {}
       security:
         - bearerAuth: []
@@ -1445,8 +1445,8 @@ components:
       title: Admin_CreateBookingDTO
       examples:
         - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Consultation
             description: Regular checkup
@@ -1555,8 +1555,8 @@ components:
       title: Admin_UpdateBookingDTO
       examples:
         - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Consultation
             description: Regular checkup
@@ -1606,7 +1606,7 @@ components:
                 description: Start time in HH:MM format (24-hour)
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '09:00'
+                  - "09:00"
               to:
                 type: string
                 description: >-
@@ -1614,7 +1614,7 @@ components:
                   time.
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '17:00'
+                  - "17:00"
             required:
               - from
               - to
@@ -1634,10 +1634,10 @@ components:
       examples:
         - forwardBooking: P3W
           workHours:
-            - from: '09:00'
-              to: '13:00'
-            - from: '14:00'
-              to: '18:00'
+            - from: "09:00"
+              to: "13:00"
+            - from: "14:00"
+              to: "18:00"
           workDays:
             - MONDAY
             - TUESDAY
@@ -1684,8 +1684,8 @@ components:
       title: Admin_BookingDTO
       examples:
         - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Consultation
             description: Regular checkup
@@ -1718,7 +1718,7 @@ components:
                 description: Start time in HH:MM format (24-hour)
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '09:00'
+                  - "09:00"
               to:
                 type: string
                 description: >-
@@ -1726,7 +1726,7 @@ components:
                   time.
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '18:00'
+                  - "18:00"
             required:
               - from
               - to
@@ -1766,10 +1766,10 @@ components:
         - id: host_123
           forwardBooking: P3W
           workHours:
-            - from: '09:00'
-              to: '13:00'
-            - from: '14:00'
-              to: '18:00'
+            - from: "09:00"
+              to: "13:00"
+            - from: "14:00"
+              to: "18:00"
           workDays:
             - MONDAY
             - TUESDAY
@@ -1846,8 +1846,8 @@ components:
         - id: booking_789
           clientId: client_123
           hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Consultation
             description: Regular checkup
@@ -1908,8 +1908,8 @@ components:
       title: Clients_CreateBookingDTO
       examples:
         - hostId: host_456
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Consultation
             description: Regular checkup
@@ -1935,8 +1935,8 @@ components:
               description: Updated booking description
       title: Clients_UpdateBookingDTO
       examples:
-        - fromDateTime: '2025-06-25T14:00:00Z'
-          toDateTime: '2025-06-25T15:00:00Z'
+        - fromDateTime: "2025-06-25T14:00:00Z"
+          toDateTime: "2025-06-25T15:00:00Z"
           info:
             title: Updated Consultation
             description: Updated description
@@ -1986,7 +1986,7 @@ components:
                 description: Start time in HH:MM format (24-hour)
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '09:00'
+                  - "09:00"
               to:
                 type: string
                 description: >-
@@ -1994,7 +1994,7 @@ components:
                   time.
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '18:00'
+                  - "18:00"
             required:
               - from
               - to
@@ -2034,10 +2034,10 @@ components:
         - id: host_123
           forwardBooking: P3W
           workHours:
-            - from: '09:00'
-              to: '13:00'
-            - from: '14:00'
-              to: '18:00'
+            - from: "09:00"
+              to: "13:00"
+            - from: "14:00"
+              to: "18:00"
           workDays:
             - MONDAY
             - TUESDAY
@@ -2091,8 +2091,8 @@ components:
         - id: booking_123
           clientId: client_456
           hostId: host_789
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Consultation
             description: Medical consultation
@@ -2129,7 +2129,7 @@ components:
             Booking start time in ISO8601 format.
             Must be within host's working hours and available time slots.
           examples:
-            - '2025-06-25T10:00:00Z'
+            - "2025-06-25T10:00:00Z"
         toDateTime:
           type: string
           format: date-time
@@ -2137,7 +2137,7 @@ components:
             Booking end time in ISO8601 format.
             Must be after fromDateTime and within host's working hours.
           examples:
-            - '2025-06-25T11:00:00Z'
+            - "2025-06-25T11:00:00Z"
         info:
           type: object
           description: Additional information about the booking/service
@@ -2186,8 +2186,8 @@ components:
       examples:
         - clientId: client_123
           hostId: ignored_value
-          fromDateTime: '2025-06-25T10:00:00Z'
-          toDateTime: '2025-06-25T11:00:00Z'
+          fromDateTime: "2025-06-25T10:00:00Z"
+          toDateTime: "2025-06-25T11:00:00Z"
           info:
             title: Medical Consultation
             description: General health checkup and consultation
@@ -2217,8 +2217,8 @@ components:
       title: Hosts_UpdateBookingDTO
       examples:
         - hostId: host_123
-          fromDateTime: '2025-06-25T14:00:00Z'
-          toDateTime: '2025-06-25T15:00:00Z'
+          fromDateTime: "2025-06-25T14:00:00Z"
+          toDateTime: "2025-06-25T15:00:00Z"
           info:
             title: Updated Consultation
             description: Updated description
@@ -2248,7 +2248,7 @@ components:
                 description: Start time in HH:MM format (24-hour)
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '09:00'
+                  - "09:00"
               to:
                 type: string
                 description: >-
@@ -2256,7 +2256,7 @@ components:
                   time.
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '17:00'
+                  - "17:00"
             required:
               - from
               - to
@@ -2276,10 +2276,10 @@ components:
       examples:
         - forwardBooking: P3W
           workHours:
-            - from: '09:00'
-              to: '13:00'
-            - from: '14:00'
-              to: '18:00'
+            - from: "09:00"
+              to: "13:00"
+            - from: "14:00"
+              to: "18:00"
           workDays:
             - MONDAY
             - TUESDAY
@@ -2462,7 +2462,7 @@ components:
                 description: Start time in HH:MM format (24-hour)
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '09:00'
+                  - "09:00"
               to:
                 type: string
                 description: >-
@@ -2470,7 +2470,7 @@ components:
                   time.
                 pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
                 examples:
-                  - '18:00'
+                  - "18:00"
             required:
               - from
               - to
@@ -2510,10 +2510,10 @@ components:
         - id: host_123
           forwardBooking: P3W
           workHours:
-            - from: '09:00'
-              to: '13:00'
-            - from: '14:00'
-              to: '18:00'
+            - from: "09:00"
+              to: "13:00"
+            - from: "14:00"
+              to: "18:00"
           workDays:
             - MONDAY
             - TUESDAY

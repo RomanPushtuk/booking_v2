@@ -9,4 +9,4 @@ const cleanOldestFileInFolder = (folderPath: string): void => {
   fs.unlinkSync(filePath);
 };
 
-export { cleanOldestFileInFolder }
+export { cleanOldestFileInFolder };
